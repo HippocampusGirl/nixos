@@ -6,8 +6,10 @@ let
     owner = "microsoft";
     repo = "WSL2-Linux-Kernel";
     rev = "linux-msft-wsl-${kernelVersion}";
-    sha256 = "sha256-szQ6swi0pFdwh3bF2HiVxbUnu/taw6yYWhBgyx7LFv4=";  # lib.fakeSha256
+    sha256 = "sha256-szQ6swi0pFdwh3bF2HiVxbUnu/taw6yYWhBgyx7LFv4=";
   };
+
+  # Adapted from https://github.com/meatcar/wsl2-kernel-nix
   kernelConfig = pkgs.linuxKernel.manualConfig rec {
     inherit src;
     inherit (pkgs) lib;
@@ -17,7 +19,6 @@ let
     modDirVersion = version;
     configfile = pkgs.writeText "config" ''
     ${builtins.readFile "${src}/Microsoft/config-wsl"}
-    CONFIG_DMIID=y
     '';
     
     allowImportFromDerivation = true;

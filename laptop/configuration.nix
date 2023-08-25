@@ -3,7 +3,7 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }: {
-  imports = [ ./kernel.nix ./wsl.nix ./zrepl.nix ../users/lea.nix ];
+  imports = [ ./fhs.nix ./kernel.nix ./wsl.nix ./zrepl.nix ../users/lea.nix ];
 
   environment = {
     systemPackages = with pkgs; [ git gnupg htop nixfmt tmux vim wget zsh ];
@@ -17,16 +17,18 @@
   };
 
   nix = {
-    gc = {
-      automatic = true;
-      dates = "Monday 01:00 UTC";
-      options = "--delete-older-than 7d";
-    };
     # Run garbage collection when disk is almost full
     extraOptions = ''
       min-free = ${toString (512 * 1024 * 1024)}
       experimental-features = nix-command flakes impure-derivations
     '';
+    # Run garbage collection on a schedule
+    gc = {
+      automatic = true;
+      dates = "Monday 01:00 UTC";
+      options = "--delete-older-than 7d";
+    };
+    settings = { auto-optimise-store = true; };
   };
 
   programs = {
