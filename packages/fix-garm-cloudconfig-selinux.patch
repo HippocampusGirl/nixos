@@ -1,0 +1,13 @@
+diff --git a/cloudconfig/templates.go b/cloudconfig/templates.go
+index e088d2c..90c2dc7 100644
+--- a/cloudconfig/templates.go
++++ b/cloudconfig/templates.go
+@@ -129,7 +129,7 @@ sudo -u {{ .RunnerUsername }} -- ./config.sh --unattended --url "{{ .RepoURL }}"
+ sendStatus "installing runner service"
+ ./svc.sh install {{ .RunnerUsername }} || fail "failed to install service"
+ 
+-if [ -e "/sys/fs/selinux" ];then
++if [ -d "/sys/fs/selinux" ] && [ -n "$(ls -A /sys/fs/selinux)" ];then
+     sudo chcon -h user_u:object_r:bin_t /home/runner/ || fail "failed to change selinux context"
+     sudo chcon -R -h {{ .RunnerUsername }}:object_r:bin_t /home/runner/* || fail "failed to change selinux context"
+ fi

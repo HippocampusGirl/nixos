@@ -1,0 +1,55 @@
+diff --git a/params/params.go b/params/params.go
+index 0e07f3a..b93952f 100644
+--- a/params/params.go
++++ b/params/params.go
+@@ -222,7 +222,8 @@ type BootstrapInstance struct {
+ }
+ 
+ type UserDataOptions struct {
+-	DisableUpdatesOnBoot bool `json:"disable_updates_on_boot"`
++	DisableUpdatesOnBoot bool     `json:"disable_updates_on_boot"`
++	ExtraPackages        []string `json:"extra_packages"`
+ }
+ 
+ type Tag struct {
+diff --git a/runner/providers/lxd/lxd.go b/runner/providers/lxd/lxd.go
+index dec6361..270073a 100644
+--- a/runner/providers/lxd/lxd.go
++++ b/runner/providers/lxd/lxd.go
+@@ -236,6 +236,7 @@ func (l *LXD) getCreateInstanceArgs(bootstrapParams params.BootstrapInstance, sp
+ 	}
+ 
+ 	bootstrapParams.UserDataOptions.DisableUpdatesOnBoot = specs.DisableUpdates
++	bootstrapParams.UserDataOptions.ExtraPackages = specs.ExtraPackages
+ 	cloudCfg, err := util.GetCloudConfig(bootstrapParams, tools, bootstrapParams.Name)
+ 	if err != nil {
+ 		return api.InstancesPost{}, errors.Wrap(err, "generating cloud-config")
+diff --git a/runner/providers/lxd/specs.go b/runner/providers/lxd/specs.go
+index 21470c1..202473b 100644
+--- a/runner/providers/lxd/specs.go
++++ b/runner/providers/lxd/specs.go
+@@ -22,7 +22,8 @@ import (
+ )
+ 
+ type extraSpecs struct {
+-	DisableUpdates bool `json:"disable_updates"`
++	DisableUpdates bool     `json:"disable_updates"`
++	ExtraPackages  []string `json:"extra_packages"`
+ }
+ 
+ func parseExtraSpecsFromBootstrapParams(bootstrapParams params.BootstrapInstance) (extraSpecs, error) {
+diff --git a/util/util.go b/util/util.go
+index 35b50ee..664c956 100644
+--- a/util/util.go
++++ b/util/util.go
+@@ -272,6 +272,10 @@ func GetCloudConfig(bootstrapParams params.BootstrapInstance, tools github.Runne
+ 			cloudCfg.Packages = []string{}
+ 		}
+ 
++		for _, pkg := range bootstrapParams.UserDataOptions.ExtraPackages {
++			cloudCfg.AddPackage(pkg)
++		}
++
+ 		cloudCfg.AddSSHKey(bootstrapParams.SSHKeys...)
+ 		cloudCfg.AddFile(installScript, "/install_runner.sh", "root:root", "755")
+ 		cloudCfg.AddRunCmd("/install_runner.sh")
