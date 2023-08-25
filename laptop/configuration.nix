@@ -3,20 +3,13 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }: {
-  imports = [ ./kernel.nix ./wsl.nix ../users/lea.nix ];
+  imports = [ ./kernel.nix ./wsl.nix ./zrepl.nix ../users/lea.nix ];
 
   environment = {
-    systemPackages = with pkgs; [
-      git
-      htop
-      nixfmt
-      nodejs
-      # ripgrep-all
-      vim
-      wget
-      zsh
-    ];
+    systemPackages = with pkgs; [ git gnupg htop nixfmt tmux vim wget zsh ];
   };
+
+  i18n = { defaultLocale = "en_US.UTF-8"; };
 
   networking = {
     hostId = "1ea1eaaa";
@@ -24,7 +17,6 @@
   };
 
   nix = {
-    # Enable garbage collection every week
     gc = {
       automatic = true;
       dates = "Monday 01:00 UTC";
@@ -43,11 +35,28 @@
   };
 
   services = {
+    # Automatically fix vscode server executable
     vscode-server = {
       enable = true;
       installPath = "~/.vscode-server-insiders";
     };
   };
 
-  system = { stateVersion = "23.05"; };
+  system = {
+    # Enable automatic security updates
+    autoUpgrade = {
+      enable = true;
+      allowReboot = false;
+      dates = "daily UTC";
+    };
+    # This value determines the NixOS release from which the default
+    # settings for stateful data, like file locations and database versions
+    # on your system were taken. It‘s perfectly fine and recommended to leave
+    # this value at the release version of the first install of this system.
+    # Before changing this value read the documentation for this option
+    # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+    stateVersion = "23.05"; # Did you read the comment?
+  };
+
+  time = { timeZone = "Europe/Berlin"; };
 }

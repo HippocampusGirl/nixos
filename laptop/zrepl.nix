@@ -3,8 +3,9 @@
     enable = true;
     settings = {
       jobs = [{
+        name = "work";
         type = "snap";
-        filesystems = { "z/lea" = true; };
+        filesystems = { "z/work" = true; };
         snapshotting = {
           type = "periodic";
           interval = "5m";
