@@ -1,26 +1,29 @@
 {
   inputs = {
     impermanence = { url = "github:nix-community/impermanence"; };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
+    nix-ld = {
+      url = "github:Mic92/nix-ld";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-wsl = {
       url = "github:nix-community/nixos-wsl";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    vscode-server = { url = "github:nix-community/nixos-vscode-server"; };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { self, nixpkgs, nixos-wsl, impermanence, sops-nix, vscode-server }: {
+    { self, nixpkgs, impermanence, nix-ld, nixos-wsl, sops-nix }: {
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
+            nix-ld.nixosModules.nix-ld
             nixos-wsl.nixosModules.wsl
             sops-nix.nixosModules.sops
-            vscode-server.nixosModules.default
             ./laptop/configuration.nix
           ];
         };
