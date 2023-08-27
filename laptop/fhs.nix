@@ -1,20 +1,12 @@
-{ config, pkgs, ... }:
-let base = pkgs.appimageTools.defaultFhsEnvArgs;
-in {
+{ config, pkgs, ... }: {
   environment = {
     systemPackages = with pkgs;
       [
-        (buildFHSUserEnv (base // {
+        (buildFHSUserEnv {
           name = "fhs";
-          targetPkgs = pkgs: (base.targetPkgs pkgs) ++ [ micromamba pkg-config ];
-          profile = ''
-            set -e
-            eval "$(micromamba shell hook -s zsh)"
-            export MAMBA_ROOT_PREFIX="~/micromamba"
-            set +e
-          '';
+          targetPkgs = _: [ libGL micromamba xorg.libXxf86vm ];
           runScript = "zsh";
-        }))
+        })
       ];
   };
 }

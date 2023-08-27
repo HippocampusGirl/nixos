@@ -6,7 +6,18 @@
   imports = [ ./fhs.nix ./kernel.nix ./wsl.nix ./zrepl.nix ../users/lea.nix ];
 
   environment = {
-    systemPackages = with pkgs; [ git gnupg htop nixfmt tmux vim wget zsh ];
+    systemPackages = with pkgs; [
+      git
+      gnupg
+      htop
+      lsyncd
+      nixfmt
+      tmux
+      unzip
+      vim
+      wget
+      zsh
+    ];
   };
 
   i18n = { defaultLocale = "en_US.UTF-8"; };
@@ -35,14 +46,6 @@
     command-not-found.enable = true;
     nix-ld.dev.enable = true;
     zsh.enable = true;
-  };
-
-  services = {
-    # Automatically fix vscode server executable
-    vscode-server = {
-      enable = true;
-      installPath = "~/.vscode-server-insiders";
-    };
   };
 
   system = {
