@@ -35,7 +35,7 @@ let
           owner = "openzfs";
           repo = "zfs";
           rev = "zfs-${zfsVersion}";
-          sha256 = "sha256-eFRXZBXlYyK7/c2FaWwIOwXuzJ77J2GKXZoFeV4vbaE=";
+          sha256 = "sha256-7Kql1lbDxrrKXG9XjeDQAShpY5RUYHVTiMATzGNHvfo=";
         };
         patches = [];
       });
