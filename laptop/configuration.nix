@@ -30,8 +30,9 @@
   };
 
   programs = {
-    zsh.enable = true;
     command-not-found.enable = true;
+    nix-ld.dev.enable = true;
+    zsh.enable = true;
   };
 
   services = {
