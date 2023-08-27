@@ -11,6 +11,7 @@
       gnupg
       htop
       lsyncd
+      micromamba
       nixfmt
       tmux
       unzip
@@ -18,6 +19,21 @@
       wget
       zsh
     ];
+  };
+
+  fileSystems = {
+    "/lea" = {
+      device = "z/lea";
+      fsType = "zfs";
+    };
+    "/scratch" = {
+      device = "z/scratch";
+      fsType = "zfs";
+    };
+    "/work" = {
+      device = "z/work";
+      fsType = "zfs";
+    };
   };
 
   i18n = { defaultLocale = "en_US.UTF-8"; };
@@ -49,6 +65,14 @@
   };
 
   system = {
+    activationScripts = {
+      wslMount = {
+        text = ''
+          /mnt/c/Windows/system32/schtasks.exe /run /tn "Mount physical disk to WSL"
+        '';
+        deps = [ ];
+      };
+    };
     # Enable automatic security updates
     autoUpgrade = {
       enable = true;

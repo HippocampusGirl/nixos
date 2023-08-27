@@ -18,9 +18,9 @@ let
     version = "${kernelVersion}-microsoft-standard-WSL2";
     modDirVersion = version;
     configfile = pkgs.writeText "config" ''
-    ${builtins.readFile "${src}/Microsoft/config-wsl"}
+      ${builtins.readFile "${src}/Microsoft/config-wsl"}
     '';
-    
+
     allowImportFromDerivation = true;
   };
 
@@ -30,23 +30,33 @@ let
   baseKernelPackages = pkgs.linuxPackagesFor kernelConfig;
   kernel = baseKernelPackages.kernel;
   kernelPackages = baseKernelPackages.extend (self: super: {
-      zfs = super.zfs.overrideAttrs (old: {
-        name = "zfs-kernel-${zfsVersion}-${kernel.version}";
-        src = pkgs.fetchFromGitHub {
-          owner = "openzfs";
-          repo = "zfs";
-          rev = "zfs-${zfsVersion}";
-          sha256 = "sha256-7Kql1lbDxrrKXG9XjeDQAShpY5RUYHVTiMATzGNHvfo=";
-        };
-        patches = [];
-      });
+    zfs = super.zfs.overrideAttrs (old: {
+      name = "zfs-kernel-${zfsVersion}-${kernel.version}";
+      src = pkgs.fetchFromGitHub {
+        owner = "openzfs";
+        repo = "zfs";
+        rev = "zfs-${zfsVersion}";
+        sha256 = "sha256-7Kql1lbDxrrKXG9XjeDQAShpY5RUYHVTiMATzGNHvfo=";
+      };
+      patches = [ ];
     });
+  });
+
+  # Adapted from nixpkgs/nixos/modules/system/boot/kernel.nix
+  # which is not run because NixOS for WSL sets 
+  # config.boot.kernel.enable to false
+  kernelModulesConf = pkgs.writeText "nixos.conf" ''
+    ${lib.concatStringsSep "\n" config.boot.kernelModules}
+  '';
 in {
   boot = {
     inherit kernelPackages;
     modprobeConfig.enable = lib.mkForce true;
     supportedFilesystems = [ "zfs" ];
   };
+  # Create /etc/modules-load.d/nixos.conf, which is read by
+  # systemd-modules-load.service to load required kernel modules.
+  environment.etc = { "modules-load.d/nixos.conf".source = kernelModulesConf; };
   system = {
     build = with kernelPackages; { inherit kernel; };
     modulesTree = with kernelPackages; [ kernel zfs ];
