@@ -3,13 +3,15 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }: {
-  imports = [ ./fhs.nix ./kernel.nix ./wsl.nix ./zrepl.nix ../users/lea.nix ];
+  imports = [ ./fhs.nix ./kernel.nix ./vscode.nix ./wsl.nix ./zrepl.nix ../users/lea.nix ];
 
   environment = {
     systemPackages = with pkgs; [
+      datalad
       git
       gnupg
       htop
+      libGL
       lsyncd
       micromamba
       nixfmt
@@ -17,6 +19,7 @@
       unzip
       vim
       wget
+      xorg.libXxf86vm
       zsh
     ];
   };
@@ -60,10 +63,10 @@
 
   programs = {
     command-not-found.enable = true;
-    nix-ld.dev.enable = true;
+    nix-ld.enable = true;
     zsh.enable = true;
   };
-
+  
   system = {
     activationScripts = {
       wslMount = {

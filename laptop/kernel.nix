@@ -58,6 +58,18 @@ in {
   # systemd-modules-load.service to load required kernel modules.
   environment.etc = { "modules-load.d/nixos.conf".source = kernelModulesConf; };
   system = {
+    activationScripts = {
+      # Copy the kernel to where it is expected by the WSL configuration
+      copyKernel = let
+        kernelBuildPath = "${config.boot.kernelPackages.kernel}/"
+          + "${pkgs.stdenv.hostPlatform.linux-kernel.target}";
+        kernelTargetPath = "/mnt/c/Users/Lea/WSL/"
+          + "${pkgs.stdenv.hostPlatform.linux-kernel.target}";
+      in ''
+        mv -v -f ${kernelTargetPath} ${kernelTargetPath}1
+        cp -v ${kernelBuildPath} ${kernelTargetPath}
+      '';
+    };
     build = with kernelPackages; { inherit kernel; };
     modulesTree = with kernelPackages; [ kernel zfs ];
     systemBuilderCommands = ''
