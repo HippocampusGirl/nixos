@@ -3,7 +3,14 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }: {
-  imports = [ ./fhs.nix ./kernel.nix ./vscode.nix ./wsl.nix ./zrepl.nix ../users/lea.nix ];
+  imports = [
+    ./fhs.nix
+    ./kernel.nix
+    ./vscode.nix
+    ./wsl.nix
+    ./zrepl.nix
+    ../users/lea.nix
+  ];
 
   environment = {
     systemPackages = with pkgs; [
@@ -11,15 +18,16 @@
       git
       gnupg
       htop
-      libGL
+      killall
       lsyncd
       micromamba
       nixfmt
+      pre-commit
+      python311
       tmux
       unzip
       vim
       wget
-      xorg.libXxf86vm
       zsh
     ];
   };
@@ -37,6 +45,12 @@
       device = "z/work";
       fsType = "zfs";
     };
+  };
+
+  hardware = {
+    opengl.enable = true;
+    opengl.driSupport = true;
+    opengl.driSupport32Bit = true;
   };
 
   i18n = { defaultLocale = "en_US.UTF-8"; };
@@ -66,7 +80,7 @@
     nix-ld.enable = true;
     zsh.enable = true;
   };
-  
+
   system = {
     activationScripts = {
       wslMount = {
@@ -92,4 +106,11 @@
   };
 
   time = { timeZone = "Europe/Berlin"; };
+
+  virtualisation.docker = {
+    autoPrune.enable = true;
+    enableNvidia = true;
+    extraOptions = "--storage-opt zfs.fsname=z/docker";
+    storageDriver = "zfs";
+  };
 }

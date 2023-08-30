@@ -30,6 +30,9 @@ let
   baseKernelPackages = pkgs.linuxPackagesFor kernelConfig;
   kernel = baseKernelPackages.kernel;
   kernelPackages = baseKernelPackages.extend (self: super: {
+    kernel = super.kernel.overrideAttrs (old: {
+      passthru = old.passthru // { features = { ia32Emulation = true; }; };
+    });
     zfs = super.zfs.overrideAttrs (old: {
       name = "zfs-kernel-${zfsVersion}-${kernel.version}";
       src = pkgs.fetchFromGitHub {
