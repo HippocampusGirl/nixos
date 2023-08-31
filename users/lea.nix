@@ -3,7 +3,8 @@
     isNormalUser = true;
     uid = 1000;
     extraGroups = [
-      "wheel" # Enable sudo.
+      "docker"  # Enable docker
+      "wheel" # Enable sudo
     ];
 
     home = "/lea";
