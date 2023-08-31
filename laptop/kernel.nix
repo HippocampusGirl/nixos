@@ -31,7 +31,7 @@ let
   kernel = baseKernelPackages.kernel;
   kernelPackages = baseKernelPackages.extend (self: super: {
     kernel = super.kernel.overrideAttrs (old: {
-      passthru = old.passthru // { features = { ia32Emulation = true; }; };
+      passthru = old.passthru // { inherit (pkgs.linux_6_1) features; };
     });
     zfs = super.zfs.overrideAttrs (old: {
       name = "zfs-kernel-${zfsVersion}-${kernel.version}";
