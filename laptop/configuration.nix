@@ -25,7 +25,7 @@
       nix-index
       pre-commit
       python311
-      ripgrep-all
+      # ripgrep-all
       tmux
       unzip
       vim
