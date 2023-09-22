@@ -22,8 +22,10 @@
       lsyncd
       micromamba
       nixfmt
+      nix-index
       pre-commit
       python311
+      ripgrep-all
       tmux
       unzip
       vim
