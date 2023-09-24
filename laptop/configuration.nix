@@ -6,6 +6,7 @@
   imports = [
     ./fhs.nix
     ./kernel.nix
+    ./tex.nix
     ./vscode.nix
     ./wsl.nix
     ./zrepl.nix
