@@ -56,7 +56,10 @@
     opengl.driSupport32Bit = true;
   };
 
-  i18n = { defaultLocale = "en_US.UTF-8"; };
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = { LC_ALL = "de_DE.UTF-8"; };
+  };
 
   networking = {
     hostId = "1ea1eaaa";
