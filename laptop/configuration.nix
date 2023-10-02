@@ -81,8 +81,14 @@
     settings = { auto-optimise-store = true; };
   };
 
+  nixpkgs.config.allowUnfree = true;
+
   programs = {
     command-not-found.enable = true;
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
     nix-ld.enable = true;
     zsh.enable = true;
   };
