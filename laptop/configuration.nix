@@ -69,16 +69,8 @@
   nix = {
     # Run garbage collection when disk is almost full
     extraOptions = ''
-      min-free = ${toString (512 * 1024 * 1024)}
       experimental-features = nix-command flakes impure-derivations
     '';
-    # Run garbage collection on a schedule
-    gc = {
-      automatic = true;
-      dates = "Monday 01:00 UTC";
-      options = "--delete-older-than 7d";
-    };
-    settings = { auto-optimise-store = true; };
   };
 
   nixpkgs.config.allowUnfree = true;
