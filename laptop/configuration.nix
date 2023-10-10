@@ -16,9 +16,7 @@
   environment = {
     systemPackages = with pkgs; [
       datalad
-      git
       gnupg
-      htop
       killall
       lsyncd
       micromamba
@@ -27,9 +25,7 @@
       pre-commit
       python311
       # ripgrep-all
-      tmux
       unzip
-      vim
       wget
       zsh
     ];
@@ -58,7 +54,8 @@
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
-    supportedLocales = [ "C.UTF-8/UTF-8" "en_US.UTF-8/UTF-8" "de_DE.UTF-8/UTF-8" ];
+    supportedLocales =
+      [ "C.UTF-8/UTF-8" "en_US.UTF-8/UTF-8" "de_DE.UTF-8/UTF-8" ];
   };
 
   networking = {
@@ -81,7 +78,22 @@
       enable = true;
       nix-direnv.enable = true;
     };
+    git.enable = true;
+    htop.enable = true;
+    less.enable = true;
+    neovim = {
+      enable = true;
+      defaultEditor = true;
+      viAlias = true;
+      vimAlias = true;
+    };
     nix-ld.enable = true;
+    singularity = {
+      enable = true;
+      enableFakeroot = true;
+      enableSuid = true;
+    };
+    tmux.enable = true;
     zsh.enable = true;
   };
 
