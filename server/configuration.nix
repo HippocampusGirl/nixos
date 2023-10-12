@@ -2,15 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
-let
-in {
+{ config, pkgs, lib, ... }: {
   imports = [
     ./docker-registry.nix
     ./garm.nix
     # Include the results of the hardware scan
     ./hardware-configuration.nix
     ./nginx.nix
+    ./password.nix
     ./tailscale.nix
     ../users/lea.nix
   ];
@@ -23,7 +22,10 @@ in {
     };
     supportedFilesystems = [ "zfs" ];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
-    kernel.sysctl = { "kernel.keys.maxkeys" = 65536; };
+    kernel.sysctl = {
+      "vm.dirty_background_ratio " = 5;
+      "vm.dirty_ratio" = 10;
+    };
     zfs = {
       devNodes = "/dev/disk/by-path";
       enableUnstable = true;
@@ -176,8 +178,7 @@ in {
   users = {
     # Do not allow passwords to be changed
     mutableUsers = false;
-    extraUsers.root = {
-      passwordFile = config.sops.secrets."users/root/hashed-password".path;
+    users.root = {
       subUidRanges = lib.mkForce [{
         startUid = 10000000;
         count = 1000000;
@@ -189,7 +190,19 @@ in {
     };
   };
 
-  virtualisation = { lxc = { enable = true; }; };
+  virtualisation = {
+    lxc = {
+      enable = true;
+      lxcfs = { enable = true; };
+    };
+    lxd = {
+      enable = true;
+
+      # This turns on a few sysctl settings that the LXD documentation recommends
+      # for running in production.
+      recommendedSysctlSettings = true;
+    };
+  };
 
   zramSwap = {
     # Enable memory compression

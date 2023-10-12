@@ -19,5 +19,17 @@
       github."HippocampusGirl".tokenFile =
         config.sops.secrets."garm/github/hippocampusgirl/token".path;
     };
+    nginx = {
+      virtualHosts = {
+        "garm.lea.science" = {
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://localhost:13464";
+            proxyWebsockets = true;
+          };
+        };
+      };
+    };
   };
 }

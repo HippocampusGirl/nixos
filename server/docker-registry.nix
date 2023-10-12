@@ -1,4 +1,24 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }:
+let
+  nginxDockerRegistryExtraConfig = ''
+    add_header Docker-Distribution-Api-Version registry/2.0;
+    proxy_buffering off;
+    proxy_request_buffering off;
+    proxy_read_timeout 900;
+    proxy_connect_timeout 600;
+    proxy_send_timeout 600;
+  '';
+  nginxDockerRegistryVirtualHost = {
+    forceSSL = true;
+    enableACME = true;
+    locations = {
+      "/v2" = {
+        proxyPass = "http://localhost:13450";
+        extraConfig = nginxDockerRegistryExtraConfig;
+      };
+    };
+  };
+in {
   imports = [ ../packages/docker-auth.nix ];
   services = {
     dockerAuth = {
@@ -47,6 +67,21 @@
           issuer = config.services.dockerAuth.token.issuer;
           rootcertbundle = config.services.dockerAuth.token.certificate;
         };
+      };
+    };
+    nginx = {
+      clientMaxBodySize = "0"; # Allow large uploads
+      virtualHosts = {
+        "cr.lea.science" = lib.mkMerge [
+          nginxDockerRegistryVirtualHost
+          {
+            locations = {
+              "/auth" = { proxyPass = "http://localhost:13451/auth"; };
+            };
+          }
+        ];
+        "gwas.science" = nginxDockerRegistryVirtualHost;
+        "fmri.science" = nginxDockerRegistryVirtualHost;
       };
     };
   };
