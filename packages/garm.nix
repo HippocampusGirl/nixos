@@ -4,17 +4,15 @@ let
   cfg = config.services.garm;
   garm = pkgs.buildGo120Module rec {
     pname = "garm";
-    version = "v0.1.0";
+    version = "v0.1.3";
     src = pkgs.fetchFromGitHub {
       owner = "cloudbase";
       repo = pname;
       rev = version;
-      sha256 =
-        "sha256-GFUKZvMSqtG/3O8lK58mJZaWrV+qN2Ta4QU26qtREdc="; # lib.fakeSha256
+      sha256 = "sha256-i32zyXRFZVz9dlrPHkh7w7rruPlH3Rs1vjyCXd0lzKc=";
     };
     patches = [
       ./fix-garm-cloudconfig-selinux.patch
-      ./add-garm-extra-packages-option.patch
     ];
     vendorHash = null;
   };

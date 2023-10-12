@@ -1,13 +1,13 @@
-diff --git a/cloudconfig/templates.go b/cloudconfig/templates.go
-index e088d2c..90c2dc7 100644
---- a/cloudconfig/templates.go
-+++ b/cloudconfig/templates.go
-@@ -129,7 +129,7 @@ sudo -u {{ .RunnerUsername }} -- ./config.sh --unattended --url "{{ .RepoURL }}"
- sendStatus "installing runner service"
- ./svc.sh install {{ .RunnerUsername }} || fail "failed to install service"
+diff --git a/vendor/github.com/cloudbase/garm-provider-common/cloudconfig/templates.go b/vendor/github.com/cloudbase/garm-provider-common/cloudconfig/templates.go
+index f813e5f..adee5cd 100644
+--- a/vendor/github.com/cloudbase/garm-provider-common/cloudconfig/templates.go
++++ b/vendor/github.com/cloudbase/garm-provider-common/cloudconfig/templates.go
+@@ -194,7 +194,7 @@ sendStatus "installing runner service"
+ sudo ./svc.sh install {{ .RunnerUsername }} || fail "failed to install service"
+ {{- end}}
  
 -if [ -e "/sys/fs/selinux" ];then
 +if [ -d "/sys/fs/selinux" ] && [ -n "$(ls -A /sys/fs/selinux)" ];then
-     sudo chcon -h user_u:object_r:bin_t /home/runner/ || fail "failed to change selinux context"
-     sudo chcon -R -h {{ .RunnerUsername }}:object_r:bin_t /home/runner/* || fail "failed to change selinux context"
+ 	sudo chcon -h user_u:object_r:bin_t /home/runner/ || fail "failed to change selinux context"
+ 	sudo chcon -R -h {{ .RunnerUsername }}:object_r:bin_t /home/runner/* || fail "failed to change selinux context"
  fi
