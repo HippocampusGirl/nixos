@@ -1,0 +1,11 @@
+keys:
+  - &lea age13wxq2zrp8ju3exrww6jx5f3gk8pj6224sca5g9j3u66kc4p3nyesz7ynkk
+  - &laptop age1780tq43m9y9luxaf9advwea7tgeq5rmv06wk6jyvkwdyv4c94yzst6038s
+  - &server age1tdru2qv9zyq4u8naxcr7f37yqscv8vp9s4mgd34k9a4chgs9qfasvfzp08
+creation_rules:
+  - path_regex: ^secrets.yaml$
+    key_groups:
+      - age:
+          - *lea
+          - *laptop
+          - *server
