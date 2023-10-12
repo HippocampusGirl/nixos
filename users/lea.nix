@@ -1,6 +1,8 @@
 { config, pkgs, ... }: {
   users.extraUsers.lea = {
     isNormalUser = true;
+    passwordFile = config.sops.secrets."users/lea/hashed-password".path;
+    
     uid = 1000;
     extraGroups = [
       "docker"  # Enable docker
@@ -12,7 +14,6 @@
 
     shell = pkgs.zsh;
 
-    # passwordFile = config.sops.secrets."users/lea/hashed-password".path;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETA8z05h0cx/Zma9WRKNcG+ckBJ1k35dGYLnAew1BXZ"
     ];
