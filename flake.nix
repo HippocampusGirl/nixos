@@ -22,24 +22,61 @@
   };
   outputs = { self, nixpkgs, home-manager, impermanence, nixos-generators
     , nixos-wsl, sops-nix, vscode-server }: {
-      nixosConfigurations = {
-        laptop = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
+      nixosModules = {
+        default = { config, ... }: {
+          imports = [
+            ./modules/command-not-found.nix
+            ./modules/direnv.nix
+            ./modules/git.nix
+            ./modules/htop.nix
+            ./modules/i18n.nix
+            ./modules/less.nix
+            ./modules/neovim.nix
+            ./modules/singularity.nix
+            ./modules/tailscale.nix
+            ./modules/tmux.nix
+            ./modules/zsh.nix
+          ];
+        };
+        home = { config, ... }: {
+          imports = [
+            self.nixosModules.default
+            ./home/configuration.nix
+            impermanence.nixosModules.impermanence
+            sops-nix.nixosModules.sops
+          ];
+        };
+        laptop = { config, ... }: {
+          imports = [
+            self.nixosModules.default
+            ./laptop/configuration.nix
             home-manager.nixosModules.home-manager
             nixos-wsl.nixosModules.wsl
             sops-nix.nixosModules.sops
             vscode-server.nixosModules.default
-            ./laptop/configuration.nix
           ];
+        };
+        server = { config, ... }: {
+          imports = [
+            self.nixosModules.default
+            ./server/configuration.nix
+            impermanence.nixosModules.impermanence
+            sops-nix.nixosModules.sops
+          ];
+        };
+      };
+      nixosConfigurations = {
+        home = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [ self.nixosModules.home ];
+        };
+        laptop = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [ self.nixosModules.laptop ];
         };
         server = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [
-            impermanence.nixosModules.impermanence
-            sops-nix.nixosModules.sops
-            ./server/configuration.nix
-          ];
+          modules = [ self.nixosModules.server ];
         };
       };
       packages.x86_64-linux = {

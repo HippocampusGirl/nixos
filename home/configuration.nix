@@ -2,14 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }: {
+{ lib, config, pkgs, ... }:
+let
+in {
   imports = [
-    ./docker-registry.nix
-    ./garm.nix
     # Include the results of the hardware scan
     ./hardware-configuration.nix
-    ./nginx.nix
-    ./password.nix
     ../modules/tailscale.nix
     ../users/lea.nix
   ];
@@ -20,13 +18,9 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
-    kernel.sysctl = {
-      "vm.dirty_background_ratio " = 5;
-      "vm.dirty_ratio" = 10;
-    };
     supportedFilesystems = [ "exfat" "zfs" ];
-    swraid.enable = false;
+    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    kernel.sysctl = { "kernel.keys.maxkeys" = 65536; };
     zfs = {
       devNodes = "/dev/disk/by-path";
       enableUnstable = true;
@@ -68,14 +62,14 @@
   i18n = { defaultLocale = "en_US.UTF-8"; };
 
   networking = {
-    hostName = "server";
-    hostId = "13413401";
+    hostName = "home";
+    hostId = "13413403";
     useDHCP = true;
 
     firewall = {
       enable = true;
       allowPing = false;
-      allowedTCPPorts = [ 80 443 ] ++ config.services.openssh.ports;
+      allowedTCPPorts = config.services.openssh.ports;
       allowedUDPPorts = [ config.services.tailscale.port ];
       checkReversePath = "loose";
       trustedInterfaces = [ config.services.tailscale.interfaceName ];
@@ -103,7 +97,10 @@
     command-not-found.enable = true;
   };
 
-  time = { timeZone = "Europe/Berlin"; };
+  time = {
+    # Set your time zone
+    timeZone = "Europe/Berlin";
+  };
 
   security = {
     acme = {
@@ -114,26 +111,15 @@
 
   services = {
     fail2ban.enable = true;
-
-    # Adapted from https://xeiaso.net/blog/paranoid-nixos-2021-07-18
-    openssh = {
+    tailscale = {
       enable = true;
-      ports = [ 13422 ];
-      allowSFTP = false; # We don't need SFTP
-      settings = {
-        PasswordAuthentication = false;
-        KbdInteractiveAuthentication = false;
-      };
-      extraConfig = ''
-        AllowTcpForwarding yes
-        X11Forwarding no
-        AllowAgentForwarding no
-        AllowStreamLocalForwarding no
-        AuthenticationMethods publickey
-      '';
+      port = 13475;
     };
-
+    tailscale-cert.enable = true;
     usbguard.enable = true;
+    services.zrepl = {
+        enable = true;
+    };
   };
 
   sops = {
@@ -147,17 +133,6 @@
     # Specification of the secrets/
     secrets."users/root/hashed-password" = { neededForUsers = true; };
     secrets."users/lea/hashed-password" = { neededForUsers = true; };
-    secrets."garm/jwt_auth/secret" = { };
-    secrets."garm/database/passphrase" = { };
-    secrets."garm/github/hippocampusgirl/token" = { };
-    secrets."docker_auth/users/lea/hashed-password" = { };
-    secrets."docker_auth/users/garm/hashed-password" = { };
-    secrets."docker_auth/certificate" = { mode = "0644"; };
-    secrets."docker_auth/key" = {
-      mode = "0440";
-      owner = config.users.users.docker-auth.name;
-      group = config.users.users.docker-auth.group;
-    };
   };
 
   system = {
@@ -179,7 +154,8 @@
   users = {
     # Do not allow passwords to be changed
     mutableUsers = false;
-    users.root = {
+    extraUsers.root = {
+      passwordFile = config.sops.secrets."users/root/hashed-password".path;
       subUidRanges = lib.mkForce [{
         startUid = 10000000;
         count = 1000000;
@@ -191,19 +167,7 @@
     };
   };
 
-  virtualisation = {
-    lxc = {
-      enable = true;
-      lxcfs = { enable = true; };
-    };
-    lxd = {
-      enable = true;
-
-      # This turns on a few sysctl settings that the LXD documentation recommends
-      # for running in production.
-      recommendedSysctlSettings = true;
-    };
-  };
+  virtualisation = { lxc = { enable = true; }; };
 
   zramSwap = {
     # Enable memory compression
