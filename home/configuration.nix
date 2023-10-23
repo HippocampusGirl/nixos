@@ -34,42 +34,16 @@ in {
     nixos.enable = false;
   };
 
-  environment.persistence."/persist" = {
-    directories = [
-      "/var/lib" # System service persistent data
-      "/var/log" # The place that journald logs to
-    ];
-    files = [
-      "/etc/ssh/ssh_host_rsa_key"
-      "/etc/ssh/ssh_host_rsa_key.pub"
-      "/etc/ssh/ssh_host_ed25519_key"
-      "/etc/ssh/ssh_host_ed25519_key.pub"
-      "/etc/machine-id"
-    ];
-  };
-
   networking = {
     hostName = "home";
     hostId = "13413403";
     useDHCP = true;
 
-    firewall = {
-      enable = true;
-      allowPing = false;
-      allowedTCPPorts = config.services.openssh.ports;
-      allowedUDPPorts = [ config.services.tailscale.port ];
-      checkReversePath = "loose";
-      trustedInterfaces = [ config.services.tailscale.interfaceName ];
-    };
   };
 
   time = { timeZone = "Europe/Berlin"; };
 
-  services = {
-    fail2ban.enable = true;
-    usbguard.enable = true;
-    services.zrepl = { enable = true; };
-  };
+  services = { services.zrepl = { enable = true; }; };
 
   sops = {
     defaultSopsFile = ../secrets.yaml;
@@ -80,7 +54,6 @@ in {
     age.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
     gnupg.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_rsa_key" ];
     # Specification of the secrets/
-    secrets."users/root/hashed-password" = { neededForUsers = true; };
     secrets."users/lea/hashed-password" = { neededForUsers = true; };
   };
 
@@ -98,22 +71,6 @@ in {
     # Before changing this value read the documentation for this option
     # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
     stateVersion = "23.05"; # Did you read the comment?
-  };
-
-  users = {
-    # Do not allow passwords to be changed
-    mutableUsers = false;
-    extraUsers.root = {
-      passwordFile = config.sops.secrets."users/root/hashed-password".path;
-      subUidRanges = lib.mkForce [{
-        startUid = 10000000;
-        count = 1000000;
-      }];
-      subGidRanges = lib.mkForce [{
-        startGid = 10000000;
-        count = 1000000;
-      }];
-    };
   };
 }
 

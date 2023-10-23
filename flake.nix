@@ -47,8 +47,11 @@
         server = { config, ... }: {
           imports = [
             self.nixosModules.default
+            ./modules/impermanence.nix
             ./modules/lxd.nix
+            ./modules/paranoid.nix
             ./modules/tailscale.nix
+            ./users/root.nix
             impermanence.nixosModules.impermanence
             sops-nix.nixosModules.sops
           ];

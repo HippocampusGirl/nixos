@@ -38,62 +38,13 @@
     nixos.enable = false;
   };
 
-  environment.persistence."/persist" = {
-    directories = [
-      "/var/lib" # System service persistent data
-      "/var/log" # The place that journald logs to
-    ];
-    files = [
-      "/etc/ssh/ssh_host_rsa_key"
-      "/etc/ssh/ssh_host_rsa_key.pub"
-      "/etc/ssh/ssh_host_ed25519_key"
-      "/etc/ssh/ssh_host_ed25519_key.pub"
-      "/etc/machine-id"
-    ];
-  };
-
-  i18n = { defaultLocale = "en_US.UTF-8"; };
-
   networking = {
     hostName = "server";
     hostId = "13413401";
     useDHCP = true;
-
-    firewall = {
-      enable = true;
-      allowPing = false;
-      allowedTCPPorts = [ 80 443 ] ++ config.services.openssh.ports;
-      allowedUDPPorts = [ config.services.tailscale.port ];
-      checkReversePath = "loose";
-      trustedInterfaces = [ config.services.tailscale.interfaceName ];
-    };
   };
 
   time = { timeZone = "Europe/Berlin"; };
-
-  services = {
-    fail2ban.enable = true;
-
-    # Adapted from https://xeiaso.net/blog/paranoid-nixos-2021-07-18
-    openssh = {
-      enable = true;
-      ports = [ 13422 ];
-      allowSFTP = false; # We don't need SFTP
-      settings = {
-        PasswordAuthentication = false;
-        KbdInteractiveAuthentication = false;
-      };
-      extraConfig = ''
-        AllowTcpForwarding yes
-        X11Forwarding no
-        AllowAgentForwarding no
-        AllowStreamLocalForwarding no
-        AuthenticationMethods publickey
-      '';
-    };
-
-    usbguard.enable = true;
-  };
 
   sops = {
     defaultSopsFile = ../secrets.yaml;
@@ -133,21 +84,6 @@
     # Before changing this value read the documentation for this option
     # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
     stateVersion = "23.05"; # Did you read the comment?
-  };
-
-  users = {
-    # Do not allow passwords to be changed
-    mutableUsers = false;
-    users.root = {
-      subUidRanges = lib.mkForce [{
-        startUid = 10000000;
-        count = 1000000;
-      }];
-      subGidRanges = lib.mkForce [{
-        startGid = 10000000;
-        count = 1000000;
-      }];
-    };
   };
 }
 
