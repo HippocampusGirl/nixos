@@ -18,7 +18,6 @@ in {
     };
     supportedFilesystems = [ "exfat" "zfs" ];
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
-    kernel.sysctl = { "kernel.keys.maxkeys" = 65536; };
     zfs = {
       devNodes = "/dev/disk/by-path";
       enableUnstable = true;
@@ -41,7 +40,7 @@ in {
 
   time = { timeZone = "Europe/Berlin"; };
 
-  services = { services.zrepl = { enable = true; }; };
+  services = { zrepl = { enable = true; }; };
 
   sops = {
     defaultSopsFile = ../secrets.yaml;

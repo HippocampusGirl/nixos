@@ -1,4 +1,5 @@
-{ # Adapted from https://xeiaso.net/blog/paranoid-nixos-2021-07-18
+{ config, ... }: {
+  # Adapted from https://xeiaso.net/blog/paranoid-nixos-2021-07-18
   networking = {
     firewall = {
       enable = true;

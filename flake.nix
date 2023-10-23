@@ -37,6 +37,7 @@
             ./modules/nix-daemon.nix
             ./modules/nix-ld.nix
             ./modules/packages.nix
+            ./modules/powertop.nix
             ./modules/singularity.nix
             ./modules/tmux.nix
             ./modules/zram.nix
@@ -71,7 +72,7 @@
       nixosConfigurations = {
         home = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ self.nixosModules.home ./home/configuration.nix ];
+          modules = [ self.nixosModules.server ./home/configuration.nix ];
         };
         laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
