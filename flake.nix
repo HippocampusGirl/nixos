@@ -62,7 +62,7 @@
           imports = [
             self.nixosModules.default
             ./modules/tex.nix
-            ./laptop/configuration.nix
+            ./machines/laptop/configuration.nix
             home-manager.nixosModules.home-manager
             nixos-wsl.nixosModules.wsl
             sops-nix.nixosModules.sops
@@ -73,7 +73,7 @@
       nixosConfigurations = {
         home = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ self.nixosModules.server ./home/configuration.nix ];
+          modules = [ self.nixosModules.server ./machines/home/configuration.nix ];
         };
         laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -81,13 +81,13 @@
         };
         server = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ self.nixosModules.server ./server/configuration.nix ];
+          modules = [ self.nixosModules.server ./machines/server/configuration.nix ];
         };
       };
       packages.x86_64-linux = {
         installer = nixos-generators.nixosGenerate {
           system = "x86_64-linux";
-          modules = [ ./installer/configuration.nix ./modules/zfs.nix ];
+          modules = [ ./machines/installer/configuration.nix ./modules/zfs.nix ];
           format = "install-iso";
         };
       };
