@@ -47,19 +47,6 @@ in {
       "/etc/machine-id"
     ];
   };
-  environment.shellAliases = { ll = "ls -lah"; };
-  environment.systemPackages = with pkgs; [
-    dig
-    git
-    htop
-    jq
-    lsof
-    tailscale
-    vim
-    wget
-  ];
-
-  i18n = { defaultLocale = "en_US.UTF-8"; };
 
   networking = {
     hostName = "home";
@@ -76,50 +63,12 @@ in {
     };
   };
 
-  nix = {
-    # Allow use by wheel group
-    settings.allowed-users = [ "@wheel" ];
-    # Enable garbage collection every week
-    gc = {
-      automatic = true;
-      dates = "Monday 01:00 UTC";
-      options = "--delete-older-than 7d";
-    };
-    # Run garbage collection when disk is almost full
-    extraOptions = ''
-      min-free = ${toString (512 * 1024 * 1024)}
-      experimental-features = nix-command flakes impure-derivations
-    '';
-  };
-
-  programs = {
-    zsh.enable = true;
-    command-not-found.enable = true;
-  };
-
-  time = {
-    # Set your time zone
-    timeZone = "Europe/Berlin";
-  };
-
-  security = {
-    acme = {
-      acceptTerms = true;
-      defaults.email = "lea@lea.science";
-    };
-  };
+  time = { timeZone = "Europe/Berlin"; };
 
   services = {
     fail2ban.enable = true;
-    tailscale = {
-      enable = true;
-      port = 13475;
-    };
-    tailscale-cert.enable = true;
     usbguard.enable = true;
-    services.zrepl = {
-        enable = true;
-    };
+    services.zrepl = { enable = true; };
   };
 
   sops = {
@@ -165,14 +114,6 @@ in {
         count = 1000000;
       }];
     };
-  };
-
-  virtualisation = { lxc = { enable = true; }; };
-
-  zramSwap = {
-    # Enable memory compression
-    enable = true;
-    memoryPercent = 150;
   };
 }
 

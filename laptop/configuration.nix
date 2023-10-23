@@ -4,32 +4,11 @@
 
 { config, pkgs, ... }: {
   imports = [
-    ./fhs.nix
     ./kernel.nix
-    ./tex.nix
     ./vscode.nix
     ./wsl.nix
     ./zrepl.nix
-    ../users/lea.nix
   ];
-
-  environment = {
-    systemPackages = with pkgs; [
-      datalad
-      gnupg
-      killall
-      lsyncd
-      micromamba
-      nixfmt
-      nix-index
-      pre-commit
-      python311
-      # ripgrep-all
-      unzip
-      wget
-      zsh
-    ];
-  };
 
   fileSystems = {
     "/lea" = {
@@ -52,49 +31,24 @@
     opengl.driSupport32Bit = true;
   };
 
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    supportedLocales =
-      [ "C.UTF-8/UTF-8" "en_US.UTF-8/UTF-8" "de_DE.UTF-8/UTF-8" ];
-  };
-
   networking = {
-    hostId = "1ea1eaaa";
+    hostId = "13413404";
     hostName = "laptop-nixos";
-  };
-
-  nix = {
-    # Run garbage collection when disk is almost full
-    extraOptions = ''
-      experimental-features = nix-command flakes impure-derivations
-    '';
   };
 
   nixpkgs.config.allowUnfree = true;
 
-  programs = {
-    command-not-found.enable = true;
-    direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-    };
-    git.enable = true;
-    htop.enable = true;
-    less.enable = true;
-    neovim = {
-      enable = true;
-      defaultEditor = true;
-      viAlias = true;
-      vimAlias = true;
-    };
-    nix-ld.enable = true;
-    singularity = {
-      enable = true;
-      enableFakeroot = true;
-      enableSuid = true;
-    };
-    tmux.enable = true;
-    zsh.enable = true;
+  sops = {
+    defaultSopsFile = ../secrets.yaml;
+    # If either of these paths does not exist immediately after boot, then 
+    # sops-nix will fail and not decrypt any secrets. That means that the
+    # the secrets will not be available when the users are generated. 
+    # This can lead to login issues
+    age.sshKeyPaths = [ "/mnt/c/Users/Lea/WSL/ssh_host_ed25519_key" ];
+    gnupg.sshKeyPaths = [ "/mnt/c/Users/Lea/WSL/ssh_host_rsa_key" ];
+    # Specification of the secrets/
+    secrets."users/root/hashed-password" = { neededForUsers = true; };
+    secrets."users/lea/hashed-password" = { neededForUsers = true; };
   };
 
   system = {
@@ -105,12 +59,6 @@
         '';
         deps = [ ];
       };
-    };
-    # Enable automatic security updates
-    autoUpgrade = {
-      enable = true;
-      allowReboot = false;
-      dates = "daily UTC";
     };
     # This value determines the NixOS release from which the default
     # settings for stateful data, like file locations and database versions

@@ -10,8 +10,6 @@
     ./hardware-configuration.nix
     ./nginx.nix
     ./password.nix
-    ../modules/tailscale.nix
-    ../users/lea.nix
   ];
 
   boot = {
@@ -53,17 +51,6 @@
       "/etc/machine-id"
     ];
   };
-  environment.shellAliases = { ll = "ls -lah"; };
-  environment.systemPackages = with pkgs; [
-    dig
-    git
-    htop
-    jq
-    lsof
-    tailscale
-    vim
-    wget
-  ];
 
   i18n = { defaultLocale = "en_US.UTF-8"; };
 
@@ -82,35 +69,7 @@
     };
   };
 
-  nix = {
-    # Allow use by wheel group
-    settings.allowed-users = [ "@wheel" ];
-    # Enable garbage collection every week
-    gc = {
-      automatic = true;
-      dates = "Monday 01:00 UTC";
-      options = "--delete-older-than 7d";
-    };
-    # Run garbage collection when disk is almost full
-    extraOptions = ''
-      min-free = ${toString (512 * 1024 * 1024)}
-      experimental-features = nix-command flakes impure-derivations
-    '';
-  };
-
-  programs = {
-    zsh.enable = true;
-    command-not-found.enable = true;
-  };
-
   time = { timeZone = "Europe/Berlin"; };
-
-  security = {
-    acme = {
-      acceptTerms = true;
-      defaults.email = "lea@lea.science";
-    };
-  };
 
   services = {
     fail2ban.enable = true;
@@ -189,26 +148,6 @@
         count = 1000000;
       }];
     };
-  };
-
-  virtualisation = {
-    lxc = {
-      enable = true;
-      lxcfs = { enable = true; };
-    };
-    lxd = {
-      enable = true;
-
-      # This turns on a few sysctl settings that the LXD documentation recommends
-      # for running in production.
-      recommendedSysctlSettings = true;
-    };
-  };
-
-  zramSwap = {
-    # Enable memory compression
-    enable = true;
-    memoryPercent = 150;
   };
 }
 

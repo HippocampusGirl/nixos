@@ -25,8 +25,8 @@ let
   };
 
   # The "z" pool was created with a development version of openzfs
-  # so we are stuck on that until 2.2.0 is released
-  zfsVersion = "2.2.0-rc3";
+  # so we are stuck on that until 2.2.0 is released in nixpkgs
+  zfsVersion = "2.2.0";
   baseKernelPackages = pkgs.linuxPackagesFor kernelConfig;
   kernel = baseKernelPackages.kernel;
   kernelPackages = baseKernelPackages.extend (self: super: {
@@ -39,7 +39,7 @@ let
         owner = "openzfs";
         repo = "zfs";
         rev = "zfs-${zfsVersion}";
-        sha256 = "sha256-7Kql1lbDxrrKXG9XjeDQAShpY5RUYHVTiMATzGNHvfo=";
+        sha256 = "sha256-s1sdXSrLu6uSOmjprbUa4cFsE2Vj7JX5i75e4vRnlvg=";
       };
       patches = [ ];
     });
@@ -55,7 +55,7 @@ in {
   boot = {
     inherit kernelPackages;
     modprobeConfig.enable = lib.mkForce true;
-    supportedFilesystems = [ "zfs" ];
+    supportedFilesystems = [ "exfat" "zfs" ];
   };
   # Create /etc/modules-load.d/nixos.conf, which is read by
   # systemd-modules-load.service to load required kernel modules.
