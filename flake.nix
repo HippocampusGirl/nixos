@@ -52,6 +52,7 @@
             ./modules/lxd.nix
             ./modules/paranoid.nix
             ./modules/tailscale.nix
+            ./modules/zfs.nix
             ./users/root.nix
             impermanence.nixosModules.impermanence
             sops-nix.nixosModules.sops
@@ -86,7 +87,7 @@
       packages.x86_64-linux = {
         installer = nixos-generators.nixosGenerate {
           system = "x86_64-linux";
-          modules = [ ./installer/configuration.nix ];
+          modules = [ ./installer/configuration.nix ./modules/zfs.nix ];
           format = "install-iso";
         };
       };
