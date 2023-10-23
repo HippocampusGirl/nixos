@@ -25,23 +25,30 @@
       nixosModules = {
         default = { config, ... }: {
           imports = [
+            ./modules/acme.nix
             ./modules/command-not-found.nix
             ./modules/direnv.nix
+            ./modules/fhs.nix
             ./modules/git.nix
             ./modules/htop.nix
             ./modules/i18n.nix
             ./modules/less.nix
             ./modules/neovim.nix
+            ./modules/nix-daemon.nix
+            ./modules/nix-ld.nix
+            ./modules/packages.nix
             ./modules/singularity.nix
-            ./modules/tailscale.nix
             ./modules/tmux.nix
+            ./modules/zram.nix
             ./modules/zsh.nix
+            ./users/lea.nix
           ];
         };
-        home = { config, ... }: {
+        server = { config, ... }: {
           imports = [
             self.nixosModules.default
-            ./home/configuration.nix
+            ./modules/lxd.nix
+            ./modules/tailscale.nix
             impermanence.nixosModules.impermanence
             sops-nix.nixosModules.sops
           ];
@@ -49,6 +56,7 @@
         laptop = { config, ... }: {
           imports = [
             self.nixosModules.default
+            ./modules/tex.nix
             ./laptop/configuration.nix
             home-manager.nixosModules.home-manager
             nixos-wsl.nixosModules.wsl
@@ -56,19 +64,11 @@
             vscode-server.nixosModules.default
           ];
         };
-        server = { config, ... }: {
-          imports = [
-            self.nixosModules.default
-            ./server/configuration.nix
-            impermanence.nixosModules.impermanence
-            sops-nix.nixosModules.sops
-          ];
-        };
       };
       nixosConfigurations = {
         home = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ self.nixosModules.home ];
+          modules = [ self.nixosModules.home ./home/configuration.nix ];
         };
         laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -76,7 +76,7 @@
         };
         server = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ self.nixosModules.server ];
+          modules = [ self.nixosModules.server ./server/configuration.nix ];
         };
       };
       packages.x86_64-linux = {
