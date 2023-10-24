@@ -17,7 +17,6 @@ in {
       efi.canTouchEfiVariables = true;
     };
     supportedFilesystems = [ "exfat" "zfs" ];
-    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
     zfs = {
       devNodes = "/dev/disk/by-path";
       enableUnstable = true;
@@ -43,7 +42,7 @@ in {
   services = { zrepl = { enable = true; }; };
 
   sops = {
-    defaultSopsFile = ../secrets.yaml;
+    defaultSopsFile = ../../users/secrets.yaml;
     # If either of these paths does not exist immediately after boot, then 
     # sops-nix will fail and not decrypt any secrets. That means that the
     # the secrets will not be available when the users are generated. 

@@ -1,9 +1,9 @@
-{ pkgs, lib, ... }:
+{ lib, config, pkgs, ... }:
 let
   # The "z" pool was created with a development version of openzfs
   # so we are stuck on that until 2.2.0 is released to nixpkgs
   zfsVersion = "2.2.0";
-  kernelPackages = pkgs.linuxPackages.extend (self: super: {
+  kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages.extend (self: super: {
     zfs = super.zfs.overrideAttrs (old: {
       name = "zfs-kernel-${zfsVersion}-${super.kernel.version}";
       src = pkgs.fetchFromGitHub {

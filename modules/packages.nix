@@ -17,6 +17,7 @@
       pre-commit
       python311
       # ripgrep-all
+      sops
       unzip
       wget
       zsh

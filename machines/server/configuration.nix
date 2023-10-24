@@ -46,7 +46,7 @@
   time = { timeZone = "Europe/Berlin"; };
 
   sops = {
-    defaultSopsFile = ../secrets.yaml;
+    defaultSopsFile = ./secrets.yaml;
     # If either of these paths does not exist immediately after boot, then 
     # sops-nix will fail and not decrypt any secrets. That means that the
     # the secrets will not be available when the users are generated. 
@@ -54,8 +54,10 @@
     age.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
     gnupg.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_rsa_key" ];
     # Specification of the secrets/
-    secrets."users/root/hashed-password" = { neededForUsers = true; };
-    secrets."users/lea/hashed-password" = { neededForUsers = true; };
+    secrets."users/lea/hashed-password" = {
+      neededForUsers = true;
+      path = ../../users/secrets.yaml;
+    };
     secrets."garm/jwt_auth/secret" = { };
     secrets."garm/database/passphrase" = { };
     secrets."garm/github/hippocampusgirl/token" = { };
