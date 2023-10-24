@@ -6,6 +6,7 @@
       dig
       gnupg
       home-manager
+      iftop
       jq
       killall
       lsof
