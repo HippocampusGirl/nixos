@@ -48,8 +48,34 @@ sudo nixos-rebuild switch -L --use-remote-sudo --flake path:///lea/nixos#server 
 ```bash
 sudo mkfs.vfat /dev/nvme0n1p1
 
-sudo zfs create -o mountpoint=legacy zyy/nix
-sudo zfs create -o mountpoint=legacy zyy/persist
+sudo zpool create \
+    -o ashift=12 \
+    -o autotrim=on \
+    -O acltype=posixacl \
+    -O canmount=off \
+    -O compression=zstd \
+    -O dnodesize=auto \
+    -O normalization=formD \
+    -O relatime=on \
+    -O xattr=sa \
+    -O special_small_blocks=1M \
+    -o encryption=on \
+    -o keylocation=prompt \
+    -o keyformat=passphrase \
+    z mirror \
+    /dev/disk/by-id/ata-TOSHIBA_MG09ACA18TE_*
+
+sudo zpool add z \
+    -o ashift=12 \
+    special mirror \
+    /dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S69ENF0R801594E-part3 \
+    /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_2TB_S4J4NJ0N308280K-part2
+
+sudo zfs set dedup=on z
+
+sudo zfs create -o mountpoint=/lea z/lea
+sudo zfs create -o mountpoint=legacy z/nix
+sudo zfs create -o mountpoint=legacy z/persist
 ```
 
 ### Install home
@@ -60,13 +86,14 @@ sudo mount /dev/nvme0n1p1 /mnt/boot
 sudo zpool import z -f
 sudo zfs load-key -a
 
-sudo zfs mount zyy/lea
-sudo mount -t zfs zyy/nix /mnt/nix
-sudo mount -t zfs zyy/persist /mnt/persist
-sudo mkdir -p /mnt/etc/nixos /mnt/var/log /mnt/persist/var/log
+sudo zfs mount z/lea
+sudo mount -t zfs z/nix /mnt/nix
+sudo mount -t zfs z/persist /mnt/persist
+sudo mkdir -p /mnt/etc/nixos /mnt/var/log /mnt/persist/var/log /mnt/lea
 sudo mount -o bind /mnt/persist/var/log /mnt/var/log
+sudo mount -o bind /lea /mnt/lea
 
-sudo nixos-install --impure --no-channel-copy --root /mnt --flake /lea/machines/nixos#server
+sudo nixos-install --impure --no-channel-copy --root /mnt --flake /lea/nixos#home
 
 sudo umount -Rl /mnt
 sudo zpool export -a
