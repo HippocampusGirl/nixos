@@ -19,6 +19,12 @@
           interval = "5m";
           prefix = "zrepl_";
         };
+        replication = {
+          concurrency = {
+            size_estimates = 20;
+            steps = 20;
+          };
+        };
         send = { encrypted = false; };
         pruning = {
           keep_sender = [
