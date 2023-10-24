@@ -41,6 +41,9 @@
     hostName = "server";
     hostId = "13413401";
     useDHCP = true;
+    firewall = {
+      allowedTCPPorts = [ 80 443 ];
+    };
   };
 
   time = { timeZone = "Europe/Berlin"; };

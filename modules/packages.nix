@@ -15,6 +15,7 @@
       nixos-generators
       nix-index
       pre-commit
+      pv
       python311
       # ripgrep-all
       sops

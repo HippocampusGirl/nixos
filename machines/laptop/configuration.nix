@@ -5,6 +5,7 @@
 { config, pkgs, ... }: {
   imports = [
     ./kernel.nix
+    ./tailscale-cert.nix
     ./vscode.nix
     ./wsl.nix
     ./zrepl.nix
@@ -39,7 +40,7 @@
   nixpkgs.config.allowUnfree = true;
 
   sops = {
-    defaultSopsFile = ../../secrets.yaml;
+    defaultSopsFile = ../../users/secrets.yaml;
     # If either of these paths does not exist immediately after boot, then 
     # sops-nix will fail and not decrypt any secrets. That means that the
     # the secrets will not be available when the users are generated. 
@@ -47,7 +48,6 @@
     age.sshKeyPaths = [ "/mnt/c/Users/Lea/WSL/ssh_host_ed25519_key" ];
     gnupg.sshKeyPaths = [ "/mnt/c/Users/Lea/WSL/ssh_host_rsa_key" ];
     # Specification of the secrets/
-    secrets."users/root/hashed-password" = { neededForUsers = true; };
     secrets."users/lea/hashed-password" = { neededForUsers = true; };
   };
 

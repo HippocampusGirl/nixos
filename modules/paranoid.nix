@@ -4,7 +4,7 @@
     firewall = {
       enable = true;
       allowPing = false;
-      allowedTCPPorts = [ 80 443 ] ++ config.services.openssh.ports;
+      allowedTCPPorts = config.services.openssh.ports;
       allowedUDPPorts = [ config.services.tailscale.port ];
       checkReversePath = "loose";
       trustedInterfaces = [ config.services.tailscale.interfaceName ];

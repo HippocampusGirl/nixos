@@ -8,6 +8,7 @@ in {
   imports = [
     # Include the results of the hardware scan
     ./hardware-configuration.nix
+    ./zrepl.nix
   ];
 
   boot = {
@@ -34,12 +35,12 @@ in {
     hostName = "home";
     hostId = "13413403";
     useDHCP = true;
-
+    firewall = {
+      allowedTCPPorts = [ config.services.zrepl.port ];
+    };
   };
 
   time = { timeZone = "Europe/Berlin"; };
-
-  services = { zrepl = { enable = true; }; };
 
   sops = {
     defaultSopsFile = ../../users/secrets.yaml;

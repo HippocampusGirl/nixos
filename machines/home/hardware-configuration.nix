@@ -24,12 +24,12 @@
   };
 
   fileSystems."/nix" = {
-    device = "zyy/nix";
+    device = "z/nix";
     fsType = "zfs";
   };
 
   fileSystems."/persist" = {
-    device = "zyy/persist";
+    device = "z/persist";
     fsType = "zfs";
     neededForBoot = true;
   };

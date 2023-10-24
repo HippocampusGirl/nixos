@@ -1,7 +1,7 @@
 { config, pkgs, ... }: {
   users.extraUsers.lea = {
     isNormalUser = true;
-    # passwordFile = config.sops.secrets."users/lea/hashed-password".path;
+    passwordFile = config.sops.secrets."users/lea/hashed-password".path;
     
     uid = 1000;
     extraGroups = [

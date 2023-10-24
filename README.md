@@ -80,6 +80,11 @@ sudo zfs create -o mountpoint=legacy z/persist
 
 ### Install home
 ```bash
+mkdir .ssh
+cat <<EOF > .ssh/authorized_keys
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETA8z05h0cx/Zma9WRKNcG+ckBJ1k35dGYLnAew1BXZ
+EOF
+
 sudo mount -t tmpfs none /mnt
 sudo mkdir -p /mnt/{boot,nix,persist}
 sudo mount /dev/nvme0n1p1 /mnt/boot
@@ -93,11 +98,11 @@ sudo mkdir -p /mnt/etc/nixos /mnt/var/log /mnt/persist/var/log /mnt/lea
 sudo mount -o bind /mnt/persist/var/log /mnt/var/log
 sudo mount -o bind /lea /mnt/lea
 
-sudo nixos-install --impure --no-channel-copy --root /mnt --flake /lea/nixos#home
+sudo nixos-install --impure --no-channel-copy --root /mnt --flake path:///lea/nixos#home
 
 sudo umount -Rl /mnt
 sudo zpool export -a
 sudo reboot
 
-nixos-rebuild switch -L --use-remote-sudo --fast --flake /mnt/etc/nixos#server
+sudo nixos-rebuild switch -L --use-remote-sudo --flake path:///lea/nixos#home
 ```
