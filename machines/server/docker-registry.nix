@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
 let
+  authListenAddress = "localhost:13451";
+  registryPort = 13450;
   nginxDockerRegistryExtraConfig = ''
     add_header Docker-Distribution-Api-Version registry/2.0;
     proxy_buffering off;
@@ -13,17 +15,17 @@ let
     enableACME = true;
     locations = {
       "/v2" = {
-        proxyPass = "http://localhost:13450";
+        proxyPass = "http://localhost:${toString (registryPort)}";
         extraConfig = nginxDockerRegistryExtraConfig;
       };
     };
   };
 in {
-  imports = [ ../packages/docker-auth.nix ];
+  imports = [ ../../packages/docker-auth.nix ];
   services = {
     dockerAuth = {
       enable = true;
-      listenAddress = "localhost:13451";
+      listenAddress = authListenAddress;
       token = {
         issuer = "https://cr.lea.science";
         expiration = 900;
@@ -59,7 +61,7 @@ in {
       enableDelete = true;
       enableGarbageCollect = true;
       enableRedisCache = false;
-      port = 13450;
+      port = registryPort;
       extraConfig = {
         auth.token = {
           realm = "https://cr.lea.science/auth";
@@ -76,7 +78,7 @@ in {
           nginxDockerRegistryVirtualHost
           {
             locations = {
-              "/auth" = { proxyPass = "http://localhost:13451/auth"; };
+              "/auth" = { proxyPass = "http://${authListenAddress}/auth"; };
             };
           }
         ];

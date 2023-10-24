@@ -1,5 +1,5 @@
 { config, pkgs, ... }: {
-  imports = [ ../packages/garm.nix ];
+  imports = [ ../../packages/garm.nix ];
   services = {
     garm = {
       enable = true;

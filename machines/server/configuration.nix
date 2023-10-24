@@ -17,13 +17,11 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
     kernel.sysctl = {
       "vm.dirty_background_ratio " = 5;
       "vm.dirty_ratio" = 10;
     };
     supportedFilesystems = [ "exfat" "zfs" ];
-    swraid.enable = false;
     zfs = {
       devNodes = "/dev/disk/by-path";
       enableUnstable = true;
@@ -41,9 +39,7 @@
     hostName = "server";
     hostId = "13413401";
     useDHCP = true;
-    firewall = {
-      allowedTCPPorts = [ 80 443 ];
-    };
+    firewall = { allowedTCPPorts = [ 80 443 ]; };
   };
 
   time = { timeZone = "Europe/Berlin"; };
@@ -59,7 +55,7 @@
     # Specification of the secrets/
     secrets."users/lea/hashed-password" = {
       neededForUsers = true;
-      path = ../../users/secrets.yaml;
+      sopsFile = ../../users/secrets.yaml;
     };
     secrets."garm/jwt_auth/secret" = { };
     secrets."garm/database/passphrase" = { };
