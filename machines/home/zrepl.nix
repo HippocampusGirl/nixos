@@ -30,5 +30,8 @@ in {
         }];
       };
     };
+    systemd.services.zrepl = {
+      after = [ "sys-subsystem-net-devices-tailscale0.device" ];
+    };
   };
 }
