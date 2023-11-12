@@ -10,7 +10,7 @@ let
       repo = "docker_auth";
       rev = version;
       sha256 =
-        "sha256-IPp4Bz8xW9BSo0mkmgTt0g1fZ9IWRX3WGie0moq5860="; # lib.fakeSha256
+        "sha256-IPp4Bz8xW9BSo0mkmgTt0g1fZ9IWRX3WGie0moq5860=";
     };
     sourceRoot = "source/auth_server";
     ldflags = [ "-X main.Version=${version}" "-X main.BuildID=${version}" ];
