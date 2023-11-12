@@ -19,8 +19,8 @@
       pciutils
       pre-commit
       pv
-      python311
-      # ripgrep-all
+      regclient
+      ripgrep-all
       sops
       usbutils
       unzip
