@@ -8,6 +8,7 @@ in {
   imports = [
     # Include the results of the hardware scan
     ./hardware-configuration.nix
+    ./lxd.nix
     ./zrepl.nix
   ];
 
@@ -17,6 +18,8 @@ in {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    # Use hardware sensors
+    kernelModules = [ "nct6775" ];
     supportedFilesystems = [ "exfat" "zfs" ];
     zfs = {
       devNodes = "/dev/disk/by-path";
@@ -35,9 +38,7 @@ in {
     hostName = "home";
     hostId = "13413403";
     useDHCP = true;
-    firewall = {
-      allowedTCPPorts = [ config.services.zrepl.port ];
-    };
+    firewall = { allowedTCPPorts = [ config.services.zrepl.port ]; };
   };
 
   time = { timeZone = "Europe/Berlin"; };
