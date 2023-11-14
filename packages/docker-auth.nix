@@ -2,7 +2,7 @@
 with lib;
 let
   cfg = config.services.dockerAuth;
-  dockerAuth = pkgs.buildGo118Module rec {
+  dockerAuth = pkgs.buildGo120Module rec {
     pname = "dockerAuth";
     version = "1.11.0";
     src = pkgs.fetchFromGitHub {

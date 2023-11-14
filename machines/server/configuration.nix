@@ -9,6 +9,7 @@
     # Include the results of the hardware scan
     ./hardware-configuration.nix
     ./nginx.nix
+    ./upload-server.nix
   ];
 
   boot = {
@@ -56,17 +57,6 @@
     secrets."users/lea/hashed-password" = {
       neededForUsers = true;
       sopsFile = ../../users/secrets.yaml;
-    };
-    secrets."garm/jwt_auth/secret" = { };
-    secrets."garm/database/passphrase" = { };
-    secrets."garm/github/hippocampusgirl/token" = { };
-    secrets."docker_auth/users/lea/hashed-password" = { };
-    secrets."docker_auth/users/garm/hashed-password" = { };
-    secrets."docker_auth/certificate" = { mode = "0644"; };
-    secrets."docker_auth/key" = {
-      mode = "0440";
-      owner = config.users.users.docker-auth.name;
-      group = config.users.users.docker-auth.group;
     };
   };
 

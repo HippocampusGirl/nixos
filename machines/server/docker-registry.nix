@@ -87,4 +87,14 @@ in {
       };
     };
   };
+  sops = {
+    secrets."docker_auth/users/lea/hashed-password" = { };
+    secrets."docker_auth/users/garm/hashed-password" = { };
+    secrets."docker_auth/certificate" = { mode = "0644"; };
+    secrets."docker_auth/key" = {
+      mode = "0440";
+      owner = config.users.users.docker-auth.name;
+      group = config.users.users.docker-auth.group;
+    };
+  };
 }

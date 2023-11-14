@@ -42,6 +42,13 @@ nixos-rebuild switch -L --use-remote-sudo --fast --flake /mnt/etc/nixos#server
 sudo nixos-rebuild switch -L --use-remote-sudo --flake path:///lea/nixos#server --show-trace --refresh
 ```
 
+### LXC storage config
+
+```
+volume.zfs.block_mode: "true"
+volume.size: "96GiB"
+```
+
 ## Home
 
 ### Format

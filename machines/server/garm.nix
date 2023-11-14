@@ -32,4 +32,9 @@
       };
     };
   };
+  sops = {
+    secrets."garm/jwt_auth/secret" = { };
+    secrets."garm/database/passphrase" = { };
+    secrets."garm/github/hippocampusgirl/token" = { };
+  };
 }

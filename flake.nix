@@ -18,10 +18,14 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    upload = {
+      url = "github:HippocampusGirl/upload";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     vscode-server = { url = "github:nix-community/nixos-vscode-server"; };
   };
   outputs = { self, nixpkgs, home-manager, impermanence, nixos-generators
-    , nixos-wsl, sops-nix, vscode-server }: {
+    , nixos-wsl, sops-nix, upload, vscode-server }: {
       nixosModules = {
         default = { config, ... }: {
           imports = [
@@ -56,6 +60,7 @@
             ./users/root.nix
             impermanence.nixosModules.impermanence
             sops-nix.nixosModules.sops
+            upload.nixosModules.upload
           ];
         };
         laptop = { config, ... }: {
@@ -73,7 +78,8 @@
       nixosConfigurations = {
         home = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ self.nixosModules.server ./machines/home/configuration.nix ];
+          modules =
+            [ self.nixosModules.server ./machines/home/configuration.nix ];
         };
         laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -81,13 +87,15 @@
         };
         server = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ self.nixosModules.server ./machines/server/configuration.nix ];
+          modules =
+            [ self.nixosModules.server ./machines/server/configuration.nix ];
         };
       };
       packages.x86_64-linux = {
         installer = nixos-generators.nixosGenerate {
           system = "x86_64-linux";
-          modules = [ ./machines/installer/configuration.nix ./modules/zfs.nix ];
+          modules =
+            [ ./machines/installer/configuration.nix ./modules/zfs.nix ];
           format = "install-iso";
         };
       };
