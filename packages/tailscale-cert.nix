@@ -48,8 +48,8 @@ in {
       };
 
       script = ''
-        ip_address=$(tailscale ip -1)
-        domain_name=$(dig +noall +answer +short -x ''${ip_address} | sed -e 's/.$//')
+        # Extract domain name from error message
+        domain_name=$(tailscale cert 2> >(sed --regexp-extended --silent 's/For domain, use "(.+)"\./\1/p') || true)
         tailscale cert --cert-file ${cfg.certFile} --key-file ${cfg.keyFile} ''${domain_name}
       '';
     };

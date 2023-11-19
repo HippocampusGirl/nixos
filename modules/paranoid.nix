@@ -5,10 +5,10 @@
       enable = true;
       allowPing = false;
       allowedTCPPorts = config.services.openssh.ports;
-      allowedUDPPorts = [ config.services.tailscale.port ];
       checkReversePath = "loose";
       trustedInterfaces = [ config.services.tailscale.interfaceName ];
     };
+    nftables.enable = true;
   };
   services = {
     fail2ban.enable = true;

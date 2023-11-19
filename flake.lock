@@ -295,11 +295,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1699810942,
-        "narHash": "sha256-OZZP6YYRHHArK7poYYwFF/Y3ObPB4ChbfoV6pUJb1nU=",
+        "lastModified": 1700400058,
+        "narHash": "sha256-Iqw8FyF6gVwPN8zJ9yl/4d19rRfMK1JMkMRbqRY3lSk=",
         "owner": "HippocampusGirl",
         "repo": "upload",
-        "rev": "ce5b4c45dda93288056d228d708cf9d0b6aed456",
+        "rev": "21f461e9a64ff3d490915204c241350e1db2d93e",
         "type": "github"
       },
       "original": {

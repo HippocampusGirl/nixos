@@ -17,8 +17,12 @@ in {
     nginx = {
       virtualHosts = {
         "upload.gwas.science" = {
-          proxyPass = "http://localhost:${toString (port)}";
-          proxyWebsockets = true;
+          forceSSL = true;
+          enableACME = true;
+          locations."/" = {
+            proxyPass = "http://localhost:${toString (port)}";
+            proxyWebsockets = true;
+          };
         };
       };
     };

@@ -4,6 +4,7 @@
 
 { config, pkgs, lib, ... }: {
   imports = [
+    ./cloudflare.nix
     ./docker-registry.nix
     ./garm.nix
     # Include the results of the hardware scan
@@ -37,13 +38,14 @@
   };
 
   networking = {
+    firewall = { allowedTCPPorts = [ 80 443 ]; };
     hostName = "server";
     hostId = "13413401";
     useDHCP = true;
-    firewall = { allowedTCPPorts = [ 80 443 ]; };
+    useNetworkd = true;
   };
 
-  time = { timeZone = "Europe/Berlin"; };
+  services = { resolved.enable = true; };
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
@@ -75,5 +77,7 @@
     # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
     stateVersion = "23.05"; # Did you read the comment?
   };
+
+  time = { timeZone = "Europe/Berlin"; };
 }
 
