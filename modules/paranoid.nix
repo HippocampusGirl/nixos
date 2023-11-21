@@ -6,7 +6,6 @@
       allowPing = false;
       allowedTCPPorts = config.services.openssh.ports;
       checkReversePath = "loose";
-      trustedInterfaces = [ config.services.tailscale.interfaceName ];
     };
     nftables.enable = true;
   };
