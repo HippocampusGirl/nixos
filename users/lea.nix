@@ -1,4 +1,5 @@
 { config, pkgs, ... }: {
+  programs.zsh.enable = true;
   users.extraUsers.lea = {
     isNormalUser = true;
     hashedPasswordFile = config.sops.secrets."users/lea/hashed-password".path;
