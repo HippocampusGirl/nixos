@@ -16,6 +16,7 @@
       nixfmt
       nixos-generators
       nix-index
+      openssl
       pciutils
       pre-commit
       pv
