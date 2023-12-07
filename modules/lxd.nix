@@ -16,4 +16,5 @@
       zfsSupport = true;
     };
   };
+  systemd.services.lxd = { partOf = [ "nftables.service" ]; };
 }

@@ -15,7 +15,7 @@ let
     sourceRoot = "source/auth_server";
     ldflags = [ "-X main.Version=${version}" "-X main.BuildID=${version}" ];
     patches = [ ./fix-docker-auth-go-version.patch ];
-    vendorSha256 = "sha256-uxoJsj4YsiJC76sAgme85OpQEChwAjFmLzQP+udGp5g=";
+    vendorHash = "sha256-uxoJsj4YsiJC76sAgme85OpQEChwAjFmLzQP+udGp5g=";
   };
   authConfig = {
     server = {

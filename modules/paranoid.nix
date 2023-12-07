@@ -29,4 +29,7 @@
     };
     usbguard.enable = true;
   };
+  # Since we replaced "firewall.service" with "nftables.service", we need to
+  # edit the fail2ban service to depend that instead
+  systemd.services.fail2ban = { partOf = [ "nftables.service" ]; };
 }
