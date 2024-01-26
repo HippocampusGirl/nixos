@@ -16,6 +16,5 @@
     startMenuLaunchers = false;
     nativeSystemd = true;
     defaultUser = "lea";
-    docker-native.enable = true;
   };
 }
