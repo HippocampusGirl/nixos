@@ -13,7 +13,7 @@
       url = "github:nix-community/nixos-wsl";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,7 +45,6 @@
             ./modules/singularity.nix
             ./modules/tmux.nix
             ./modules/zram.nix
-            ./modules/zsh.nix
             ./users/lea.nix
           ];
         };
@@ -55,6 +54,7 @@
             ./modules/impermanence.nix
             ./modules/lxd.nix
             ./modules/paranoid.nix
+            ./modules/postgres.nix
             ./modules/tailscale.nix
             ./modules/zfs.nix
             ./users/root.nix
