@@ -45,6 +45,7 @@
             ./modules/singularity.nix
             ./modules/tmux.nix
             ./modules/zram.nix
+            ./modules/zrepl.nix
             ./users/lea.nix
           ];
         };
@@ -76,6 +77,16 @@
         };
       };
       nixosConfigurations = {
+        audio = nixpkgs.lib.nixosSystem {
+          modules = [
+            "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-raspberrypi.nix"
+            ./modules/git.nix
+            ./modules/i18n.nix
+            ./modules/paranoid.nix
+            ./users/root.nix
+            ./machines/audio/configuration.nix
+          ];
+        };
         home = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules =
@@ -97,6 +108,14 @@
           modules =
             [ ./machines/installer/configuration.nix ./modules/zfs.nix ];
           format = "install-iso";
+        };
+        audio-sdimage =
+          self.nixosConfigurations.audio.config.system.build.sdImage;
+      };
+      devShells.x86_64-linux = let pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      in {
+        default = pkgs.mkShell {
+          buildInputs = with pkgs; [ nil nixd nixfmt nixpkgs-fmt ];
         };
       };
     };

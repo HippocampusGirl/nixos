@@ -12,6 +12,8 @@
     ./mattermost.nix
     ./nginx.nix
     ./upload-server.nix
+    ./nix-remote.nix
+    ./zrepl.nix
   ];
 
   boot = {
@@ -25,6 +27,7 @@
       "vm.dirty_ratio" = 10;
     };
     supportedFilesystems = [ "exfat" "zfs" ];
+    tmp.cleanOnBoot = true;
     zfs = {
       devNodes = "/dev/disk/by-path";
       enableUnstable = true;

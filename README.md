@@ -1,11 +1,25 @@
 # nixos
+
 My nixos configs repo
 
 Setup as per <https://grahamc.com/blog/erase-your-darlings/> and <https://carjorvaz.com/posts/installing-nixos-with-root-on-tmpfs-and-encrypted-zfs-on-a-netcup-vps/>
 
 ## Laptop
 
+### Install laptop
+
+```bash
+sudo zpool create \
+    -o ashift=12 \
+    -O encryption=on \
+    -O keylocation=file://{keyFile} \
+    -O keyformat=passphrase \
+    z \
+    {diskId}
+```
+
 ### Update laptop
+
 ```bash
 nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake github:HippocampusGirl/nixos#laptop
 ```
@@ -13,6 +27,12 @@ nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake github:Hip
 ## Server
 
 ### Install server
+
+```bash
+
+```
+
+### Reinstall server
 
 ```bash
 sudo mount -t tmpfs none /mnt
@@ -52,6 +72,7 @@ volume.size: "96GiB"
 ## Home
 
 ### Format
+
 ```bash
 sudo mkfs.vfat /dev/nvme0n1p1
 
@@ -70,13 +91,12 @@ sudo zpool create \
     -o keylocation=prompt \
     -o keyformat=passphrase \
     z mirror \
-    /dev/disk/by-id/ata-TOSHIBA_MG09ACA18TE_*
+    /dev/disk/by-id/ata-*
 
 sudo zpool add z \
     -o ashift=12 \
     special mirror \
-    /dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S69ENF0R801594E-part3 \
-    /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_2TB_S4J4NJ0N308280K-part2
+    /dev/disk/by-id/nvme-*
 
 sudo zfs set dedup=on z
 
@@ -86,6 +106,7 @@ sudo zfs create -o mountpoint=legacy z/persist
 ```
 
 ### Install home
+
 ```bash
 mkdir .ssh
 cat <<EOF > .ssh/authorized_keys

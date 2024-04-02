@@ -33,6 +33,12 @@
     fsType = "zfs";
     neededForBoot = true;
   };
+  
+  fileSystems."/tmp" = {
+    device = "z/tmp";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
 
   swapDevices =
     [{ device = "/dev/disk/by-path/virtio-pci-0000:00:10.0-part2"; }];

@@ -2,8 +2,10 @@
   environment = {
     systemPackages = with pkgs; [
       cached-nix-shell
+      cachix
       datalad
       dig
+      file
       gnupg
       home-manager
       iftop
@@ -16,6 +18,7 @@
       nixfmt
       nixos-generators
       nix-index
+      nix-tree
       openssl
       pciutils
       pre-commit
@@ -23,6 +26,7 @@
       regclient
       ripgrep-all
       sops
+      tree
       usbutils
       unzip
       wget

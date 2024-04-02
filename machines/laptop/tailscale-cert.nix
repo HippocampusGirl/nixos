@@ -41,6 +41,7 @@ in {
             --key-file  $(/bin/wslpath -w ${temporaryKeyFile}) \
             ''${domain_name}
         # Move certificates to the correct location
+        mkdir --parents ${basePath}
         mv ${temporaryCertFile} ${cfg.certFile}
         mv ${temporaryKeyFile} ${cfg.keyFile}
         # Set permissions

@@ -1,4 +1,8 @@
 {
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
+  "nix.enableLanguageServer": true,
+  "nix.formatterPath": "nixfmt",
+  "nix.serverPath": "nil"
+  // "nix.serverPath": "nixd"
 }

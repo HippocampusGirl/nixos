@@ -1,16 +1,6 @@
 { config, lib, ... }:
 let cfg = config.services.zrepl;
 in {
-  options = with lib; {
-    services.zrepl = {
-      port = mkOption {
-        type = types.int;
-        description = "The port to listen on.";
-        default = 13427;
-      };
-    };
-  };
-
   config = {
     services.zrepl = {
       enable = true;
@@ -21,7 +11,7 @@ in {
           root_fs = "z";
           serve = {
             type = "tls";
-            listen = "home.dzo-owl.ts.net:${toString (cfg.port)}";
+            listen = "home.dzo-owl.ts.net:${toString (cfg.sinkPort)}";
             ca = "/etc/ssl/certs/ca-certificates.crt";
             cert = config.services.tailscale-cert.certFile;
             key = config.services.tailscale-cert.keyFile;

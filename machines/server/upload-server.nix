@@ -1,17 +1,16 @@
-{ config, ... }:
-let port = 13481;
+{ config, lib, ... }:
+let
+  name = "upload";
+  port = 13481;
 in {
   services = {
     upload-server = {
       inherit port;
       enable = true;
       publicKeyFile = config.sops.secrets."upload-server/public-key".path;
-      s3 = {
-        endpointFile = config.sops.secrets."upload-server/s3/endpoint".path;
-        accessKeyIdFile =
-          config.sops.secrets."upload-server/s3/access-key-id".path;
-        secretAccessKeyFile =
-          config.sops.secrets."upload-server/s3/secret-access-key".path;
+      database = {
+        type = "postgres";
+        connection-string = "socket://${name}@/var/run/postgresql?db=${name}";
       };
     };
     nginx = {
@@ -26,11 +25,22 @@ in {
         };
       };
     };
+    postgresql = {
+      enable = lib.mkForce true;
+      ensureDatabases = [ name ];
+      ensureUsers = [{
+        name = name;
+        ensureDBOwnership = true;
+      }];
+    };
   };
   sops = {
-    secrets."upload-server/public-key" = { };
-    secrets."upload-server/s3/endpoint" = { };
-    secrets."upload-server/s3/access-key-id" = { };
-    secrets."upload-server/s3/secret-access-key" = { };
+    secrets."upload-server/public-key" = { owner = "${name}"; };
+  };
+  systemd.services.upload-server.serviceConfig.User = "${name}";
+  users.groups.${name} = { };
+  users.users.${name} = {
+    isSystemUser = true;
+    group = "${name}";
   };
 }
