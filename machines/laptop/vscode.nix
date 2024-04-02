@@ -3,7 +3,7 @@
     # Automatically fix vscode server executable
     vscode-server = {
       enable = true;
-      installPath = "~/.vscode-server-insiders";
+      installPath = "~/.vscode-server";
     };
   };
 }

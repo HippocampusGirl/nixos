@@ -2,14 +2,9 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }: {
-  imports = [
-    ./kernel.nix
-    ./tailscale-cert.nix
-    ./vscode.nix
-    ./wsl.nix
-    ./zrepl.nix
-  ];
+{ config, pkgs, lib, ... }: {
+  imports =
+    [ ./kernel.nix ./tailscale-cert.nix ./vscode.nix ./wsl.nix ./zrepl.nix ];
 
   fileSystems = {
     "/lea" = {
@@ -37,7 +32,17 @@
     hostName = "laptop-nixos";
   };
 
+  nix.settings.max-jobs = 1;
+
   nixpkgs.config.allowUnfree = true;
+
+  programs.ssh.extraConfig = lib.mkAfter ''
+    ServerAliveInterval 120
+    TCPKeepAlive yes
+
+    Host server.lea.science
+    Port 13422
+  '';
 
   sops = {
     defaultSopsFile = ../../users/secrets.yaml;
