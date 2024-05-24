@@ -2,9 +2,18 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }: {
-  imports =
-    [ ./kernel.nix ./tailscale-cert.nix ./vscode.nix ./wsl.nix ./zrepl.nix ];
+{ lib, ... }: {
+  imports = [
+    ./bitcoin.nix
+    ./cuda.nix
+    ./docker.nix
+    ./kernel.nix
+    ./nix-remote.nix
+    ./tailscale-cert.nix
+    ./vscode.nix
+    ./wsl.nix
+    ./zrepl.nix
+  ];
 
   fileSystems = {
     "/lea" = {
@@ -19,12 +28,6 @@
       device = "z/work";
       fsType = "zfs";
     };
-  };
-
-  hardware = {
-    opengl.enable = true;
-    opengl.driSupport = true;
-    opengl.driSupport32Bit = true;
   };
 
   networking = {
@@ -76,11 +79,4 @@
 
   time = { timeZone = "Europe/Berlin"; };
 
-  virtualisation.docker = {
-    autoPrune.enable = true;
-    enable = true;
-    enableNvidia = true;
-    extraOptions = "--storage-opt zfs.fsname=z/docker";
-    storageDriver = "zfs";
-  };
 }
