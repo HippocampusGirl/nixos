@@ -1,7 +1,19 @@
-{ lib, config, pkgs, ... }: {
+{
   imports = [ ./mta-sts.nix ];
 
   services = {
+    fail2ban = {
+      enable = true;
+      jails.nginx-auth = ''
+        enabled  = true
+        port     = http,https
+        filter   = nginx-noagent
+        backend  = auto
+        maxretry = 1
+        logpath  = %(nginx_access_log)s
+        action   = iptables-multiport[port="http,https"]
+      '';
+    };
     nginx = {
       enable = true;
       enableReload = true;

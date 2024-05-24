@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   cfg = config.services.zrepl;
   ca = "/etc/ssl/certs/ca-certificates.crt";
@@ -23,6 +23,33 @@ let
   conflict_resolution = { initial_replication = "all"; };
   send = { encrypted = false; };
   snapshotting = { type = "manual"; };
+  wakeupJobs = pkgs.writeShellApplication {
+    name = "wakeup-jobs";
+    runtimeInputs = [ config.services.zrepl.package ];
+    text = ''
+      if [ "$ZREPL_DRYRUN" = "true" ]
+      then 
+        DRYRUN="echo DRYRUN: "
+      else
+        DRYRUN=""
+      fi
+
+      case "$ZREPL_HOOKTYPE" in
+          pre_snapshot)
+              exit 0
+              ;;
+          post_snapshot)
+              $DRYRUN zrepl signal wakeup push_home || true
+              $DRYRUN zrepl signal wakeup push_server || true
+              exit 0
+              ;;
+          *)
+              printf 'Unrecognized hook type: %s\n' "$ZREPL_HOOKTYPE"
+              exit 255
+              ;;
+      esac
+    '';
+  };
 in {
   services.zrepl = {
     enable = true;
@@ -37,13 +64,18 @@ in {
             type = "periodic";
             interval = "5m";
             prefix = "zrepl_";
+            hooks = [{
+              type = "command";
+              path = "${wakeupJobs}/bin/wakeup-jobs";
+              err_is_fatal = false;
+            }];
           };
           pruning.keep = keepForever;
         }
         # The home has a lot of disk space, so we keep hourly snapshots
         # for one hundred years
         {
-          name = "home";
+          name = "push_home";
           type = "push";
           filesystems = { "z/work" = true; };
           connect = {
@@ -66,7 +98,7 @@ in {
         # The server does not have much disk space, so we keep only a limited
         # snapshot history there
         {
-          name = "server";
+          name = "push_server";
           type = "push";
           filesystems = { "z/work" = true; };
           connect = {

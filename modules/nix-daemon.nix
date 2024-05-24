@@ -1,24 +1,9 @@
 { lib, config, ... }: {
   nix = {
-    buildMachines = [
-      (lib.mkIf (config.networking.hostName != "server") {
-        hostName = "server.lea.science";
-        system = "x86_64-linux";
-
-        protocol = "ssh";
-        sshUser = "nix-remote";
-        sshKey = "/root/.ssh/id_ed25519";
-
-        maxJobs = 4;
-
-        supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" ];
-        mandatoryFeatures = [ ];
-      })
-    ];
     distributedBuilds = true;
     extraOptions = ''
       builders-use-substitutes = true
-      experimental-features = nix-command flakes impure-derivations
+      experimental-features = nix-command flakes impure-derivations ca-derivations
     '';
     # Enable garbage collection every week
     gc = {

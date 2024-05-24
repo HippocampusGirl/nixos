@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, lib, ... }:
 let
   authListenAddress = "localhost:13451";
   registryPort = 13450;

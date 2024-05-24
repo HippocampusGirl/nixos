@@ -3,6 +3,7 @@
     systemPackages = with pkgs; [
       cached-nix-shell
       cachix
+      cmake
       datalad
       dig
       file
@@ -15,15 +16,16 @@
       lsof
       lsyncd
       micromamba
+      nil
       nixfmt
       nixos-generators
       nix-index
       nix-tree
       openssl
       pciutils
+      pkg-config
       pre-commit
       pv
-      regclient
       ripgrep-all
       sops
       tree
