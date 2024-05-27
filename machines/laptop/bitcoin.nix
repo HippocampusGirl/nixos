@@ -6,5 +6,8 @@
     group = "bitcoin";
 
     dataDir = "/z/bitcoin";
+
+    rpc.users.lea.passwordHMAC =
+      "be686e9454ee579d214fda65a09e5a74$1e0b66843168daf3c6936ec5842c846b5ef0d479dd12bde5696d19f31ce5255d";
   };
 }
