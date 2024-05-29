@@ -2,6 +2,7 @@
   services.nginx = {
     enable = true;
     additionalModules = with pkgs.nginxModules; [ dav ];
+    clientMaxBodySize = "0"; # Allow large uploads
 
     virtualHosts = {
       "localhost" = {

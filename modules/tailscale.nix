@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ config, ... }: {
   imports = [ ../packages/tailscale-cert.nix ];
   networking.firewall.trustedInterfaces =
     [ config.services.tailscale.interfaceName ];

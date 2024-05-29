@@ -1,6 +1,6 @@
 keys:
   - &lea age13wxq2zrp8ju3exrww6jx5f3gk8pj6224sca5g9j3u66kc4p3nyesz7ynkk
-  - &laptop age1780tq43m9y9luxaf9advwea7tgeq5rmv06wk6jyvkwdyv4c94yzst6038s
+  - &laptop age14e8qqzk8mq0asfyq4yvdm6p5kfn4fead44zr3nlw8u6jzrflq50sfkdnfs
   - &server age1tdru2qv9zyq4u8naxcr7f37yqscv8vp9s4mgd34k9a4chgs9qfasvfzp08
   - &home age1t4g0muet3zf0cc9x30ygacx7a542vdn8peq9r366rxlgm3mrc9tshcezye
 creation_rules:
@@ -11,6 +11,11 @@ creation_rules:
           - *laptop
           - *server
           - *home
+  - path_regex: ^machines/laptop/secrets.yaml$
+    key_groups:
+      - age:
+          - *lea
+          - *laptop
   - path_regex: ^machines/server/secrets.yaml$
     key_groups:
       - age:

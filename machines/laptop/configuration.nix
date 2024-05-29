@@ -8,9 +8,9 @@
     ./cuda.nix
     ./docker.nix
     ./kernel.nix
+    ./network.nix
     ./nginx.nix
     ./nix-remote.nix
-    ./tailscale-cert.nix
     ./vscode.nix
     ./wsl.nix
     ./zrepl.nix

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: {
+{ pkgs, ... }: {
   wsl = {
     enable = true;
 
@@ -21,10 +21,6 @@
         mountFsTab = false;
         root = "/mnt";
       };
-      # boot = {
-      #   command = ''
-      #     /mnt/c/Windows/system32/schtasks.exe /run /tn "Mount physical disk to WSL"'';
-      # };
     };
   };
 }

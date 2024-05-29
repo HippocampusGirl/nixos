@@ -37,12 +37,14 @@
             ./modules/htop.nix
             ./modules/i18n.nix
             ./modules/less.nix
+            ./modules/mtr.nix
             ./modules/neovim.nix
             ./modules/nix-daemon.nix
             ./modules/nix-ld.nix
             ./modules/packages.nix
             ./modules/powertop.nix
             ./modules/singularity.nix
+            ./modules/tailscale.nix
             ./modules/tmux.nix
             ./modules/zram.nix
             ./modules/zrepl.nix
@@ -56,7 +58,6 @@
             ./modules/lxd.nix
             ./modules/paranoid.nix
             ./modules/postgres.nix
-            ./modules/tailscale.nix
             ./modules/zfs.nix
             ./users/root.nix
             impermanence.nixosModules.impermanence
