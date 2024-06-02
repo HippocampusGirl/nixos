@@ -1,19 +1,17 @@
 {
   inputs = {
+
+    flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    impermanence = { url = "github:nix-community/impermanence"; };
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    impermanence.url = "github:nix-community/impermanence";
     nixos-wsl = {
       url = "github:nix-community/nixos-wsl";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:nixos/nixpkgs/release-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,10 +20,11 @@
       url = "github:HippocampusGirl/upload";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    vscode-server = { url = "github:nix-community/nixos-vscode-server"; };
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
-  outputs = { self, nixpkgs, home-manager, impermanence, nixos-generators
-    , nixos-wsl, sops-nix, upload, vscode-server }: {
+  outputs = { self, flake-utils, home-manager, impermanence, nixos-wsl, nixpkgs
+    , sops-nix, upload, vscode-server }:
+    {
       nixosModules = {
         default = { config, ... }: {
           imports = [
@@ -103,21 +102,21 @@
             [ self.nixosModules.server ./machines/server/configuration.nix ];
         };
       };
-      packages.x86_64-linux = {
-        installer = nixos-generators.nixosGenerate {
+    } // flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
           system = "x86_64-linux";
-          modules =
-            [ ./machines/installer/configuration.nix ./modules/zfs.nix ];
-          format = "install-iso";
+          config.permittedInsecurePackages = [ "libdwarf-20210528" ];
         };
-        audio-sdimage =
-          self.nixosConfigurations.audio.config.system.build.sdImage;
-      };
-      devShells.x86_64-linux = let pkgs = nixpkgs.legacyPackages.x86_64-linux;
       in {
-        default = pkgs.mkShell {
-          buildInputs = with pkgs; [ nil nixd nixfmt nixpkgs-fmt ];
+        packages = {
+          garm = pkgs.callPackage ./packages/garm.nix { };
+          globalprotect-openconnect =
+            pkgs.callPackage ./packages/globalprotect-openconnect.nix { };
         };
-      };
-    };
+        devShells = {
+          default =
+            pkgs.mkShell { buildInputs = with pkgs; [ nil nixd nixpkgs-fmt ]; };
+        };
+      });
 }

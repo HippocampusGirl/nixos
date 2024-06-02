@@ -2,7 +2,7 @@
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
   "nix.enableLanguageServer": true,
-  "nix.formatterPath": "nixfmt",
+  "nix.formatterPath": "nixpkgs-fmt",
   "nix.serverPath": "nil"
   // "nix.serverPath": "nixd"
 }

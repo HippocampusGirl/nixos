@@ -11,6 +11,10 @@
     };
     tailscale-cert.enable = true;
   };
-  systemd.services.tailscaled.after =
-    [ "network-online.target" "systemd-resolved.service" ];
+  systemd.services.tailscaled =
+    let depends-on = [ "network-online.target" "systemd-resolved.service" ];
+    in {
+      after = depends-on;
+      wants = depends-on;
+    };
 }

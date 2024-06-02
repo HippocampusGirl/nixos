@@ -8,7 +8,7 @@
     ./cuda.nix
     ./docker.nix
     ./kernel.nix
-    ./network.nix
+    ./networking.nix
     ./nginx.nix
     ./nix-remote.nix
     ./vscode.nix
@@ -75,7 +75,7 @@
     # this value at the release version of the first install of this system.
     # Before changing this value read the documentation for this option
     # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-    stateVersion = "23.11"; # Did you read the comment?
+    stateVersion = "24.05"; # Did you read the comment?
   };
 
   time = { timeZone = "Europe/Berlin"; };

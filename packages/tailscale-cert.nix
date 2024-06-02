@@ -26,9 +26,12 @@ in {
   };
 
   config = mkIf cfg.enable {
-    systemd.services.tailscale-cert = {
-      after = [ "network.target" "network-online.target" "tailscaled.service" ];
-      wants = [ "tailscaled.service" ];
+    systemd.services.tailscale-cert = let
+      depends-on =
+        [ "network.target" "network-online.target" "tailscaled.service" ];
+    in {
+      after = depends-on;
+      wants = depends-on;
       requires = [ "tailscaled.service" ];
       wantedBy = [ "multi-user.target" ];
 

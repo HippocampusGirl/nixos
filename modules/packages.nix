@@ -17,7 +17,7 @@
       lsyncd
       micromamba
       nil
-      nixfmt
+      nixpkgs-fmt
       nixos-generators
       nix-index
       nix-tree
