@@ -28,8 +28,38 @@ nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake github:Hip
 
 ### Install server
 
-```bash
+https://carjorvaz.com/posts/installing-nixos-with-root-on-tmpfs-and-encrypted-zfs-on-a-netcup-vps/
 
+```bash
+sudo zpool create \
+    -o ashift=12 \
+    -o autotrim=on \
+    -O acltype=posixacl \
+    -O atime=off \
+    -O canmount=off \
+    -O compression=zstd \
+    -O dnodesize=auto \
+    -O normalization=formD \
+    -O xattr=sa \
+    -O mountpoint=none \
+    -O encryption=on \
+    -O keylocation=prompt \
+    -O keyformat=passphrase \
+    z \
+    /dev/disk/by-partuuid/...
+
+sudo zfs create z/nix
+```
+
+## Restore from backup
+
+```bash
+for dataset in z/www z/postgres z/lea z/persist; do
+    first=$(zfs list -t snapshot -o name -S creation "z/server.dzo-owl.ts.net/${dataset}" | tail --lines=1)
+    last=$(zfs list -t snapshot -o name -s creation "z/server.dzo-owl.ts.net/${dataset}" | tail --lines=1)
+    sudo zfs send "${first}" | pv | ssh -p 22 nixos@5.45.110.175 sudo zfs recv -v -x compression "${dataset}"
+    sudo zfs send -I "${first}" "${last}" | pv | ssh -p 22 nixos@5.45.110.175 sudo zfs recv -v "${dataset}"
+done
 ```
 
 ### Reinstall server
@@ -37,7 +67,7 @@ nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake github:Hip
 ```bash
 sudo mount -t tmpfs none /mnt
 sudo mkdir -p /mnt/{boot,nix,persist}
-sudo mount /dev/vda3 /mnt/boot
+sudo mount /dev/sda1 /mnt/boot
 sudo zpool import z -f
 sudo zfs load-key -a
 

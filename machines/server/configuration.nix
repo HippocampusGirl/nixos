@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }: {
+{ ... }: {
   imports = [
     ./cloudflare.nix
     ./docker-registry.nix
@@ -42,14 +42,24 @@
   };
 
   networking = {
-    firewall = { allowedTCPPorts = [ 80 443 ]; };
+    hostId = "1ea1ea11";
     hostName = "server";
-    hostId = "13413401";
-    useDHCP = true;
+
+    firewall = { allowedTCPPorts = [ 80 443 ]; };
+
+    enableIPv6 = true;
+    interfaces = {
+      ens3 = {
+        useDHCP = false;
+        ipv4.addresses = [{ address = "5.45.110.175"; prefixLength = 22; }];
+        ipv6.addresses = [{ address = "2a03:4000:6:2187::"; prefixLength = 64; }];
+      };
+    };
+    defaultGateway.address = "5.45.108.1";
+    defaultGateway6.address = "fe80::1";
+
     useNetworkd = true;
   };
-
-  services = { resolved.enable = true; };
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
@@ -79,7 +89,7 @@
     # this value at the release version of the first install of this system.
     # Before changing this value read the documentation for this option
     # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-    stateVersion = "23.11"; # Did you read the comment?
+    stateVersion = "24.05"; # Did you read the comment?
   };
 
   time = { timeZone = "Europe/Berlin"; };
