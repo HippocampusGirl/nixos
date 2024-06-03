@@ -1,17 +1,17 @@
 {
   nix = {
-    buildMachines = [{
-      hostName = "server.lea";
-      system = "x86_64-linux";
+    # buildMachines = [{
+    #   hostName = "server.lea";
+    #   system = "x86_64-linux";
 
-      protocol = "ssh";
-      sshUser = "nix-remote";
-      sshKey = "/root/.ssh/id_ed25519";
+    #   protocol = "ssh";
+    #   sshUser = "nix-remote";
+    #   sshKey = "/root/.ssh/id_ed25519";
 
-      maxJobs = 4;
+    #   maxJobs = 4;
 
-      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" ];
-      mandatoryFeatures = [ ];
-    }];
+    #   supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" ];
+    #   mandatoryFeatures = [ ];
+    # }];
   };
 }

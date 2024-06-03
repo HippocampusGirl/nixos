@@ -22,8 +22,17 @@
     };
     vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
-  outputs = { self, flake-utils, home-manager, impermanence, nixos-wsl, nixpkgs
-    , sops-nix, upload, vscode-server }:
+  outputs =
+    { self
+    , flake-utils
+    , home-manager
+    , impermanence
+    , nixos-wsl
+    , nixpkgs
+    , sops-nix
+    , upload
+    , vscode-server
+    }:
     {
       nixosModules = {
         default = { config, ... }: {
@@ -42,6 +51,7 @@
             ./modules/nix-ld.nix
             ./modules/packages.nix
             ./modules/powertop.nix
+            ./modules/resolved.nix
             ./modules/singularity.nix
             ./modules/tailscale.nix
             ./modules/tmux.nix
@@ -103,20 +113,19 @@
         };
       };
     } // flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs {
-          system = "x86_64-linux";
-          config.permittedInsecurePackages = [ "libdwarf-20210528" ];
-        };
-      in {
-        packages = {
-          garm = pkgs.callPackage ./packages/garm.nix { };
-          globalprotect-openconnect =
-            pkgs.callPackage ./packages/globalprotect-openconnect.nix { };
-        };
-        devShells = {
-          default =
-            pkgs.mkShell { buildInputs = with pkgs; [ nil nixd nixpkgs-fmt ]; };
-        };
-      });
+    let
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+        config.permittedInsecurePackages = [ "libdwarf-20210528" ];
+      };
+    in
+    {
+      packages = {
+        garm = pkgs.callPackage ./packages/garm.nix { };
+      };
+      devShells = {
+        default =
+          pkgs.mkShell { buildInputs = with pkgs; [ nil nixd nixpkgs-fmt ]; };
+      };
+    });
 }

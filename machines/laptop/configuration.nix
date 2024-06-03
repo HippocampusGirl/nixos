@@ -32,7 +32,7 @@
   };
 
   networking = {
-    hostId = "13413404";
+    hostId = "1ea1ea12";
     hostName = "laptop-nixos";
   };
 

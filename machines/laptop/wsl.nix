@@ -1,4 +1,14 @@
 { pkgs, ... }: {
+  environment = {
+    shellAliases = {
+      gnome-open = "wslview";
+      kde-open = "wslview";
+      xdg-open = "wslview";
+    };
+    systemPackages = with pkgs; [
+      wslu
+    ];
+  };
   wsl = {
     enable = true;
 
