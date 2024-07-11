@@ -3,10 +3,10 @@
   users.extraUsers.lea = {
     isNormalUser = true;
     hashedPasswordFile = config.sops.secrets."users/lea/hashed-password".path;
-    
+
     uid = 1000;
     extraGroups = [
-      "docker"  # Enable docker
+      "docker" # Enable docker
       "wheel" # Enable sudo
     ];
 
@@ -27,5 +27,11 @@
       startGid = 1000000;
       count = 1000000;
     }];
+  };
+  sops = {
+    secrets."users/lea/hashed-password" = {
+      neededForUsers = true;
+      sopsFile = ./secrets.yaml;
+    };
   };
 }

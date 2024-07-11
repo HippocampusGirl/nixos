@@ -2,7 +2,7 @@
 with lib;
 let
   cfg = config.services.dockerAuth;
-  dockerAuth = pkgs.buildGo120Module rec {
+  dockerAuth = pkgs.buildGo121Module rec {
     pname = "dockerAuth";
     version = "1.11.0";
     src = pkgs.fetchFromGitHub {
@@ -23,32 +23,39 @@ let
       net = cfg.net;
     };
     token = cfg.token;
-    users = lib.mapAttrs (user: configuration:
-      (lib.listToAttrs (lib.concatMap (name:
-        let value = configuration.${name};
-        in if name == "password" && value != null then
-          [ (lib.nameValuePair "password" value) ]
-        else
-          (if name == "passwordFile" && value != null then
-            [
-              (lib.nameValuePair "password" "$(cat ${value})")
-            ]
-          else
-            [ ])) (lib.attrNames configuration)))) cfg.users;
+    users = lib.mapAttrs
+      (user: configuration:
+        (lib.listToAttrs (lib.concatMap
+          (name:
+            let value = configuration.${name};
+            in if name == "password" && value != null then
+              [ (lib.nameValuePair "password" value) ]
+            else
+              (if name == "passwordFile" && value != null then
+                [
+                  (lib.nameValuePair "password" "$(cat ${value})")
+                ]
+              else
+                [ ]))
+          (lib.attrNames configuration))))
+      cfg.users;
     acl = cfg.acl;
   };
   configJSON = builtins.toJSON (recursiveUpdate authConfig cfg.extraConfig);
-  configureScript = pkgs.writeShellScriptBin "docker-auth-configure" (''
-    cat > /var/lib/docker-auth/config.yaml <<EOF
-    ${configJSON}
-    EOF
-    chown docker-auth:docker-auth /var/lib/docker-auth/config.yaml
-    chmod 755 /var/lib/docker-auth
-    chmod 700 /var/lib/docker-auth/config.yaml
-    chmod 755 ${cfg.token.certificate}
-  '');
+  configureScript = pkgs.writeShellScriptBin "docker-auth-configure" (
+    ''
+      cat > /var/lib/docker-auth/config.yaml <<EOF
+      ${configJSON}
+      EOF
+      chown docker-auth:docker-auth /var/lib/docker-auth/config.yaml
+      chmod 755 /var/lib/docker-auth
+      chmod 700 /var/lib/docker-auth/config.yaml
+      chmod 755 ${cfg.token.certificate}
+    ''
+  );
 
-in {
+in
+{
   options = {
     services.dockerAuth = {
       enable = mkEnableOption "Enable Docker Registry 2 Authentication Server";

@@ -2,7 +2,7 @@
 with lib;
 let
   cfg = config.services.garm;
-  garm = pkgs.buildGo120Module rec {
+  garm = pkgs.buildGo121Module rec {
     pname = "garm";
     version = "v0.1.3";
     src = pkgs.fetchFromGitHub {
@@ -16,122 +16,125 @@ let
     ];
     vendorHash = null;
   };
-  configureScript = pkgs.writeShellScriptBin "garm-configure" (''
-    mkdir -p /etc/garm
-    cat <<EOF > /etc/garm/config.toml
-    [default]
-    callback_url = "${cfg.callbackUrl}"
-    metadata_url = "${cfg.metadataUrl}"
-    config_dir = "${cfg.configDir}"
-    enable_log_streamer = ${if cfg.logStreamer.enable then "true" else "false"}
+  configureScript = pkgs.writeShellScriptBin "garm-configure" (
+    ''
+      mkdir -p /etc/garm
+      cat <<EOF > /etc/garm/config.toml
+      [default]
+      callback_url = "${cfg.callbackUrl}"
+      metadata_url = "${cfg.metadataUrl}"
+      config_dir = "${cfg.configDir}"
+      enable_log_streamer = ${if cfg.logStreamer.enable then "true" else "false"}
 
-    [metrics]
-    enable = ${if cfg.metrics.enable then "true" else "false"}
+      [metrics]
+      enable = ${if cfg.metrics.enable then "true" else "false"}
 
-    [jwt_auth]
-    secret = "$(cat ${cfg.jwtAuth.secretFile})"
-    time_to_live = "${cfg.jwtAuth.timeToLive}"
+      [jwt_auth]
+      secret = "$(cat ${cfg.jwtAuth.secretFile})"
+      time_to_live = "${cfg.jwtAuth.timeToLive}"
 
-    [apiserver]
-      bind = "${cfg.apiServer.bind}"
-      port = ${toString cfg.apiServer.port}
-      use_tls = ${if cfg.apiServer.tls.enable then "true" else "false"}
+      [apiserver]
+        bind = "${cfg.apiServer.bind}"
+        port = ${toString cfg.apiServer.port}
+        use_tls = ${if cfg.apiServer.tls.enable then "true" else "false"}
 
-      cors_origins = ["${concatStringsSep ''", "'' cfg.apiServer.corsOrigins}"]
-      [apiserver.tls]
-        ${
-          optionalString (cfg.apiServer.tls.certFile != null) ''
-            certificate = "${cfg.apiServer.tls.certFile}"
-          ''
-        }
-        ${
-          optionalString (cfg.apiServer.tls.keyFile != null) ''
-            key = "${cfg.apiServer.tls.keyFile}"
-          ''
-        }
+        cors_origins = ["${concatStringsSep ''", "'' cfg.apiServer.corsOrigins}"]
+        [apiserver.tls]
+          ${
+            optionalString (cfg.apiServer.tls.certFile != null) ''
+              certificate = "${cfg.apiServer.tls.certFile}"
+            ''
+          }
+          ${
+            optionalString (cfg.apiServer.tls.keyFile != null) ''
+              key = "${cfg.apiServer.tls.keyFile}"
+            ''
+          }
 
-    [database]
-      debug = ${if cfg.database.debug then "true" else "false"}
-      backend = "sqlite3"
-      passphrase = "$(cat ${cfg.database.passphraseFile})"
-      [database.sqlite3]
-        # Path on disk to the sqlite3 database file.
-        db_file = "${cfg.configDir}/garm.db"
+      [database]
+        debug = ${if cfg.database.debug then "true" else "false"}
+        backend = "sqlite3"
+        passphrase = "$(cat ${cfg.database.passphraseFile})"
+        [database.sqlite3]
+          # Path on disk to the sqlite3 database file.
+          db_file = "${cfg.configDir}/garm.db"
 
-    # Currently, providers are defined statically in the config. This is due to the fact
-    # that we have not yet added support for storing secrets in something like Barbican
-    # or Vault. This will change in the future. However, for now, it's important to remember
-    # that once you create a pool using one of the providers defined here, the name of that
-    # provider must not be changes, or the pool will no longer work. Make sure you remove any
-    # pools before removing or changing a provider.
-    [[provider]]
-      # An arbitrary string describing this provider.
-      name = "lxd_local"
-      # Provider type. Garm is designed to allow creating providers which are used to spin
-      # up compute resources, which in turn will run the github runner software.
-      # Currently, LXD is the only supprted provider, but more will be written in the future.
-      provider_type = "lxd"
-      # A short description of this provider. The name, description and provider types will
-      # be included in the information returned by the API when listing available providers.
-      description = "Local LXD installation"
-      [provider.lxd]
-        # the path to the unix socket that LXD is listening on. This works if garm and LXD
-        # are on the same system, and this option takes precedence over the "url" option,
-        # which connects over the network.
-        unix_socket_path = "/var/lib/lxd/unix.socket"
-        # When defining a pool for a repository or an organization, you have an option to
-        # specify a "flavor". In LXD terms, this translates to "profiles". Profiles allow
-        # you to customize your instances (memory, cpu, disks, nics, etc).
-        # This option allows you to inject the "default" profile along with the profile selected
-        # by the flavor.
-        include_default_profile = false
-        instance_type = "${cfg.lxd.instanceType}"
-        # enable/disable secure boot. If the image you select for the pool does not have a
-        # signed bootloader, set this to false, otherwise your instances won't boot.
-        secure_boot = false
-        # Project name to use. You can create a separate project in LXD for runners.
-        project_name = "${cfg.lxd.project}"
-        [provider.lxd.image_remotes]
-          # Image remotes are important. These are the default remotes used by lxc. The names
-          # of these remotes are important. When specifying an "image" for the pool, that image
-          # can be a hash of an existing image on your local LXD installation or it can be a
-          # remote image from one of these remotes. You can specify the images as follows:
-          # Example:
-          #
-          #    * ubuntu:20.04
-          #    * ubuntu_daily:20.04
-          #    * images:centos/8/cloud
-          #
-          # Ubuntu images come pre-installed with cloud-init which we use to set up the runner
-          # automatically and customize the runner. For non Ubuntu images, you need to use the
-          # variant that has "/cloud" in the name. Those images come with cloud-init.
-          [provider.lxd.image_remotes.ubuntu]
-            addr = "https://cloud-images.ubuntu.com/releases"
-            public = true
-            protocol = "simplestreams"
-            skip_verify = false
-          [provider.lxd.image_remotes.ubuntu_daily]
-            addr = "https://cloud-images.ubuntu.com/daily"
-            public = true
-            protocol = "simplestreams"
-            skip_verify = false
-          [provider.lxd.image_remotes.images]
-            addr = "https://images.linuxcontainers.org"
-            public = true
-            protocol = "simplestreams"
-            skip_verify = false
+      # Currently, providers are defined statically in the config. This is due to the fact
+      # that we have not yet added support for storing secrets in something like Barbican
+      # or Vault. This will change in the future. However, for now, it's important to remember
+      # that once you create a pool using one of the providers defined here, the name of that
+      # provider must not be changes, or the pool will no longer work. Make sure you remove any
+      # pools before removing or changing a provider.
+      [[provider]]
+        # An arbitrary string describing this provider.
+        name = "lxd_local"
+        # Provider type. Garm is designed to allow creating providers which are used to spin
+        # up compute resources, which in turn will run the github runner software.
+        # Currently, LXD is the only supprted provider, but more will be written in the future.
+        provider_type = "lxd"
+        # A short description of this provider. The name, description and provider types will
+        # be included in the information returned by the API when listing available providers.
+        description = "Local LXD installation"
+        [provider.lxd]
+          # the path to the unix socket that LXD is listening on. This works if garm and LXD
+          # are on the same system, and this option takes precedence over the "url" option,
+          # which connects over the network.
+          unix_socket_path = "/var/lib/lxd/unix.socket"
+          # When defining a pool for a repository or an organization, you have an option to
+          # specify a "flavor". In LXD terms, this translates to "profiles". Profiles allow
+          # you to customize your instances (memory, cpu, disks, nics, etc).
+          # This option allows you to inject the "default" profile along with the profile selected
+          # by the flavor.
+          include_default_profile = false
+          instance_type = "${cfg.lxd.instanceType}"
+          # enable/disable secure boot. If the image you select for the pool does not have a
+          # signed bootloader, set this to false, otherwise your instances won't boot.
+          secure_boot = false
+          # Project name to use. You can create a separate project in LXD for runners.
+          project_name = "${cfg.lxd.project}"
+          [provider.lxd.image_remotes]
+            # Image remotes are important. These are the default remotes used by lxc. The names
+            # of these remotes are important. When specifying an "image" for the pool, that image
+            # can be a hash of an existing image on your local LXD installation or it can be a
+            # remote image from one of these remotes. You can specify the images as follows:
+            # Example:
+            #
+            #    * ubuntu:20.04
+            #    * ubuntu_daily:20.04
+            #    * images:centos/8/cloud
+            #
+            # Ubuntu images come pre-installed with cloud-init which we use to set up the runner
+            # automatically and customize the runner. For non Ubuntu images, you need to use the
+            # variant that has "/cloud" in the name. Those images come with cloud-init.
+            [provider.lxd.image_remotes.ubuntu]
+              addr = "https://cloud-images.ubuntu.com/releases"
+              public = true
+              protocol = "simplestreams"
+              skip_verify = false
+            [provider.lxd.image_remotes.ubuntu_daily]
+              addr = "https://cloud-images.ubuntu.com/daily"
+              public = true
+              protocol = "simplestreams"
+              skip_verify = false
+            [provider.lxd.image_remotes.images]
+              addr = "https://images.linuxcontainers.org"
+              public = true
+              protocol = "simplestreams"
+              skip_verify = false
 
-    ${concatStringsSep "\n" (mapAttrsToList (name: value: ''
-      [[github]]
-      name = "${name}"
-      ${optionalString (value.description != null) ''
-        description = "${value.description}"
-      ''}
-      oauth2_token = "$(cat ${value.tokenFile})"
-    '') cfg.github)}
-    EOF
-  '');
-in {
+      ${concatStringsSep "\n" (mapAttrsToList (name: value: ''
+        [[github]]
+        name = "${name}"
+        ${optionalString (value.description != null) ''
+          description = "${value.description}"
+        ''}
+        oauth2_token = "$(cat ${value.tokenFile})"
+      '') cfg.github)}
+      EOF
+    ''
+  );
+in
+{
   options = {
     services.garm = {
       enable = mkEnableOption "Enable GitHub Actions Runner Manager";

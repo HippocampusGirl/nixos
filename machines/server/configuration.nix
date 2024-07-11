@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ ... }: {
+{
   imports = [
     ./cloudflare.nix
     ./docker-registry.nix
@@ -30,7 +30,6 @@
     tmp.cleanOnBoot = true;
     zfs = {
       devNodes = "/dev/disk/by-path";
-      enableUnstable = true;
       requestEncryptionCredentials = true;
     };
   };
@@ -55,8 +54,8 @@
         ipv6.addresses = [{ address = "2a03:4000:6:2187::"; prefixLength = 64; }];
       };
     };
-    defaultGateway.address = "5.45.108.1";
-    defaultGateway6.address = "fe80::1";
+    defaultGateway = { address = "5.45.108.1"; interface = "ens3"; };
+    defaultGateway6 = { address = "fe80::1"; interface = "ens3"; };
 
     useNetworkd = true;
   };
@@ -69,11 +68,6 @@
     # This can lead to login issues
     age.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
     gnupg.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_rsa_key" ];
-    # Specification of the secrets/
-    secrets."users/lea/hashed-password" = {
-      neededForUsers = true;
-      sopsFile = ../../users/secrets.yaml;
-    };
   };
 
   system = {
@@ -82,6 +76,11 @@
       enable = true;
       allowReboot = false;
       dates = "daily UTC";
+      flags = [
+        "--update-input"
+        "nixpkgs"
+        "--no-write-lock-file"
+      ];
     };
     # This value determines the NixOS release from which the default
     # settings for stateful data, like file locations and database versions

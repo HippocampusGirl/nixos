@@ -11,6 +11,7 @@
     ./networking.nix
     ./nginx.nix
     ./nix-remote.nix
+    ./proxy.nix
     ./vscode.nix
     ./wsl.nix
     ./zrepl.nix

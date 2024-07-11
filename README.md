@@ -76,8 +76,9 @@ sudo mount -t zfs z/nix /mnt/nix
 sudo mount -t zfs z/persist /mnt/persist
 sudo mkdir -p /mnt/etc/nixos /mnt/var/log
 sudo mount -o bind /mnt/persist/var/log /mnt/var/log
+sudo mount -o bind /lea /mnt/lea
 
-sudo nixos-install --impure --no-channel-copy --root /mnt --flake /lea/machines/nixos#server
+sudo nixos-install --no-channel-copy --root /mnt --flake path:///lea/nixos#server --show-trace
 
 sudo umount -Rl /mnt
 sudo zpool export -a
