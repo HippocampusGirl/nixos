@@ -8,7 +8,7 @@
   };
 
   services.trafficserver = {
-    enable = true;
+    # enable = true;
 
     ipAllow = [
       {

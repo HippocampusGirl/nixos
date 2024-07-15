@@ -1,5 +1,10 @@
 { config, pkgs, ... }:
 {
+  networking = {
+    hostId = "1ea1ea12";
+    hostName = "laptop-nixos";
+    # nftables.enable = true;
+  };
   services = {
     openvpn.servers."charite" =
       let

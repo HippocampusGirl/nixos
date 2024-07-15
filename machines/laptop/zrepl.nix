@@ -50,7 +50,8 @@ let
       esac
     '';
   };
-in {
+in
+{
   services.zrepl = {
     enable = true;
     settings = {
@@ -135,5 +136,8 @@ in {
         }
       ];
     };
+  };
+  systemd.services.zrepl = {
+    after = [ "tailscaled.service" "sys-subsystem-net-devices-tailscale0.device" ];
   };
 }

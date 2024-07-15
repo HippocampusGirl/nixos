@@ -32,11 +32,6 @@
     };
   };
 
-  networking = {
-    hostId = "1ea1ea12";
-    hostName = "laptop-nixos";
-  };
-
   nix.settings.max-jobs = 1;
 
   nixpkgs.config.allowUnfree = true;
