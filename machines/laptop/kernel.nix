@@ -22,6 +22,21 @@ let
       ${builtins.readFile "${src}/Microsoft/config-wsl"}
     '';
 
+    kernelPatches = [
+      {
+        name = "enable-zram-zstd";
+        patch = null;
+        extraStructuredConfig = {
+          CONFIG_ZRAM_DEF_COMP_ZSTD = lib.kernel.yes;
+          CONFIG_ZRAM_DEF_COMP = "zstd";
+          CONFIG_ZRAM_WRITEBACK = lib.kernel.yes;
+          CONFIG_ZRAM_TRACK_ENTRY_ACTIME = lib.kernel.yes;
+          CONFIG_ZRAM_MEMORY_TRACKING = lib.kernel.yes;
+          CONFIG_ZRAM_MULTI_COMP = lib.kernel.yes;
+        };
+      }
+    ];
+
     allowImportFromDerivation = true;
   };
 

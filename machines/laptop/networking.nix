@@ -3,6 +3,7 @@
   networking = {
     hostId = "1ea1ea12";
     hostName = "laptop-nixos";
+    # firewall.enable = false;
     # nftables.enable = true;
   };
   services = {
@@ -37,7 +38,7 @@
       portal = "vpn.ini.usc.edu";
     in
     {
-      description = "GlobalProtect/OpenConnect instance ‘${portal}’";
+      description = "GlobalProtect/OpenConnect instance '${portal}'";
 
       enable = true;
       wantedBy = [ "multi-user.target" ];

@@ -81,7 +81,6 @@
           imports = [
             self.nixosModules.default
             ./modules/tex.nix
-            ./machines/laptop/configuration.nix
             home-manager.nixosModules.home-manager
             nixos-wsl.nixosModules.wsl
             sops-nix.nixosModules.sops
@@ -97,7 +96,7 @@
         };
         laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          modules = [ self.nixosModules.laptop ];
+          modules = [ self.nixosModules.laptop ./machines/laptop/configuration.nix ];
         };
         server = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";

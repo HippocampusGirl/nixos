@@ -23,6 +23,7 @@
       nix-tree
       openssl
       pciutils
+      pixi
       pkg-config
       pre-commit
       pv
