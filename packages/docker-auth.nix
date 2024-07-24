@@ -41,11 +41,10 @@ let
       cfg.users;
     acl = cfg.acl;
   };
-  configJSON = builtins.toJSON (recursiveUpdate authConfig cfg.extraConfig);
   configureScript = pkgs.writeShellScriptBin "docker-auth-configure" (
     ''
       cat > /var/lib/docker-auth/config.yaml <<EOF
-      ${configJSON}
+      ${builtins.toJSON (recursiveUpdate authConfig cfg.extraConfig)}
       EOF
       chown docker-auth:docker-auth /var/lib/docker-auth/config.yaml
       chmod 755 /var/lib/docker-auth
