@@ -10,5 +10,4 @@
   };
   programs.nix-ld.libraries = with pkgs;
     (lib.mkOptionDefault [ cudaPackages.cudatoolkit cudaPackages.cudnn ]);
-  wsl.useWindowsDriver = true;
 }

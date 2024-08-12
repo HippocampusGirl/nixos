@@ -4,7 +4,7 @@ My nixos configs repo
 
 Setup as per <https://grahamc.com/blog/erase-your-darlings/> and <https://carjorvaz.com/posts/installing-nixos-with-root-on-tmpfs-and-encrypted-zfs-on-a-netcup-vps/>
 
-## Laptop
+## laptop-wsl
 
 ### Install laptop
 
@@ -21,7 +21,34 @@ sudo zpool create \
 ### Update laptop
 
 ```bash
-nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake github:HippocampusGirl/nixos#laptop
+nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake github:HippocampusGirl/nixos#laptop-wsl
+```
+
+## laptop
+
+### Install laptop
+
+```bash
+sudo mount -t tmpfs none /mnt
+sudo mkdir -p /mnt/{boot,nix,persist,work,lea}
+sudo mount /dev/nvme1n1p1 /mnt/boot
+sudo zpool import x -f
+sudo zfs load-key -a
+
+sudo mount -t zfs x/nix /mnt/nix
+sudo mount -t zfs x/persist /mnt/persist
+sudo mkdir -p /mnt/etc/nixos /mnt/var/{log,lib}
+sudo mount -o bind /mnt/persist/var/log /mnt/var/log
+sudo mount -o bind /mnt/persist/var/lib /mnt/var/lib
+
+sudo ln -s /mnt/var/lib/key-file /var/lib/key-file
+sudo zpool import z -f
+sudo zfs load-key -a
+
+sudo mount -t zfs z/lea /mnt/lea
+sudo mount -t zfs z/work /mnt/work
+
+sudo nixos-install --no-channel-copy --root /mnt --flake path:///work/nixos#laptop --show-trace
 ```
 
 ## Server

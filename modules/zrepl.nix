@@ -1,6 +1,4 @@
-{ config, lib, ... }:
-let cfg = config.services.zrepl;
-in {
+{ lib, ... }: {
   options = with lib; {
     services.zrepl = {
       sinkPort = mkOption {

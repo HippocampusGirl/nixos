@@ -9,6 +9,11 @@
       wslu
     ];
   };
+  systemd.managerEnvironment = {
+    # Allow running zram-generator on wsl
+    "ZRAM_GENERATOR_ROOT" = "/";
+  };
+
   wsl = {
     enable = true;
 
@@ -33,4 +38,10 @@
       };
     };
   };
+
+  # CUDA
+  wsl.useWindowsDriver = true;
+
+  # Networking 
+  wsl.wslConf.network = { generateResolvConf = false; };
 }

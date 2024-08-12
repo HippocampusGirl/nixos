@@ -1,4 +1,4 @@
-{ config, lib, pkgs, utils, ... }:
+{ config, lib, pkgs, ... }:
 with lib;
 let
   toml = pkgs.formats.toml { };
@@ -104,7 +104,7 @@ in
             mkdir -p ${statePath}
             
             ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: c: ''
-              ${utils.genJqSecretsReplacementSnippet c "${statePath}/${name}.json"}
+              ${lib.utils.genJqSecretsReplacementSnippet c "${statePath}/${name}.json"}
               json2toml "${statePath}/${name}.json" "${statePath}/${name}.toml"
               rm "${statePath}/${name}.json"
             '') configFiles)}

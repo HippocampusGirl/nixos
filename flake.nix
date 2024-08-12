@@ -1,6 +1,5 @@
 {
   inputs = {
-
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -21,6 +20,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     { self
@@ -32,6 +35,7 @@
     , sops-nix
     , upload
     , vscode-server
+    , lanzaboote
     }:
     {
       nixosModules = {
@@ -80,6 +84,18 @@
         laptop = { config, ... }: {
           imports = [
             self.nixosModules.default
+            ./modules/impermanence.nix
+            ./modules/zfs.nix
+            ./users/root.nix
+            impermanence.nixosModules.impermanence
+            sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+            lanzaboote.nixosModules.lanzaboote
+          ];
+        };
+        laptop-wsl = { config, ... }: {
+          imports = [
+            self.nixosModules.default
             ./modules/tex.nix
             home-manager.nixosModules.home-manager
             nixos-wsl.nixosModules.wsl
@@ -97,6 +113,10 @@
         laptop = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [ self.nixosModules.laptop ./machines/laptop/configuration.nix ];
+        };
+        laptop-wsl = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [ self.nixosModules.laptop-wsl ./machines/laptop-wsl/configuration.nix ];
         };
         server = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";

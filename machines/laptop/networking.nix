@@ -1,17 +1,12 @@
 { config, pkgs, ... }:
 {
-  networking = {
-    hostId = "1ea1ea12";
-    hostName = "laptop-nixos";
-    # firewall.enable = false;
-    # nftables.enable = true;
-  };
   services = {
     openvpn.servers."charite" =
       let
         update-systemd-resolved = ''
           ${pkgs.update-systemd-resolved}/libexec/openvpn/update-systemd-resolved
-          resolvectl dnsovertls $dev no'';
+          resolvectl dnsovertls $dev no
+          resolvectl domain $dev charite.de bihealth.org'';
       in
       {
         config = ''
@@ -54,7 +49,6 @@
         RemainAfterExit = true;
       };
     };
-  wsl.wslConf.network = { generateResolvConf = false; };
 }
 
 

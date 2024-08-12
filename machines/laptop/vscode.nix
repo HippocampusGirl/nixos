@@ -1,9 +1,8 @@
-{
-  services = {
-    # Automatically fix vscode server executable
-    vscode-server = {
-      enable = true;
-      installPath = "$HOME/.vscode-server";
-    };
-  };
+{ pkgs, ... }: {
+environment.systemPackages = with pkgs; [ vscode ];
+
+#programs.vscode = {
+  #  enable = true;
+  #  package = pkgs.vscode.fhs;
+  #};
 }
