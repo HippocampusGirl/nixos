@@ -5,6 +5,7 @@
 {
   imports = [
     ./cloudflare.nix
+    ./denbi.nix
     ./docker-registry.nix
     ./garm.nix
     # Include the results of the hardware scan
@@ -73,5 +74,7 @@
   };
 
   time = { timeZone = "Europe/Berlin"; };
+
+
 }
 

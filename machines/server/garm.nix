@@ -37,12 +37,6 @@
           passphrase._secret = config.sops.secrets."garm/database-passphrase".path;
           sqlite3.db_file = "/var/lib/garm/garm.db";
         };
-        github = [
-          {
-            name = "hippocampusgirl";
-            oauth2_token._secret = config.sops.secrets."garm/github-token".path;
-          }
-        ];
       };
       providers = {
         "local" = {
@@ -93,7 +87,6 @@
   sops = {
     secrets."garm/jwt-auth-secret" = { };
     secrets."garm/database-passphrase" = { };
-    secrets."garm/github-token" = { };
     secrets."denbi/clouds" = { };
   };
 }

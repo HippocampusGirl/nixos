@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, utils, ... }:
 with lib;
 let
   toml = pkgs.formats.toml { };
@@ -15,15 +15,16 @@ let
       };
       vendorHash = null;
     };
-  garm = buildCloudbaseModule "garm" "v0.1.4" "sha256-5tRrBSgrIedecjpRfrmWn2qW2r/THrPyrj/M09OaQCE=" {
+  garm = buildCloudbaseModule "garm" "v0.1.5" "sha256-6kIULhL2NtyfduEYlApHLuwKdWEPVgcxdJ/zsLSh7AQ=" {
     checkFlags = [ "-tags=testing" ];
   };
 
   providerExecutables = {
-    openstack = ''${buildCloudbaseModule "garm-provider-openstack" "f3a0d85fe3e5ab40b6b6f6c5399c99e64cf18fdf" "sha256-RV5RyLzUUekTL/RqD3l+DDLZz7lclgBSPOZhfIIp8S8=" {
+    lxd = ''${buildCloudbaseModule "garm-provider-lxd" "v0.1.0" "sha256-pzyqfuphBKGgR6o1AK1cEdhM+J3OBrKw7LaWq/XgDMA=" { 
+    }}/bin/garm-provider-lxd'';
+    openstack = ''${buildCloudbaseModule "garm-provider-openstack" "v0.1.0" "sha256-tQtzLelEcfIj2c7xACTS7sJA62KfbIT4xaZpTmLD5fE=" {
       checkFlags = [ "-tags=testing" ];
     }}/bin/garm-provider-openstack'';
-    lxd = ''${buildCloudbaseModule "garm-provider-lxd" "c8e68708e64921eedef8f10dfc6c8c7ca507c5e7" "sha256-aB/tTmRjrYyzkRFZsuETDb8HvVfu4nhAPLJ3RukjLek=" { }}/bin/garm-provider-lxd'';
   };
 
   statePath = "/etc/garm";
@@ -104,7 +105,7 @@ in
             mkdir -p ${statePath}
             
             ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: c: ''
-              ${lib.utils.genJqSecretsReplacementSnippet c "${statePath}/${name}.json"}
+              ${utils.genJqSecretsReplacementSnippet c "${statePath}/${name}.json"}
               json2toml "${statePath}/${name}.json" "${statePath}/${name}.toml"
               rm "${statePath}/${name}.json"
             '') configFiles)}

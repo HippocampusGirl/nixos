@@ -26,36 +26,38 @@ in {
   };
 
   config = mkIf cfg.enable {
-    systemd.services.tailscale-cert = let
-      depends-on =
-        [ "network.target" "network-online.target" "tailscaled.service" ];
-    in {
-      after = depends-on;
-      wants = depends-on;
-      requires = [ "tailscaled.service" ];
-      wantedBy = [ "multi-user.target" ];
+    systemd.services.tailscale-cert =
+      let
+        depends-on =
+          [ "network.target" "network-online.target" "tailscaled.service" ];
+      in
+      {
+        after = depends-on;
+        wants = depends-on;
+        requires = [ "tailscaled.service" ];
+        wantedBy = [ "multi-user.target" ];
 
-      path = with pkgs; [ dig tailscale ];
+        path = [ pkgs.dig config.services.tailscale.package ];
 
-      serviceConfig = {
-        Type = "oneshot";
-        ProtectSystem = "strict";
-        ReadWritePaths = [ cfg.basePath ];
-        PrivateTmp = true;
-        WorkingDirectory = cfg.basePath;
-        NoNewPrivileges = true;
-        PrivateDevices = true;
-        ProtectClock = true;
-        ProtectHome = true;
-        ProtectHostname = true;
+        serviceConfig = {
+          Type = "oneshot";
+          ProtectSystem = "strict";
+          ReadWritePaths = [ cfg.basePath ];
+          PrivateTmp = true;
+          WorkingDirectory = cfg.basePath;
+          NoNewPrivileges = true;
+          PrivateDevices = true;
+          ProtectClock = true;
+          ProtectHome = true;
+          ProtectHostname = true;
+        };
+
+        script = ''
+          # Extract domain name from error message
+          domain_name=$(tailscale cert 2> >(sed --regexp-extended --silent 's/For domain, use "(.+)"\./\1/p') || true)
+          tailscale cert --cert-file ${cfg.certFile} --key-file ${cfg.keyFile} ''${domain_name}
+        '';
       };
-
-      script = ''
-        # Extract domain name from error message
-        domain_name=$(tailscale cert 2> >(sed --regexp-extended --silent 's/For domain, use "(.+)"\./\1/p') || true)
-        tailscale cert --cert-file ${cfg.certFile} --key-file ${cfg.keyFile} ''${domain_name}
-      '';
-    };
 
     systemd.timers.tailscale-cert = {
       wantedBy = [ "timers.target" ];

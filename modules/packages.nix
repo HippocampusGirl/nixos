@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   environment = {
     systemPackages = with pkgs; [
+      apngopt
       cached-nix-shell
       cachix
       cmake
@@ -22,18 +23,21 @@
       nix-index
       nix-tree
       openssl
+      unstable.packer
       pciutils
-      pixi
+      unstable.pixi
       pkg-config
       pre-commit
       pv
       ripgrep-all
+      unstable.ruff
       sops
       tree
       usbutils
       unzip
       wget
       zsh
+      zulu
     ];
   };
 }
