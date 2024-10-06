@@ -11,7 +11,7 @@
     ../laptop/networking.nix
     ../laptop/nginx.nix
     ../laptop/nix-remote.nix
-    ../laptop/proxy.nix
+    ./trafficserver.nix
     ./vscode.nix
     ./wsl.nix
     ../laptop/zrepl.nix
@@ -42,6 +42,7 @@
   nix.settings.max-jobs = 1;
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfreePredicate = _: true;
 
   programs.ssh.extraConfig = lib.mkAfter ''
     ServerAliveInterval 120

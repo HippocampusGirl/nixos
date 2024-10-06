@@ -24,6 +24,7 @@
       url = "github:nix-community/lanzaboote/v0.4.1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   };
   outputs =
     { self
@@ -36,7 +37,11 @@
     , upload
     , vscode-server
     , lanzaboote
+    , nixpkgs-unstable
     }:
+    let
+      system = "x86_64-linux";
+    in
     {
       nixosModules = {
         default = { config, ... }: {
@@ -64,6 +69,16 @@
             ./users/lea.nix
             {
               system.autoUpgrade.flake = self.outPath;
+              nixpkgs.overlays = [
+                (final: prev: {
+                  unstable = import nixpkgs-unstable {
+                    inherit system;
+                    config = {
+                      allowUnfree = true;
+                    };
+                  };
+                })
+              ];
             }
           ];
         };
@@ -106,20 +121,20 @@
       };
       nixosConfigurations = {
         home = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules =
             [ self.nixosModules.server ./machines/home/configuration.nix ];
         };
         laptop = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = [ self.nixosModules.laptop ./machines/laptop/configuration.nix ];
         };
         laptop-wsl = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = [ self.nixosModules.laptop-wsl ./machines/laptop-wsl/configuration.nix ];
         };
         server = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules =
             [ self.nixosModules.server ./machines/server/configuration.nix ];
         };
@@ -127,8 +142,7 @@
     } // flake-utils.lib.eachDefaultSystem (system:
     let
       pkgs = import nixpkgs {
-        system = "x86_64-linux";
-        config.permittedInsecurePackages = [ "libdwarf-20210528" ];
+        inherit system;
       };
     in
     {

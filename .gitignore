@@ -1,2 +1,4 @@
 # ignore direnv
 .direnv
+
+machines/laptop/openvpn_management.py

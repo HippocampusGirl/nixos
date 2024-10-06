@@ -11,7 +11,8 @@
       {
         config = ''
           config ${config.sops.secrets."charite/openvpn/config".path}
-          auth-user-pass ${config.sops.secrets."charite/openvpn/credentials".path}
+          management /run/openvpn-charite-management.sock unix
+          management-query-passwords
         '';
         up = update-systemd-resolved;
         down = update-systemd-resolved;
@@ -20,7 +21,24 @@
   };
   sops = {
     secrets."charite/openvpn/config" = { sopsFile = ./secrets.yaml; };
-    secrets."charite/openvpn/credentials" = { sopsFile = ./secrets.yaml; };
+    secrets."charite/openvpn/secrets" = { sopsFile = ./secrets.yaml; };
+    secrets."charite/openvpn/management-script" = { sopsFile = ./secrets.yaml; mode = "0500"; };
+  };
+  systemd.services.openvpn-charite-management = {
+    enable = true;
+    startLimitIntervalSec = 0;
+
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = ''
+        ${pkgs.python3}/bin/python ${config.sops.secrets."charite/openvpn/management-script".path} \
+          ${config.sops.secrets."charite/openvpn/secrets".path}
+      '';
+      Restart = "always";
+      RestartSec = "1s";
+    };
   };
   environment.etc."vpnc/post-connect.d/update-systemd-resolved" = {
     source = ''${pkgs.writeShellScriptBin "update-systemd-resolved" ''
@@ -35,7 +53,7 @@
     {
       description = "GlobalProtect/OpenConnect instance '${portal}'";
 
-      enable = true;
+      enable = false;
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
       restartTriggers = [ config.environment.etc."vpnc/post-connect.d/update-systemd-resolved".source ];

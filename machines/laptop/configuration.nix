@@ -30,16 +30,18 @@
     nvidia = {
       modesetting.enable = true;
       open = false;
-      prime = {
-        offload = {
-          enable = true;
-          enableOffloadCmd = true;
-        };
-        # Bus ID of the NVIDIA GPU. You can find it using lspci, either under 3D or VGA 
-        nvidiaBusId = "PCI:1:0:0";
-        # Bus ID of the Intel GPU. You can find it using lspci, either under 3D or VGA 
-        intelBusId = "PCI:0:2:0";
-      };
+      nvidiaPersistenced = true;
+      # prime = {
+      #   allowExternalGpu = true;
+      #   offload = {
+      #     enable = true;
+      #     enableOffloadCmd = true;
+      #   };
+      #   # Bus ID of the NVIDIA GPU. You can find it using lspci, either under 3D or VGA 
+      #   nvidiaBusId = "PCI:30:0:0";
+      #   # Bus ID of the Intel GPU. You can find it using lspci, either under 3D or VGA 
+      #   intelBusId = "PCI:0:2:0";
+      # };
     };
 
     opengl.enable = true;
@@ -64,10 +66,16 @@
   powerManagement.enable = true;
 
   services = {
-    # Enable touchpad support (enabled default in most desktopManager)
+    # fwupd is a simple daemon allowing you to update some devices' firmware, including UEFI for several machines
+    fwupd.enable = true;
+
+    # A userspace daemon to enable security levels for Thunderbolt 3
+    hardware.bolt.enable = true;
+
+    # Touchpad support (enabled default in most desktopManager)
     libinput.enable = true;
 
-    # Enable sound
+    # Sound
     pipewire = {
       enable = true;
 
@@ -76,10 +84,10 @@
       pulse.enable = true;
     };
 
-    # Enable CUPS to print documents
+    # CUPS to print documents
     printing.enable = true;
 
-    # Enable the X11 windowing system
+    # X11 windowing system
     xserver = {
       enable = true;
 

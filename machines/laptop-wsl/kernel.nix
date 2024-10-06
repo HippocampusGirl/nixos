@@ -1,13 +1,13 @@
 { config, lib, pkgs, ... }:
 let
-  kernelVersion = "6.6.36.3";
+  kernelVersion = "6.6.36.6";
   baseKernel = pkgs.linux_6_6;
 
   src = pkgs.fetchFromGitHub {
     owner = "microsoft";
     repo = "WSL2-Linux-Kernel";
     rev = "linux-msft-wsl-${kernelVersion}";
-    sha256 = "sha256-kNNEJ81rlM0ns+bdiiSpYcM2hZUFjXb7EgGgHEI7b04=";
+    sha256 = "sha256-6jLZs+qlmZQHtcG1fmMv9GZsJiqg2EmsiP4QmEaSU2o=";
   };
 
   extraConfig = with lib.kernel;{
