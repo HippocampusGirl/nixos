@@ -5,7 +5,7 @@
       cached-nix-shell
       cachix
       cmake
-      datalad
+      unstable.datalad
       dig
       file
       gnupg

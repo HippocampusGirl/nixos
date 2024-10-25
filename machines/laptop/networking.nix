@@ -22,7 +22,6 @@
   sops = {
     secrets."charite/openvpn/config" = { sopsFile = ./secrets.yaml; };
     secrets."charite/openvpn/secrets" = { sopsFile = ./secrets.yaml; };
-    secrets."charite/openvpn/management-script" = { sopsFile = ./secrets.yaml; mode = "0500"; };
   };
   systemd.services.openvpn-charite-management = {
     enable = true;
@@ -32,8 +31,9 @@
 
     serviceConfig = {
       Type = "simple";
-      ExecStart = ''
-        ${pkgs.python3}/bin/python ${config.sops.secrets."charite/openvpn/management-script".path} \
+      Environment = "DISPLAY=:0";
+      ExecStart = let python = pkgs.python3.withPackages (ps: with ps; [ tkinter ]); in ''
+        ${python}/bin/python ${./openvpn_management.py}  \
           ${config.sops.secrets."charite/openvpn/secrets".path}
       '';
       Restart = "always";
@@ -53,12 +53,12 @@
     {
       description = "GlobalProtect/OpenConnect instance '${portal}'";
 
-      enable = false;
+      enable = true;
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
       restartTriggers = [ config.environment.etc."vpnc/post-connect.d/update-systemd-resolved".source ];
 
-      path = [ pkgs.openconnect pkgs.gp-saml-gui pkgs.sudo ];
+      path = [ pkgs.gp-saml-gui pkgs.openconnect pkgs.sudo ];
 
       serviceConfig = {
         Type = "simple";
