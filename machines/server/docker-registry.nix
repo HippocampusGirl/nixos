@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 let
   authListenAddress = "localhost:13451";
   registryPort = 13450;
@@ -20,7 +20,23 @@ let
       };
     };
   };
-in {
+  # distribution = pkgs.unstable.distribution.overrideAttrs (_: {
+  #   version = "git";
+  #   src = pkgs.fetchFromGitHub {
+  #     owner = "distribution";
+  #     repo = "distribution";
+  #     rev = "0bfa293eeae4234eb23785f58a74d373f6fa38fb";
+  #     sha256 = "sha256-F0TSjf8WlF7QvK7UTwFCdFZVulA/9+1OrFyR1IsfQ/k=";
+  #   };
+  #   patches = [
+  #     (pkgs.fetchpatch {
+  #       url = "https://github.com/distribution/distribution/pull/4424.patch";
+  #       sha256 = "sha256-9nd6ai4PICUYsuE55DQMMoUqJpQpDtmEke+cUC2/2QY=";
+  #     })
+  #   ];
+  # });
+in
+{
   imports = [ ../../packages/docker-auth.nix ];
   services = {
     dockerAuth = {
@@ -29,17 +45,17 @@ in {
       token = {
         issuer = "https://cr.lea.science";
         expiration = 900;
-        certificate = config.sops.secrets."docker_auth/certificate".path;
-        key = config.sops.secrets."docker_auth/key".path;
+        certificate = config.sops.secrets."docker-auth/certificate".path;
+        key = config.sops.secrets."docker-auth/key".path;
       };
       users = {
         lea = {
           passwordFile =
-            config.sops.secrets."docker_auth/users/lea/hashed-password".path;
+            config.sops.secrets."docker-auth/users/lea/hashed-password".path;
         };
         garm = {
           passwordFile =
-            config.sops.secrets."docker_auth/users/garm/hashed-password".path;
+            config.sops.secrets."docker-auth/users/garm/hashed-password".path;
         };
         "" = { }; # Allow anonymous access
       };
@@ -70,6 +86,15 @@ in {
           rootcertbundle = config.services.dockerAuth.token.certificate;
         };
       };
+      # package = distribution;
+      # storagePath = null;
+      # extraConfig = {
+      #   storage = {
+      #     s3 = {
+      #       chunksize = 104857600;
+      #     };
+      #   };
+      # };
     };
     nginx = {
       clientMaxBodySize = "0"; # Allow large uploads
@@ -88,13 +113,18 @@ in {
     };
   };
   sops = {
-    secrets."docker_auth/users/lea/hashed-password" = { };
-    secrets."docker_auth/users/garm/hashed-password" = { };
-    secrets."docker_auth/certificate" = { mode = "0644"; };
-    secrets."docker_auth/key" = {
+    secrets."docker-auth/users/lea/hashed-password" = { };
+    secrets."docker-auth/users/garm/hashed-password" = { };
+    secrets."docker-auth/certificate" = { mode = "0644"; };
+    secrets."docker-auth/key" = {
       mode = "0440";
       owner = config.users.users.docker-auth.name;
       group = config.users.users.docker-auth.group;
     };
+    secrets."docker-registry/environment" = { };
+  };
+  systemd.services.docker-registry.serviceConfig = {
+    Environment = [ "OTEL_TRACES_EXPORTER=none" ];
+    #   EnvironmentFile = config.sops.secrets."docker-registry/environment".path;
   };
 }
