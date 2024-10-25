@@ -53,15 +53,13 @@
   '';
 
   sops = {
-    defaultSopsFile = ../../users/secrets.yaml;
+    defaultSopsFile = ../laptop/secrets.yaml;
     # If either of these paths does not exist immediately after boot, then 
     # sops-nix will fail and not decrypt any secrets. That means that the
     # the secrets will not be available when the users are generated. 
     # This can lead to login issues
     age.sshKeyPaths = [ "/mnt/c/Users/Lea/WSL/ssh_host_ed25519_key" ];
     gnupg.sshKeyPaths = [ "/mnt/c/Users/Lea/WSL/ssh_host_rsa_key" ];
-    # Specification of the secrets/
-    secrets."users/lea/hashed-password" = { neededForUsers = true; };
   };
 
   system = {

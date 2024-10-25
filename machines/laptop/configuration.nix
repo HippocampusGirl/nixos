@@ -105,6 +105,7 @@
   sops = {
     # This is using an age key that is expected to already be in the filesystem
     age.keyFile = "/var/lib/sops/key.txt";
+    defaultSopsFile = ./secrets.yaml;
   };
 
   # This option defines the firste this value after the initial install, for any reason,

@@ -1,9 +1,11 @@
-{ lib, config, ... }: {
+{ config, ... }: {
   nix = {
+    checkConfig = false;
     distributedBuilds = true;
     extraOptions = ''
       builders-use-substitutes = true
       experimental-features = nix-command flakes impure-derivations ca-derivations
+      !include ${config.sops.templates."nix-extra-config".path}
     '';
     # Enable garbage collection every week
     gc = {
@@ -26,6 +28,18 @@
       trusted-users = [ "lea" "nix-remote" ];
       # Automatically merge duplicate files from the store
       auto-optimise-store = true;
+    };
+
+  };
+  sops = {
+    templates."nix-extra-config" = {
+      content = ''
+        access-tokens = github.com=${config.sops.placeholder."github-token"}
+      '';
+      mode = "0444";
+    };
+    secrets."github-token" = {
+      restartUnits = [ "nix-daemon.service" ];
     };
   };
 }
