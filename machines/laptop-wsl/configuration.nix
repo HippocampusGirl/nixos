@@ -47,9 +47,6 @@
   programs.ssh.extraConfig = lib.mkAfter ''
     ServerAliveInterval 120
     TCPKeepAlive yes
-
-    Host server.lea.science
-    Port 13422
   '';
 
   sops = {

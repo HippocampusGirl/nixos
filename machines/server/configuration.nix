@@ -13,6 +13,7 @@
     ./mattermost.nix
     ./networking.nix
     ./nginx.nix
+    ./optuna.nix
     ./upload-server.nix
     ./nix-remote.nix
     ./zrepl.nix

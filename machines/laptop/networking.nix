@@ -1,4 +1,11 @@
 { config, pkgs, ... }:
+let
+  gp-saml-gui = pkgs.gp-saml-gui.overrideAttrs (_: {
+    patches = [
+      ./gp-saml-gui.patch
+    ];
+  });
+in
 {
   services = {
     openvpn.servers."charite" =
@@ -58,16 +65,19 @@
       after = [ "network.target" ];
       restartTriggers = [ config.environment.etc."vpnc/post-connect.d/update-systemd-resolved".source ];
 
-      path = [ pkgs.gp-saml-gui pkgs.openconnect pkgs.sudo ];
+      path = [ gp-saml-gui pkgs.openconnect pkgs.sudo ];
 
       serviceConfig = {
         Type = "simple";
         Environment = "DISPLAY=:0";
-        ExecStart = "${pkgs.gp-saml-gui}/bin/gp-saml-gui --gateway ${portal} --sudo-openconnect";
+        ExecStart = ''
+          ${gp-saml-gui}/bin/gp-saml-gui --sudo-openconnect --gateway ${portal}
+        '';
         RemainAfterExit = true;
       };
     };
 }
-
+# \
+#             --script "${pkgs.vpn-slice}/bin/vpn-slice <10.0.0.0/8>"
 
 

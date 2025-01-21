@@ -1,5 +1,4 @@
 {
-  hardware.nvidia-container-toolkit.enable = true;
   virtualisation = {
     containers.enable = true;
     docker = {

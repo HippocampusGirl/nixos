@@ -2,11 +2,9 @@
   environment = {
     systemPackages = with pkgs.cudaPackages; [ cudatoolkit cudnn ];
   };
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    setLdLibraryPath = true;
+    enable32Bit = true;
   };
   programs.nix-ld.libraries = with pkgs;
     (lib.mkOptionDefault [ cudaPackages.cudatoolkit cudaPackages.cudnn ]);

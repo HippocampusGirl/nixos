@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 let
   authListenAddress = "localhost:13451";
   registryPort = 13450;
@@ -47,6 +47,7 @@ in
         expiration = 900;
         certificate = config.sops.secrets."docker-auth/certificate".path;
         key = config.sops.secrets."docker-auth/key".path;
+        jwks = config.sops.secrets."docker-auth/jwks".path;
       };
       users = {
         lea = {
@@ -84,6 +85,7 @@ in
           service = "Docker registry";
           issuer = config.services.dockerAuth.token.issuer;
           rootcertbundle = config.services.dockerAuth.token.certificate;
+          jwks = config.services.dockerAuth.token.jwks;
         };
       };
       # package = distribution;
@@ -116,6 +118,7 @@ in
     secrets."docker-auth/users/lea/hashed-password" = { };
     secrets."docker-auth/users/garm/hashed-password" = { };
     secrets."docker-auth/certificate" = { mode = "0644"; };
+    secrets."docker-auth/jwks" = { mode = "0644"; };
     secrets."docker-auth/key" = {
       mode = "0440";
       owner = config.users.users.docker-auth.name;

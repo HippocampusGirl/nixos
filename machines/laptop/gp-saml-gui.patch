@@ -1,0 +1,13 @@
+diff --git a/gp_saml_gui.py b/gp_saml_gui.py
+index f3ad169..f12c61e 100755
+--- a/gp_saml_gui.py
++++ b/gp_saml_gui.py
+@@ -295,7 +295,7 @@ def parse_args(args = None):
+     p.add_argument('--user-agent', '--useragent', default='PAN GlobalProtect',
+                    help='Use the provided string as the HTTP User-Agent header (default is %(default)r, as used by OpenConnect)')
+     p.add_argument('--no-proxy', action='store_true', help='Disable system proxy settings')
+-    p.add_argument('openconnect_extra', nargs='*', help="Extra arguments to include in output OpenConnect command-line")
++    p.add_argument('openconnect_extra', nargs=argparse.REMAINDER, help="Extra arguments to include in output OpenConnect command-line")
+     args = p.parse_args(args)
+ 
+     args.ocos = clientos2ocos[args.clientos]

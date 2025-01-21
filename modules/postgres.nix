@@ -4,7 +4,7 @@
     enableJIT = true;
     enableTCPIP = false;
 
-    package = pkgs.postgresql_16_jit;
+    package = pkgs.postgresql_17_jit;
 
     dataDir = "/postgres/${config.services.postgresql.package.psqlSchema}";
 
@@ -13,4 +13,5 @@
       full_page_writes = false;
     };
   };
+  # systemd.services.postgresql.postStart = lib.mkForce '''';
 }

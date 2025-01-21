@@ -21,6 +21,12 @@ sudo zpool create \
 ### Update laptop
 
 ```bash
+nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake path:///work/nixos#laptop-wsl
+```
+
+or
+
+```bash
 nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake github:HippocampusGirl/nixos#laptop-wsl
 ```
 

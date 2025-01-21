@@ -2,6 +2,7 @@
   environment = {
     systemPackages = with pkgs; [
       apngopt
+      bundle2jwks
       cached-nix-shell
       cachix
       cmake

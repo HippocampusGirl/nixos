@@ -2,18 +2,18 @@
 with lib;
 let
   cfg = config.services.dockerAuth;
-  dockerAuth = pkgs.buildGo121Module rec {
+  dockerAuth = pkgs.buildGo123Module rec {
     pname = "dockerAuth";
-    version = "git";
+    version = "1.13";
     src = pkgs.fetchFromGitHub {
       owner = "cesanta";
       repo = "docker_auth";
-      rev = "69aa6300780fe62ef4860abee63c5226dea7dc6d";
-      sha256 = "sha256-8uBqKNIgn98j27eYMGuUqkaog5FKA2o6TVO6HensclU=";
+      rev = "48e07e9ecd895df692d54e99da8883189d82ab93";
+      sha256 = "sha256-I0AoPehWci6Rj+HbuI2ZJFBQdSx2iIt+R0c0kEhMp2A=";
     };
     sourceRoot = "source/auth_server";
     ldflags = [ "-X main.Version=${version}" "-X main.BuildID=${version}" ];
-    vendorHash = "sha256-DJhXC4sXjacYaFck1wBHPYEuT8YmOWvuAVc3JyVgJso=";
+    vendorHash = "sha256-u4zKyDwKlEiIt6ItmN2SezVOyfbayTy04o+QVVS4yZc=";
   };
   authConfig = {
     server = {
@@ -111,6 +111,7 @@ in
               '';
             };
             key = mkOption { type = types.path; };
+            jwks = mkOption { type = types.path; };
           };
         };
         description = mdDoc ''

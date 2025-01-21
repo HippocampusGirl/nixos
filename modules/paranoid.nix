@@ -13,7 +13,6 @@
     fail2ban.enable = true;
     openssh = {
       enable = true;
-      ports = [ 13422 ];
       allowSFTP = false; # We don't need SFTP
       settings = {
         PasswordAuthentication = false;

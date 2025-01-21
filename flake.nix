@@ -10,7 +10,7 @@
       url = "github:nix-community/nixos-wsl";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/release-24.11";
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -70,6 +70,7 @@
             {
               system.autoUpgrade.flake = self.outPath;
               nixpkgs.overlays = [
+                (import ./packages/bundle2jwks.nix)
                 (final: prev: {
                   unstable = import nixpkgs-unstable {
                     inherit system;
