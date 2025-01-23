@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, config, ... }: {
   environment = {
     shellAliases = {
       gnome-open = "wslview";
@@ -29,19 +29,21 @@
     startMenuLaunchers = false;
     nativeSystemd = true;
     defaultUser = "lea";
+
     usbip.enable = true;
+
+    useWindowsDriver = true; # CUDA support
+
     wslConf = {
       automount = {
         enabled = true;
         mountFsTab = false;
         root = "/mnt";
       };
+      network = { generateResolvConf = false; };
     };
   };
 
-  # CUDA
-  wsl.useWindowsDriver = true;
-
-  # Networking 
-  wsl.wslConf.network = { generateResolvConf = false; };
+  # https://github.com/nix-community/NixOS-WSL/issues/578#issuecomment-2459445182
+  programs.nix-ld.libraries = config.hardware.graphics.extraPackages;
 }
