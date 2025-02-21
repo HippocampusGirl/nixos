@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, config, pkgs, ... }:
 let name = "optuna"; in {
   services = {
     postgresql = {
@@ -14,6 +14,10 @@ let name = "optuna"; in {
         host ${name} ${name} 127.0.0.1/32 trust
         host ${name} ${name} ::1/128 trust
       '';
+    };
+    redis = {
+      package = pkgs.valkey;
+      enable = true;
     };
   };
   users.groups.${name} = { };
