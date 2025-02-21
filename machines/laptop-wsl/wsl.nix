@@ -7,7 +7,7 @@
     };
     systemPackages = with pkgs; [
       wslu
-    ];
+    ] ++ config.hardware.graphics.extraPackages;
   };
   systemd.managerEnvironment = {
     # Allow running zram-generator on wsl
