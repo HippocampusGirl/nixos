@@ -9,7 +9,6 @@
       unstable.datalad
       dig
       file
-      gnupg
       home-manager
       iftop
       jq

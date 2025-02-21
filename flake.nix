@@ -51,6 +51,7 @@
             ./modules/direnv.nix
             ./modules/fhs.nix
             ./modules/git.nix
+            ./modules/gnupg.nix
             ./modules/htop.nix
             ./modules/i18n.nix
             ./modules/less.nix
