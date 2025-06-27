@@ -1,25 +1,27 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 let
   name = "mattermost";
   port = 13465;
-in {
+in
+{
   services = {
     mattermost = {
       enable = true;
       mutableConfig = true;
 
-      listenAddress = "localhost:${toString (port)}";
+      inherit port;
       siteUrl = "https://mattermost.fmri.science";
 
-      localDatabaseUser = name;
-      localDatabaseName = name;
-      localDatabaseCreate = false;
-
-      extraConfig = {
-        # Use unix sockets for postgresql
-        SqlSettings.DataSource =
-          "postgresql:///${name}?user=${name}&host=/var/run/postgresql";
+      database = {
+        host = "localhost";
+        inherit name;
+        user = name;
+        create = false;
+        driver = "postgres";
+        peerAuth = true;
       };
+
+      package = pkgs.mattermostLatest;
     };
     nginx = {
       virtualHosts = {

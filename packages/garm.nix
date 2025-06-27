@@ -5,7 +5,7 @@ let
 
   cfg = config.services.garm;
   buildCloudbaseModule = pname: version: sha256: { checkFlags ? [ ] }:
-    pkgs.buildGo122Module rec {
+    pkgs.buildGo123Module rec {
       inherit pname version checkFlags;
       src = pkgs.fetchFromGitHub {
         owner = "cloudbase";

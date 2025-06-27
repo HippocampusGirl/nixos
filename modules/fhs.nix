@@ -2,9 +2,9 @@
   environment = {
     systemPackages = with pkgs;
       [
-        (buildFHSUserEnv {
+        (buildFHSEnv {
           name = "fhs";
-          targetPkgs = _: [ libGL micromamba xorg.libXxf86vm which ];
+          targetPkgs = _: [ linux-pam libGL micromamba xorg.libXxf86vm which zlib ];
           runScript = "zsh";
         })
       ];

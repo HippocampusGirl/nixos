@@ -10,7 +10,7 @@
       url = "github:nix-community/nixos-wsl";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:nixos/nixpkgs/release-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/release-25.05";
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -49,6 +49,7 @@
             ./modules/acme.nix
             ./modules/command-not-found.nix
             ./modules/direnv.nix
+            ./modules/docker.nix
             ./modules/fhs.nix
             ./modules/git.nix
             ./modules/gnupg.nix

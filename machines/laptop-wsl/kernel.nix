@@ -1,13 +1,13 @@
 { config, lib, pkgs, ... }:
 let
-  kernelVersion = "6.6.36.6";
+  kernelVersion = "6.6.87.2";
   baseKernel = pkgs.linux_6_6;
 
   src = pkgs.fetchFromGitHub {
     owner = "microsoft";
     repo = "WSL2-Linux-Kernel";
     rev = "linux-msft-wsl-${kernelVersion}";
-    sha256 = "sha256-6jLZs+qlmZQHtcG1fmMv9GZsJiqg2EmsiP4QmEaSU2o=";
+    sha256 = "sha256-UYPqnn605nPplLqDnEKGZ625K+AahOqy3D1ENQE7d/8=";
   };
 
   extraConfig = with lib.kernel;{
@@ -130,7 +130,7 @@ in
         '';
     };
     build = with kernelPackages; { inherit kernel; };
-    modulesTree = with kernelPackages; [ kernel zfs ];
+    modulesTree = with kernelPackages; [ kernel kernelPackages.${pkgs.zfs.kernelModuleAttribute} ];
     systemBuilderCommands = ''
       ln -s ${config.system.modulesTree} $out/kernel-modules
     '';

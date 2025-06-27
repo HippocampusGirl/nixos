@@ -17,7 +17,7 @@ let name = "optuna"; in {
     };
     redis = {
       package = pkgs.valkey;
-      enable = true;
+      servers."".enable = true;
     };
   };
   users.groups.${name} = { };

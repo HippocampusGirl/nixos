@@ -71,7 +71,7 @@ in
         Type = "simple";
         Environment = "DISPLAY=:0";
         ExecStart = ''
-          ${gp-saml-gui}/bin/gp-saml-gui --sudo-openconnect --gateway ${portal}
+          ${gp-saml-gui}/bin/gp-saml-gui --allow-insecure-crypto --sudo-openconnect --gateway ${portal}
         '';
         RemainAfterExit = true;
       };

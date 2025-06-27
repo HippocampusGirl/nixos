@@ -27,7 +27,6 @@
     ];
 
     startMenuLaunchers = false;
-    nativeSystemd = true;
     defaultUser = "lea";
 
     usbip.enable = true;

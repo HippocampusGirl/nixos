@@ -6,7 +6,6 @@
   imports = [
     ../laptop/bitcoin.nix
     ../laptop/cuda.nix
-    ../laptop/docker.nix
     ./kernel.nix
     ../laptop/networking.nix
     ../laptop/nginx.nix
@@ -78,5 +77,7 @@
   };
 
   time = { timeZone = "Europe/Berlin"; };
+
+  virtualisation.docker.extraOptions = "--storage-opt zfs.fsname=z/docker --iptables=False";
 
 }

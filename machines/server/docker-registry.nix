@@ -130,4 +130,10 @@ in
     Environment = [ "OTEL_TRACES_EXPORTER=none" ];
     #   EnvironmentFile = config.sops.secrets."docker-registry/environment".path;
   };
+  systemd.services.docker-registry-garbage-collect = {
+    script = lib.mkForce ''
+      ${config.services.dockerRegistry.package}/bin/registry garbage-collect --delete-untagged ${config.services.dockerRegistry.configFile}
+      /run/current-system/systemd/bin/systemctl restart docker-registry.service
+    '';
+  };
 }
