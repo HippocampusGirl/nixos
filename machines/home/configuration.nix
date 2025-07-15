@@ -2,13 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ lib, config, pkgs, ... }:
-let
-in {
+{ config, ... }: {
   imports = [
     # Include the results of the hardware scan
     ./hardware-configuration.nix
-    ./lxd.nix
+    ./incus.nix
     ./zrepl.nix
   ];
 

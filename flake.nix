@@ -89,7 +89,7 @@
           imports = [
             self.nixosModules.default
             ./modules/impermanence.nix
-            ./modules/lxd.nix
+            ./modules/incus.nix
             ./modules/paranoid.nix
             ./modules/postgres.nix
             ./modules/zfs.nix

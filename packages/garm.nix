@@ -5,7 +5,7 @@ let
 
   cfg = config.services.garm;
   buildCloudbaseModule = pname: version: sha256: { checkFlags ? [ ] }:
-    pkgs.buildGo123Module rec {
+    pkgs.buildGo124Module rec {
       inherit pname version checkFlags;
       src = pkgs.fetchFromGitHub {
         owner = "cloudbase";
@@ -20,9 +20,9 @@ let
   };
 
   providerExecutables = {
-    lxd = ''${buildCloudbaseModule "garm-provider-lxd" "v0.1.0" "sha256-pzyqfuphBKGgR6o1AK1cEdhM+J3OBrKw7LaWq/XgDMA=" { 
-    }}/bin/garm-provider-lxd'';
-    openstack = ''${buildCloudbaseModule "garm-provider-openstack" "v0.1.0" "sha256-tQtzLelEcfIj2c7xACTS7sJA62KfbIT4xaZpTmLD5fE=" {
+    incus = ''${buildCloudbaseModule "garm-provider-incus" "v0.1.1" "sha256-G/CdsiDohjan7QYi8gfrBm6lLWU8vrtugPkFVC/Mf9A=" { 
+    }}/bin/garm-provider-incus'';
+    openstack = ''${buildCloudbaseModule "garm-provider-openstack" "v0.1.1" "sha256-T/t1gpqe+oY5fmPQXA+MKF6v2fxRtoJQ8zHBRVy3K7s=" {
       checkFlags = [ "-tags=testing" ];
     }}/bin/garm-provider-openstack'';
   };
@@ -114,16 +114,15 @@ in
         ExecStart = "${garm}/bin/garm";
       };
     };
-    systemd.services.lxd.path = [ pkgs.e2fsprogs ];
     users = {
       users.garm = {
         createHome = false;
         isSystemUser = true;
         group = "garm";
-        extraGroups = [ "lxd" ];
+        extraGroups = [ "incus" ];
       };
       groups.garm = { };
     };
-    virtualisation.lxd.enable = true;
+    virtualisation.incus.enable = true;
   };
 }

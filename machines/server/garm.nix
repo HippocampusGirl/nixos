@@ -40,16 +40,16 @@
       };
       providers = {
         "local" = {
-          type = "lxd";
+          type = "incus";
           config = {
-            unix_socket_path = "/var/lib/lxd/unix.socket";
+            unix_socket_path = "/var/lib/incus/unix.socket";
             include_default_profile = false;
             instance_type = "container";
             secure_boot = true;
             project_name = "default";
             image_remotes = {
-              "ubuntu_daily" = {
-                addr = "https://cloud-images.ubuntu.com/daily";
+              "images" = {
+                addr = "https://images.linuxcontainers.org";
                 public = true;
                 protocol = "simplestreams";
                 skip_verify = false;
