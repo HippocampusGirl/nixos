@@ -48,7 +48,6 @@
     # the secrets will not be available when the users are generated. 
     # This can lead to login issues
     age.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
-    gnupg.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_rsa_key" ];
     # Specification of the secrets/
     secrets."users/lea/hashed-password" = { neededForUsers = true; };
   };

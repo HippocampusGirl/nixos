@@ -5,11 +5,10 @@
 { lib, ... }: {
   imports = [
     ../laptop/bitcoin.nix
-    ../laptop/cuda.nix
+    ./cuda.nix
     ./kernel.nix
     ../laptop/networking.nix
     ../laptop/nginx.nix
-    ../laptop/nix-remote.nix
     ./trafficserver.nix
     ./vscode.nix
     ./wsl.nix
@@ -55,7 +54,6 @@
     # the secrets will not be available when the users are generated. 
     # This can lead to login issues
     age.sshKeyPaths = [ "/mnt/c/Users/Lea/WSL/ssh_host_ed25519_key" ];
-    gnupg.sshKeyPaths = [ "/mnt/c/Users/Lea/WSL/ssh_host_rsa_key" ];
   };
 
   system = {

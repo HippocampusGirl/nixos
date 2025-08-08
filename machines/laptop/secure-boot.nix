@@ -2,16 +2,13 @@
   boot = {
     lanzaboote = {
       enable = true;
-
-      configurationLimit = 1;
-      pkiBundle = "/etc/secureboot";
-
-      settings = {
-        reboot-for-bitlocker = true;
-      };
+      pkiBundle = "/var/lib/sbctl";
     };
+    loader.efi.canTouchEfiVariables = true;
     loader.systemd-boot.enable = false;
   };
-  environment.systemPackages = with pkgs; [ sbctl ];
-  environment.persistence."/persist".directories = [ "/etc/secureboot" ];
+  environment.systemPackages = with pkgs; [ 
+    # For debugging and troubleshooting Secure Boot
+    sbctl
+  ];
 }

@@ -1,6 +1,6 @@
 {
   services.bitcoind.default = {
-    enable = false;
+    enable = true;
 
     user = "bitcoin";
     group = "bitcoin";

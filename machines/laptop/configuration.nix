@@ -2,60 +2,43 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ ... }:
+{ pkgs, ... }:
 
 {
   imports =
     [
+      ./bitcoin.nix
+      ./gnome.nix
       # Include the results of the hardware scan
       ./hardware-configuration.nix
+      ./networking.nix
+      ./nginx.nix
       ./secure-boot.nix
       ./vscode.nix
+      ./zrepl.nix
     ];
 
-  # Use the systemd-boot EFI boot loader
-  boot = {
-    loader = {
-      efi.canTouchEfiVariables = true;
-    };
-  };
-
+  boot.kernelPackages = pkgs.linuxPackages_6_15;
+  boot.kernelParams = [ "usbcore.autosuspend=-1" ];
+  
   console = {
     font = "Lat2-Terminus16";
-    # keyMap = "us";
-    useXkbConfig = true; # use xkb.options in tty.
+    useXkbConfig = true; # use xkb.options in tty
   };
 
   hardware = {
-    nvidia = {
-      modesetting.enable = true;
-      open = false;
-      nvidiaPersistenced = true;
-      # prime = {
-      #   allowExternalGpu = true;
-      #   offload = {
-      #     enable = true;
-      #     enableOffloadCmd = true;
-      #   };
-      #   # Bus ID of the NVIDIA GPU. You can find it using lspci, either under 3D or VGA 
-      #   nvidiaBusId = "PCI:30:0:0";
-      #   # Bus ID of the Intel GPU. You can find it using lspci, either under 3D or VGA 
-      #   intelBusId = "PCI:0:2:0";
-      # };
+    graphics = {
+      enable = true;
+      enable32Bit = true;
     };
-
-    opengl.enable = true;
-
-    pulseaudio.enable = false;
   };
-
 
   # Select internationalisation properties
   i18n.defaultLocale = "en_US.UTF-8";
 
   networking = {
     hostId = "1ea1ea12";
-    hostName = "laptop";
+    hostName = "laptop-nixos";
     firewall.enable = true;
     networkmanager.enable = true;
     nftables.enable = true;
@@ -65,43 +48,16 @@
 
   powerManagement.enable = true;
 
-  services = {
-    # fwupd is a simple daemon allowing you to update some devices' firmware, including UEFI for several machines
-    fwupd.enable = true;
+  # A fuse filesystem that dynamically populates contents of /bin and /usr/bin/ so that
+  # it contains all executables from the PATH of the requesting process. This allows
+  # executing FHS based programs on a non-FHS system. For example, this is useful to
+  #execute shebangs on NixOS that assume hard coded locations like /bin or /usr/bin etc.
+  services.envfs.enable = true;
 
-    # A userspace daemon to enable security levels for Thunderbolt 3
-    hardware.bolt.enable = true;
+  services.printing.enable = true;
 
-    # Touchpad support (enabled default in most desktopManager)
-    libinput.enable = true;
-
-    # Sound
-    pipewire = {
-      enable = true;
-
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-    };
-
-    # CUPS to print documents
-    printing.enable = true;
-
-    # X11 windowing system
-    xserver = {
-      enable = true;
-
-      # Enable the GNOME Desktop Environment
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
-
-      videoDrivers = [ "nvidia" ];
-
-      # Configure keymap in X11
-      xkb = { layout = "us"; options = "eurosign:e,caps:escape"; };
-    };
-  };
-
+  services.openssh.enable = true;
+  
   sops = {
     # This is using an age key that is expected to already be in the filesystem
     age.keyFile = "/var/lib/sops/key.txt";

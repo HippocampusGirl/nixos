@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   programs.nix-ld = {
     enable = true;
-    libraries = with pkgs; [ libGL xorg.libXxf86vm ];
+    libraries = with pkgs; [ libGL linux-pam xorg.libXxf86vm ];
   };
 }

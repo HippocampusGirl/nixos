@@ -53,31 +53,27 @@ in
     ''}/bin/update-systemd-resolved'';
     mode = "0755";
   };
-  systemd.services.globalprotect-ini-usc =
-    let
-      portal = "vpn.ini.usc.edu";
-    in
-    {
-      description = "GlobalProtect/OpenConnect instance '${portal}'";
+  # systemd.services.globalprotect-ini-usc =
+  #   let
+  #     portal = "vpn.ini.usc.edu";
+  #   in
+  #   {
+  #     description = "GlobalProtect/OpenConnect instance '${portal}'";
 
-      enable = true;
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
-      restartTriggers = [ config.environment.etc."vpnc/post-connect.d/update-systemd-resolved".source ];
+  #     enable = true;
+  #     wantedBy = [ "multi-user.target" ];
+  #     after = [ "network.target" ];
+  #     restartTriggers = [ config.environment.etc."vpnc/post-connect.d/update-systemd-resolved".source ];
 
-      path = [ gp-saml-gui pkgs.openconnect pkgs.sudo ];
+  #     path = [ gp-saml-gui pkgs.openconnect pkgs.sudo ];
 
-      serviceConfig = {
-        Type = "simple";
-        Environment = "DISPLAY=:0";
-        ExecStart = ''
-          ${gp-saml-gui}/bin/gp-saml-gui --allow-insecure-crypto --sudo-openconnect --gateway ${portal}
-        '';
-        RemainAfterExit = true;
-      };
-    };
+  #     serviceConfig = {
+  #       Type = "simple";
+  #       Environment = "DISPLAY=:0";
+  #       ExecStart = ''
+  #         ${gp-saml-gui}/bin/gp-saml-gui --allow-insecure-crypto --sudo-openconnect --gateway ${portal}
+  #       '';
+  #       RemainAfterExit = true;
+  #     };
+  #   };
 }
-# \
-#             --script "${pkgs.vpn-slice}/bin/vpn-slice <10.0.0.0/8>"
-
-

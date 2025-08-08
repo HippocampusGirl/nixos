@@ -21,7 +21,7 @@
     };
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.1";
+      url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
@@ -154,7 +154,7 @@
       };
       devShells = {
         default =
-          pkgs.mkShell { buildInputs = with pkgs; [ nil nixd nixpkgs-fmt ]; };
+          pkgs.mkShell { buildInputs = with pkgs; [ nil nixd nixpkgs-fmt ruff python3 ]; };
       };
     });
 }
