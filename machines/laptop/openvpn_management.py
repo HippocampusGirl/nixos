@@ -2,8 +2,8 @@ import logging
 import re
 from argparse import ArgumentParser
 from asyncio import open_unix_connection, run
-import subprocess
 from typing import Mapping, Protocol
+from tkinter.simpledialog import askstring
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger("openvpn_management")
@@ -17,15 +17,11 @@ with open(arguments.secrets, "r") as file_handle:
 
 
 def totp() -> str:
-    args = [
-        "systemd-ask-password",
-        "--icon",
-        "network-vpn",
-        "--system",
-        "--echo",
-        "Please confirm with second factor:",
-    ]
-    return subprocess.check_output(args, text=True).strip()
+    while (
+        totp := askstring(title="Charité", prompt="Please confirm with second factor")
+    ) is None:
+        pass
+    return totp
 
 
 class Handler(Protocol):

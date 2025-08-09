@@ -3,11 +3,12 @@
     lanzaboote = {
       enable = true;
       pkiBundle = "/var/lib/sbctl";
+      configurationLimit = 3;
     };
     loader.efi.canTouchEfiVariables = true;
     loader.systemd-boot.enable = false;
   };
-  environment.systemPackages = with pkgs; [ 
+  environment.systemPackages = with pkgs; [
     # For debugging and troubleshooting Secure Boot
     sbctl
   ];

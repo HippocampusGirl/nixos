@@ -1,11 +1,11 @@
 { config, pkgs, ... }:
-let
-  gp-saml-gui = pkgs.gp-saml-gui.overrideAttrs (_: {
-    patches = [
-      ./gp-saml-gui.patch
-    ];
-  });
-in
+# let
+  # gp-saml-gui = pkgs.gp-saml-gui.overrideAttrs (_: {
+  #   patches = [
+  #     ./gp-saml-gui.patch
+  #   ];
+  # });
+# in
 {
   services = {
     openvpn.servers."charite" =
@@ -28,9 +28,9 @@ in
   };
   sops = {
     secrets."charite/openvpn/config" = { sopsFile = ./secrets.yaml; };
-    secrets."charite/openvpn/secrets" = { sopsFile = ./secrets.yaml; };
+    secrets."charite/openvpn/secrets" = { owner = "lea"; sopsFile = ./secrets.yaml; };
   };
-  systemd.services.openvpn-charite-management = {
+  systemd.user.services.openvpn-charite-management = {
     enable = true;
     startLimitIntervalSec = 0;
 
@@ -38,7 +38,6 @@ in
 
     serviceConfig = {
       Type = "simple";
-      Environment = "DISPLAY=:0";
       ExecStart = let python = pkgs.python3.withPackages (ps: with ps; [ tkinter ]); in ''
         ${python}/bin/python ${./openvpn_management.py}  \
           ${config.sops.secrets."charite/openvpn/secrets".path}
