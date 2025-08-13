@@ -26,6 +26,7 @@
   environment.systemPackages = with pkgs; [
     alacritty
     remmina
+    spotify
     zotero
   ];
 
@@ -34,4 +35,8 @@
     enable = true;
     pulse.enable = true;
   };
+
+  environment.persistence."/persist".directories = [
+    "/etc/NetworkManager/system-connections"
+  ];
 }

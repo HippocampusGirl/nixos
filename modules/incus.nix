@@ -25,7 +25,7 @@
             driver = "zfs";
             config = {
               source = "z/incus";
-              "volume.size" = "100GiB";
+              "volume.size" = "200GiB";
               "volume.zfs.block_mode" = true;
             };
           }
