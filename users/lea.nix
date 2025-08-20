@@ -6,7 +6,8 @@
 
     uid = 1000;
     extraGroups = [
-      "docker" # Enable docker
+      "audio"
+      "docker"
       "wheel" # Enable sudo
     ];
 

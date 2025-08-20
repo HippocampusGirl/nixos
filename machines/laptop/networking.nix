@@ -1,11 +1,11 @@
 { config, pkgs, ... }:
-# let
-  # gp-saml-gui = pkgs.gp-saml-gui.overrideAttrs (_: {
-  #   patches = [
-  #     ./gp-saml-gui.patch
-  #   ];
-  # });
-# in
+let
+  gp-saml-gui = pkgs.gp-saml-gui.overrideAttrs (_: {
+    patches = [
+      ./gp-saml-gui.patch
+    ];
+  });
+in
 {
   services = {
     openvpn.servers."charite" =
@@ -34,7 +34,7 @@
     enable = true;
     startLimitIntervalSec = 0;
 
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = [ "graphical-session.target" ];
 
     serviceConfig = {
       Type = "simple";
@@ -52,27 +52,26 @@
     ''}/bin/update-systemd-resolved'';
     mode = "0755";
   };
-  # systemd.services.globalprotect-ini-usc =
-  #   let
-  #     portal = "vpn.ini.usc.edu";
-  #   in
-  #   {
-  #     description = "GlobalProtect/OpenConnect instance '${portal}'";
+  systemd.user.services.globalprotect-ini-usc =
+    let
+      portal = "vpn.ini.usc.edu";
+    in
+    {
+      description = "GlobalProtect/OpenConnect instance '${portal}'";
 
-  #     enable = true;
-  #     wantedBy = [ "multi-user.target" ];
-  #     after = [ "network.target" ];
-  #     restartTriggers = [ config.environment.etc."vpnc/post-connect.d/update-systemd-resolved".source ];
+      enable = true;
+      wantedBy = [ "graphical-session.target" ];
+      after = [ "network.target" ];
+      restartTriggers = [ config.environment.etc."vpnc/post-connect.d/update-systemd-resolved".source ];
 
-  #     path = [ gp-saml-gui pkgs.openconnect pkgs.sudo ];
+      path = [ gp-saml-gui pkgs.openconnect pkgs.sudo ];
 
-  #     serviceConfig = {
-  #       Type = "simple";
-  #       Environment = "DISPLAY=:0";
-  #       ExecStart = ''
-  #         ${gp-saml-gui}/bin/gp-saml-gui --allow-insecure-crypto --sudo-openconnect --gateway ${portal}
-  #       '';
-  #       RemainAfterExit = true;
-  #     };
-  #   };
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = ''
+          ${gp-saml-gui}/bin/gp-saml-gui --allow-insecure-crypto --pkexec-openconnect --gateway ${portal}
+        '';
+        RemainAfterExit = true;
+      };
+    };
 }

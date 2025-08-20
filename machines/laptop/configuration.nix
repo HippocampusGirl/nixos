@@ -18,11 +18,13 @@
       ./zrepl.nix
     ];
 
-  boot.kernelPackages = pkgs.linuxPackages_6_15;
-  boot.kernelParams = [ "usbcore.autosuspend=-1" ];
+  boot = {
+    kernelPackages = pkgs.linuxPackages_6_15;
+    kernelParams = [ "usbcore.autosuspend=-1" ];
+    tmp.cleanOnBoot = true;
+  };
   
   console = {
-    font = "Lat2-Terminus16";
     useXkbConfig = true; # use xkb.options in tty
   };
 
@@ -54,10 +56,6 @@
   #execute shebangs on NixOS that assume hard coded locations like /bin or /usr/bin etc.
   services.envfs.enable = true;
 
-  services.printing.enable = true;
-
-  services.openssh.enable = true;
-  
   sops = {
     # This is using an age key that is expected to already be in the filesystem
     age.keyFile = "/var/lib/sops/key.txt";

@@ -19,11 +19,16 @@
       device = "none";
       fsType = "tmpfs";
     };
+  fileSystems."/tmp" = {
+    device = "z/tmp";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/8CB5-C90A";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = [ "fmask=0077" "dmask=0077" ];
     };
 
   fileSystems."/nix" = {

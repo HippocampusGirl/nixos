@@ -26,14 +26,21 @@
   environment.systemPackages = with pkgs; [
     alacritty
     remmina
+    signal-desktop
     spotify
     zotero
   ];
 
   # Enable sound
-  services.pipewire = {
+  services.pipewire.enable = false;
+  services.pulseaudio.enable = true;
+  services.pulseaudio.support32Bit = true;
+  services.gnome.gnome-remote-desktop.enable = false;
+  sound.enable = true;
+
+  services.printing = {
     enable = true;
-    pulse.enable = true;
+    drivers = [ pkgs.cups-brother-dcpl3550cdw ];
   };
 
   environment.persistence."/persist".directories = [

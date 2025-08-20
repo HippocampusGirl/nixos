@@ -9,6 +9,7 @@
       unstable.datalad
       dig
       file
+      gh
       home-manager
       iftop
       jq
@@ -29,6 +30,7 @@
       pkg-config
       pre-commit
       pv
+      quarto
       ripgrep-all
       unstable.ruff
       sops
