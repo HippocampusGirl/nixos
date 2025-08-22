@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, ... }: {
+{
   imports = [
     # Include the results of the hardware scan
     ./hardware-configuration.nix
@@ -21,7 +21,6 @@
     supportedFilesystems = [ "exfat" "zfs" ];
     zfs = {
       devNodes = "/dev/disk/by-path";
-      enableUnstable = true;
       requestEncryptionCredentials = true;
     };
   };
@@ -36,13 +35,12 @@
     hostName = "home";
     hostId = "13413403";
     useDHCP = true;
-    firewall = { allowedTCPPorts = [ config.services.zrepl.port ]; };
   };
 
   time = { timeZone = "Europe/Berlin"; };
 
   sops = {
-    defaultSopsFile = ../../users/secrets.yaml;
+    defaultSopsFile = ./secrets.yaml;
     # If either of these paths does not exist immediately after boot, then 
     # sops-nix will fail and not decrypt any secrets. That means that the
     # the secrets will not be available when the users are generated. 

@@ -24,3 +24,8 @@ creation_rules:
       - age:
           - *lea
           - *server
+  - path_regex: ^machines/home/secrets.yaml$
+    key_groups:
+      - age:
+          - *lea
+          - *home

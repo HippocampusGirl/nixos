@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, ... }:
 let cfg = config.services.zrepl;
 in {
   config = {
@@ -22,6 +22,9 @@ in {
     };
     systemd.services.zrepl = {
       after = [ "tailscaled.service" "sys-subsystem-net-devices-tailscale0.device" ];
+    };
+    networking = {
+      firewall = { allowedTCPPorts = [ config.services.zrepl.sinkPort ]; };
     };
   };
 }
