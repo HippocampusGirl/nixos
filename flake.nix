@@ -6,10 +6,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence.url = "github:nix-community/impermanence";
-    nixos-wsl = {
-      url = "github:nix-community/nixos-wsl";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixpkgs.url = "github:nixos/nixpkgs/release-25.05";
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -19,7 +15,6 @@
       url = "github:HippocampusGirl/upload";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,11 +26,9 @@
     , flake-utils
     , home-manager
     , impermanence
-    , nixos-wsl
     , nixpkgs
     , sops-nix
     , upload
-    , vscode-server
     , lanzaboote
     , nixpkgs-unstable
     }:
@@ -111,16 +104,6 @@
             lanzaboote.nixosModules.lanzaboote
           ];
         };
-        laptop-wsl = { config, ... }: {
-          imports = [
-            self.nixosModules.default
-            ./modules/tex.nix
-            home-manager.nixosModules.home-manager
-            nixos-wsl.nixosModules.wsl
-            sops-nix.nixosModules.sops
-            vscode-server.nixosModules.default
-          ];
-        };
       };
       nixosConfigurations = {
         home = nixpkgs.lib.nixosSystem {
@@ -131,10 +114,6 @@
         laptop = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [ self.nixosModules.laptop ./machines/laptop/configuration.nix ];
-        };
-        laptop-wsl = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [ self.nixosModules.laptop-wsl ./machines/laptop-wsl/configuration.nix ];
         };
         server = nixpkgs.lib.nixosSystem {
           inherit system;

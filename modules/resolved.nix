@@ -1,4 +1,4 @@
-{ config, lib, ... }: {
+{ config, ... }: {
   services = {
     resolved =
       let
@@ -14,10 +14,6 @@
           DNS=2a07:a8c0::#${endpoint}
           DNS=45.90.30.0#${endpoint}
           DNS=2a07:a8c1::#${endpoint}
-
-          ${lib.optionalString (lib.hasAttr "wsl" config) ''
-            DNSStubListenerExtra=udp:127.0.0.1:9953
-            DNSStubListenerExtra=udp:[::1]:9953''}
         '';
         fallbackDns = [
           "1.1.1.1#one.one.one.one"
