@@ -1,5 +1,5 @@
 diff --git a/rpc/grpcclientidentity/grpchelper/authlistener_grpc_adaptor_wrapper.go b/rpc/grpcclientidentity/grpchelper/authlistener_grpc_adaptor_wrapper.go
-index 91358d5..df646b2 100644
+index 91358d5..bf4042f 100644
 --- a/rpc/grpcclientidentity/grpchelper/authlistener_grpc_adaptor_wrapper.go
 +++ b/rpc/grpcclientidentity/grpchelper/authlistener_grpc_adaptor_wrapper.go
 @@ -4,6 +4,7 @@ package grpchelper
@@ -24,3 +24,13 @@ index 91358d5..df646b2 100644
  	if err != nil {
  		log.WithError(err).Error("cannot create gRPC client conn (non-blocking)")
  		// It's ok to panic here: the we call grpc.DialContext without the
+@@ -63,7 +67,8 @@ func NewServer(authListener transport.AuthenticatedListener, clientIdentityKey i
+ 	})
+ 	tcs := grpcclientidentity.NewTransportCredentials(logger)
+ 	unary, stream := grpcclientidentity.NewInterceptors(logger, clientIdentityKey, ctxInterceptor)
+-	srv = grpc.NewServer(grpc.Creds(tcs), grpc.UnaryInterceptor(unary), grpc.StreamInterceptor(stream), ka, ep)
++	mr, ms := grpc.MaxRecvMsgSize(math.MaxInt32), grpc.MaxSendMsgSize(math.MaxInt32)
++	srv = grpc.NewServer(grpc.Creds(tcs), grpc.UnaryInterceptor(unary), grpc.StreamInterceptor(stream), ka, ep, mr, ms)
+ 
+ 	serve = func() error {
+ 		if err := srv.Serve(netadaptor.New(authListener, logger)); err != nil {
