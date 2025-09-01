@@ -1,4 +1,5 @@
-{ lib, ... }: {
+{ lib, pkgs, ... }:
+{
   options = with lib; {
     services.zrepl = {
       sinkPort = mkOption {
@@ -12,5 +13,12 @@
         default = 13428;
       };
     };
+  };
+  config = {
+    services.zrepl.package = pkgs.zrepl.overrideAttrs (_: {
+      patches = [
+        ./zrepl-max-recv-msg-size.patch
+      ];
+    });
   };
 }

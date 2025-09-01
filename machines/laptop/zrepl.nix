@@ -88,7 +88,7 @@ in
           conflict_resolution = { initial_replication = "all"; };
           inherit replication send snapshotting;
           pruning = {
-            keep_sender = keepForever;
+            keep_sender = [{ type = "not_replicated"; }] ++ keep;
             keep_receiver = [{
               type = "grid";
               grid = "1x1d(keep=all) | 1000000x1h";

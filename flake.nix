@@ -66,6 +66,7 @@
               system.autoUpgrade.flake = self.outPath;
               nixpkgs.overlays = [
                 (import ./packages/bundle2jwks.nix)
+                (import ./packages/vuescan.nix)
                 (final: prev: {
                   unstable = import nixpkgs-unstable {
                     inherit system;
@@ -84,7 +85,6 @@
             ./modules/impermanence.nix
             ./modules/incus.nix
             ./modules/paranoid.nix
-            ./modules/postgres.nix
             ./modules/zfs.nix
             ./users/root.nix
             impermanence.nixosModules.impermanence
@@ -106,11 +106,6 @@
         };
       };
       nixosConfigurations = {
-        home = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules =
-            [ self.nixosModules.server ./machines/home/configuration.nix ];
-        };
         laptop = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [ self.nixosModules.laptop ./machines/laptop/configuration.nix ];
@@ -118,7 +113,21 @@
         server = nixpkgs.lib.nixosSystem {
           inherit system;
           modules =
-            [ self.nixosModules.server ./machines/server/configuration.nix ];
+            [
+              self.nixosModules.server
+              ./modules/postgres.nix
+              ./machines/server/configuration.nix
+            ];
+        };
+        home = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules =
+            [ self.nixosModules.server ./machines/home/configuration.nix ];
+        };
+        machine-learning = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules =
+            [ self.nixosModules.server ./machines/machine-learning/configuration.nix ];
         };
       };
     } // flake-utils.lib.eachDefaultSystem (system:

@@ -4,32 +4,6 @@ My nixos configs repo
 
 Setup as per <https://grahamc.com/blog/erase-your-darlings/> and <https://carjorvaz.com/posts/installing-nixos-with-root-on-tmpfs-and-encrypted-zfs-on-a-netcup-vps/>
 
-## laptop-wsl
-
-### Install laptop
-
-```bash
-sudo zpool create \
-    -o ashift=12 \
-    -O encryption=on \
-    -O keylocation=file://{keyFile} \
-    -O keyformat=passphrase \
-    z \
-    {diskId}
-```
-
-### Update laptop
-
-```bash
-nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake path:///work/nixos#laptop-wsl
-```
-
-or
-
-```bash
-nixos-rebuild switch --use-remote-sudo --refresh --show-trace --flake github:HippocampusGirl/nixos#laptop-wsl
-```
-
 ## laptop
 
 ### Install laptop

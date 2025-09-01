@@ -7,7 +7,6 @@
 {
   imports =
     [
-      ./bitcoin.nix
       ./gnome.nix
       # Include the results of the hardware scan
       ./hardware-configuration.nix
@@ -19,7 +18,7 @@
     ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_15;
+    kernelPackages = pkgs.linuxPackages_6_16;
     kernelParams = [ "usbcore.autosuspend=-1" ];
     tmp.cleanOnBoot = true;
   };

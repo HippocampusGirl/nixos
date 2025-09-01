@@ -1,0 +1,26 @@
+diff --git a/rpc/grpcclientidentity/grpchelper/authlistener_grpc_adaptor_wrapper.go b/rpc/grpcclientidentity/grpchelper/authlistener_grpc_adaptor_wrapper.go
+index 91358d5..df646b2 100644
+--- a/rpc/grpcclientidentity/grpchelper/authlistener_grpc_adaptor_wrapper.go
++++ b/rpc/grpcclientidentity/grpchelper/authlistener_grpc_adaptor_wrapper.go
+@@ -4,6 +4,7 @@ package grpchelper
+ 
+ import (
+ 	"context"
++	"math"
+ 	"time"
+ 
+ 	"google.golang.org/grpc"
+@@ -36,9 +37,12 @@ func ClientConn(cn transport.Connecter, log Logger) *grpc.ClientConn {
+ 	})
+ 	dialerOption := grpc.WithContextDialer(grpcclientidentity.NewDialer(log, cn))
+ 	cred := grpc.WithTransportCredentials(grpcclientidentity.NewTransportCredentials(log))
++	defaultCallOptions := grpc.WithDefaultCallOptions(
++		grpc.MaxCallSendMsgSize(math.MaxInt32),
++		grpc.MaxCallRecvMsgSize(math.MaxInt32))
+ 	// we use context.Background without a timeout here because we don't set grpc.WithBlock
+ 	// => docs:  "In the non-blocking case, the ctx does not act against the connection. It only controls the setup steps."
+-	cc, err := grpc.DialContext(context.Background(), "doesn't matter done by dialer", dialerOption, cred, ka)
++	cc, err := grpc.DialContext(context.Background(), "doesn't matter done by dialer", dialerOption, cred, ka, defaultCallOptions)
+ 	if err != nil {
+ 		log.WithError(err).Error("cannot create gRPC client conn (non-blocking)")
+ 		// It's ok to panic here: the we call grpc.DialContext without the

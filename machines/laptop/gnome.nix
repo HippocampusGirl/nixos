@@ -25,23 +25,31 @@
   programs.zoom-us.enable = true;
   environment.systemPackages = with pkgs; [
     alacritty
+    brave
+    freecad-wayland
     remmina
-    signal-desktop
+    pkgs.unstable.signal-desktop
     spotify
+    vuescan
     zotero
   ];
 
   # Enable sound
-  services.pipewire.enable = false;
-  services.pulseaudio.enable = true;
-  services.pulseaudio.support32Bit = true;
-  services.gnome.gnome-remote-desktop.enable = false;
-  sound.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
 
   services.printing = {
     enable = true;
-    drivers = [ pkgs.cups-brother-dcpl3550cdw ];
+    drivers = [ pkgs.brlaser pkgs.cups-brother-dcpl3550cdw ];
   };
+
+  # Scanner
+  hardware.sane.enable = true;
+  services.udev.packages = with pkgs; [ vuescan ];
 
   environment.persistence."/persist".directories = [
     "/etc/NetworkManager/system-connections"

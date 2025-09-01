@@ -3,6 +3,7 @@ keys:
   - &laptop age1lf54v5kvwg6gacxdz5w78u7wn9khfl4tqyucp88600c9n0ay3p6q9w4hn9
   - &server age1tdru2qv9zyq4u8naxcr7f37yqscv8vp9s4mgd34k9a4chgs9qfasvfzp08
   - &home age1t4g0muet3zf0cc9x30ygacx7a542vdn8peq9r366rxlgm3mrc9tshcezye
+  - &machine-learning age1fesunltczsayhgsxr4gre4kj0zf7hvhc6ruq4yp24kyynj24zy0sy9dgky
 creation_rules:
   - path_regex: ^users/secrets.yaml$
     key_groups:
@@ -11,6 +12,7 @@ creation_rules:
           - *laptop
           - *server
           - *home
+          - *machine-learning
   - path_regex: ^machines/laptop/secrets.yaml$
     key_groups:
       - age:
@@ -26,3 +28,8 @@ creation_rules:
       - age:
           - *lea
           - *home
+  - path_regex: ^machines/machine-learning/secrets.yaml$
+    key_groups:
+      - age:
+          - *lea
+          - *machine-learning

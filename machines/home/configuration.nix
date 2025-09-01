@@ -4,6 +4,7 @@
 
 {
   imports = [
+    ./bitcoin.nix
     # Include the results of the hardware scan
     ./hardware-configuration.nix
     ./incus.nix
@@ -16,8 +17,8 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    # Use hardware sensors
-    kernelModules = [ "nct6775" ];
+    # # Use hardware sensors
+    # kernelModules = [ "nct6775" ];
     supportedFilesystems = [ "exfat" "zfs" ];
     zfs = {
       devNodes = "/dev/disk/by-path";

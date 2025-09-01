@@ -10,6 +10,7 @@
       dig
       file
       gh
+      go
       home-manager
       iftop
       jq
