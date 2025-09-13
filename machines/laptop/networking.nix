@@ -24,7 +24,10 @@ in
         up = update-systemd-resolved;
         down = update-systemd-resolved;
       };
-
+    resolved = {
+      enable = true;
+      fallbackDns = [ ]; # Disable fallback DNS
+    };
   };
   sops = {
     secrets."charite/openvpn/config" = { sopsFile = ./secrets.yaml; };

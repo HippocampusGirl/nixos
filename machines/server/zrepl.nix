@@ -4,7 +4,7 @@ let
   ca = "/etc/ssl/certs/ca-certificates.crt";
   cert = config.services.tailscale-cert.certFile;
   key = config.services.tailscale-cert.keyFile;
-  client_cns = [ "laptop-nixos.dzo-owl.ts.net" ];
+  client_cns = [ "laptop.dzo-owl.ts.net" ];
 in
 {
   services.zrepl = {

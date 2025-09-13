@@ -27,10 +27,14 @@
     alacritty
     brave
     freecad-wayland
+    gnome-boxes # VM management
+    gnomeExtensions.appindicator
+    libreoffice
     remmina
     pkgs.unstable.signal-desktop
-    spotify
+    pkgs.unstable.spotify
     vuescan
+    swtpm
     zotero
   ];
 
@@ -49,9 +53,27 @@
 
   # Scanner
   hardware.sane.enable = true;
-  services.udev.packages = with pkgs; [ vuescan ];
+  services.udev.packages = with pkgs; [ vuescan gnome-settings-daemon ];
 
   environment.persistence."/persist".directories = [
     "/etc/NetworkManager/system-connections"
   ];
+
+  services.xserver.xkb.extraLayouts.ultimatekeys =
+    let
+      source = pkgs.fetchFromGitHub {
+        owner = "pieter-degroote";
+        repo = "UltimateKEYS";
+        rev = "r2025-08-14";
+        sha256 = "sha256-SgFqcHsy0mz+T7/XT26zRLXBF8CgreKzQu1P1bc6oWA=";
+      };
+    in
+    {
+      description = "UltimateKEYS";
+      languages = [
+        "deu"
+        "eng"
+      ];
+      symbolsFile = "${source}/linux-xkb/custom";
+    };
 }

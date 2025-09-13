@@ -54,8 +54,6 @@
             ./modules/nix-daemon.nix
             ./modules/nix-ld.nix
             ./modules/packages.nix
-            ./modules/powertop.nix
-            ./modules/resolved.nix
             ./modules/singularity.nix
             ./modules/tailscale.nix
             ./modules/tmux.nix
@@ -85,6 +83,7 @@
             ./modules/impermanence.nix
             ./modules/incus.nix
             ./modules/paranoid.nix
+            ./modules/resolved.nix
             ./modules/zfs.nix
             ./users/root.nix
             impermanence.nixosModules.impermanence

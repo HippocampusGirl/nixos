@@ -3,6 +3,7 @@
     containers.enable = true;
     docker = {
       enable = true;
+      enableOnBoot = false;
       autoPrune.enable = true;
       daemon.settings = {
         default-address-pools = [

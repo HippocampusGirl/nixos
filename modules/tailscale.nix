@@ -1,7 +1,7 @@
 { config, pkgs, ... }: {
   imports = [ ../packages/tailscale-cert.nix ];
-  networking.firewall.trustedInterfaces =
-    [ config.services.tailscale.interfaceName ];
+  networking.firewall.trustedInterfaces = [ config.services.tailscale.interfaceName ];
+  networking.networkmanager.unmanaged = [ config.services.tailscale.interfaceName ];
   services = {
     tailscale = {
       enable = true;

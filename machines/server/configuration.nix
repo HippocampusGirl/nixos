@@ -2,10 +2,9 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{
+{ pkgs, ... }: {
   imports = [
     ./cloudflare.nix
-    ./denbi.nix
     ./docker-registry.nix
     ./garm.nix
     # Include the results of the hardware scan
@@ -25,6 +24,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    kernelPackages = pkgs.linuxPackages_latest;
     kernel.sysctl = {
       "vm.dirty_background_ratio " = 5;
       "vm.dirty_ratio" = 10;

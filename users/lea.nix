@@ -8,6 +8,9 @@
     extraGroups = [
       "audio"
       "docker"
+      "incus-admin"
+      "kvm"
+      "libvirtd"
       "wheel" # Enable sudo
     ];
 

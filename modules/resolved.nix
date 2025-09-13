@@ -7,7 +7,7 @@
       {
         enable = true;
         dnssec = "allow-downgrade";
-        dnsovertls = "true";
+        # dnsovertls = "true";
         extraConfig = ''
           [Resolve]
           DNS=45.90.28.0#${endpoint}

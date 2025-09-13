@@ -2,8 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ pkgs, ... }:
-
+{ pkgs, lib, ... }:
 {
   imports =
     [
@@ -22,10 +21,15 @@
     kernelParams = [ "usbcore.autosuspend=-1" ];
     tmp.cleanOnBoot = true;
   };
-  
+
   console = {
     useXkbConfig = true; # use xkb.options in tty
   };
+
+  environment.systemPackages = with pkgs; [
+    incus
+    spice-gtk
+  ];
 
   hardware = {
     graphics = {
@@ -39,7 +43,7 @@
 
   networking = {
     hostId = "1ea1ea12";
-    hostName = "laptop-nixos";
+    hostName = "laptop";
     firewall.enable = true;
     networkmanager.enable = true;
     nftables.enable = true;
@@ -61,6 +65,24 @@
     defaultSopsFile = ./secrets.yaml;
   };
 
+  time = {
+    timeZone = lib.mkForce null;
+    hardwareClockInLocalTime = true;
+  };
+
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      qemu = {
+        swtpm.enable = true;
+        ovmf.enable = true;
+        ovmf.packages = [ pkgs.OVMFFull.fd ];
+      };
+    };
+    spiceUSBRedirection.enable = true;
+  };
+  services.spice-vdagentd.enable = true;
+
   # This option defines the firste this value after the initial install, for any reason,
   # even if you've upgraded your system to a new NixOS release.
   #
@@ -79,10 +101,5 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.05"; # Did you read the comment?
-
-  time = {
-    timeZone = "Europe/Berlin";
-    hardwareClockInLocalTime = true;
-  };
 }
 
