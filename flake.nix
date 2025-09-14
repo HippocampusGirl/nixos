@@ -123,10 +123,10 @@
           modules =
             [ self.nixosModules.server ./machines/home/configuration.nix ];
         };
-        machine-learning = nixpkgs.lib.nixosSystem {
+        desktop = nixpkgs.lib.nixosSystem {
           inherit system;
           modules =
-            [ self.nixosModules.server ./machines/machine-learning/configuration.nix ];
+            [ self.nixosModules.server ./machines/desktop/configuration.nix ];
         };
       };
     } // flake-utils.lib.eachDefaultSystem (system:

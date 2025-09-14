@@ -32,7 +32,7 @@
   };
 
   networking = {
-    hostName = "machine-learning";
+    hostName = "desktop";
     hostId = "13413404";
     useDHCP = true;
   };

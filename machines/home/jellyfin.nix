@@ -11,7 +11,7 @@
         "interfaces" = "lo";
         "smb ports" = 445;
         "server min protocol" = "SMB3_11";
-        "guest ok" = "yes";
+        "guest ok" = "no";
         "writeable" = "yes";
         "browseable" = "yes";
       };
@@ -19,5 +19,9 @@
       movies.path = "/z/movies";
       shows.path = "/z/shows";
     };
+  };
+  users.extraUsers.johannes = {
+    isNormalUser = true;
+    createHome = false;
   };
 }
