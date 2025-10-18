@@ -15,6 +15,7 @@
       iftop
       jq
       killall
+      libcgroup
       lm_sensors
       lsof
       lsyncd

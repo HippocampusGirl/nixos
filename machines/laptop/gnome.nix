@@ -26,13 +26,18 @@
   environment.systemPackages = with pkgs; [
     alacritty
     brave
+    discord
     freecad-wayland
     gnome-boxes # VM management
     gnomeExtensions.appindicator
+    inkscape
+    krita
     libreoffice
     remmina
+    shfmt
     pkgs.unstable.signal-desktop
     pkgs.unstable.spotify
+    pkgs.unstable.vscode
     vuescan
     swtpm
     zotero
@@ -48,7 +53,7 @@
 
   services.printing = {
     enable = true;
-    drivers = [ pkgs.brlaser pkgs.cups-brother-dcpl3550cdw ];
+    drivers = [ pkgs.brlaser pkgs.cups-brother-dcpl3550cdw pkgs.foomatic-db-ppds-withNonfreeDb ];
   };
 
   # Scanner

@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 {
   imports =
     [
@@ -12,7 +12,6 @@
       ./networking.nix
       ./nginx.nix
       ./secure-boot.nix
-      ./vscode.nix
       ./zrepl.nix
     ];
 
@@ -65,10 +64,7 @@
     defaultSopsFile = ./secrets.yaml;
   };
 
-  time = {
-    timeZone = lib.mkForce null;
-    hardwareClockInLocalTime = true;
-  };
+  time = { timeZone = "America/Montreal"; };
 
   virtualisation = {
     libvirtd = {

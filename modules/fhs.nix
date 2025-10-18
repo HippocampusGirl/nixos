@@ -4,7 +4,18 @@
       [
         (buildFHSEnv {
           name = "fhs";
-          targetPkgs = _: [ linux-pam libGL micromamba xorg.libXxf86vm which zlib ];
+          targetPkgs = _: [
+            linux-pam
+            libGL
+            libxcrypt
+            libxcrypt-legacy
+            micromamba
+            openssl
+            tcsh
+            xorg.libXxf86vm
+            which
+            zlib
+          ];
           runScript = "zsh";
         })
       ];
