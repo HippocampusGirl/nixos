@@ -2,9 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
-
-{
+{ pkgs, lib, ... }: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -24,6 +22,55 @@
       requestEncryptionCredentials = true;
     };
   };
+
+  hardware.graphics.enable = true;
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia.open = true;
+  hardware.nvidia-container-toolkit.enable = true;
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "cuda_cccl"
+    "cuda_cudart"
+    "cuda_cuobjdump"
+    "cuda_cupti"
+    "cuda_cuxxfilt"
+    "cuda_gdb"
+    "cuda-merged"
+    "cuda_nvcc"
+    "cuda_nvdisasm"
+    "cuda_nvml_dev"
+    "cuda_nvprune"
+    "cuda_nvrtc"
+    "cuda_nvtx"
+    "cuda_profiler_api"
+    "cuda_sanitizer_api"
+    "cudnn"
+    "libcublas"
+    "libcufft"
+    "libcurand"
+    "libcusolver"
+    "libcusparse"
+    "libnpp"
+    "libnvjitlink"
+    "nvidia-settings"
+    "nvidia-x11"
+    "tensorrt"
+  ];
+  boot.kernelModules = [
+    "nvidia_uvm"
+  ];
+  environment.systemPackages = with pkgs; [
+    ffmpeg-full
+    cudatoolkit
+    stdenv.cc
+  ];
+  environment.sessionVariables = {
+    CPATH = with pkgs; [
+      "${cudatoolkit}/include"
+      "${cudaPackages.cudnn}/include"
+    ];
+    LD_LIBRARY_PATH = [ "/run/opengl-driver/lib" ];
+  };
+  programs.nix-ld.libraries = with pkgs; [ cudatoolkit cudaPackages.cudnn ];
 
   documentation = {
     # Disable documentation to improve performance

@@ -26,7 +26,6 @@
       nix-index
       nix-tree
       openssl
-      unstable.packer
       pciutils
       unstable.pixi
       pkg-config

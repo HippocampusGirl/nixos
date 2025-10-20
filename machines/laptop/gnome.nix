@@ -22,7 +22,10 @@
     enable = true;
     package = pkgs.unstable.firefox;
   };
-  programs.zoom-us.enable = true;
+  programs.zoom-us = {
+    enable = true;
+    # package = pkgs.unstable.zoom-us;
+  };
   environment.systemPackages = with pkgs; [
     alacritty
     brave
@@ -53,7 +56,7 @@
 
   services.printing = {
     enable = true;
-    drivers = [ pkgs.brlaser pkgs.cups-brother-dcpl3550cdw pkgs.foomatic-db-ppds-withNonfreeDb ];
+    drivers = [ pkgs.brlaser ];
   };
 
   # Scanner
