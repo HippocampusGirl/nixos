@@ -44,6 +44,7 @@
     "cuda_profiler_api"
     "cuda_sanitizer_api"
     "cudnn"
+    "ffmpeg-full"
     "libcublas"
     "libcufft"
     "libcurand"
@@ -59,7 +60,7 @@
     "nvidia_uvm"
   ];
   environment.systemPackages = with pkgs; [
-    ffmpeg-full
+    (pkgs.ffmpeg-full.override { withUnfree = true; })
     cudatoolkit
     stdenv.cc
   ];
