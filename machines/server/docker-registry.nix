@@ -20,21 +20,6 @@ let
       };
     };
   };
-  # distribution = pkgs.unstable.distribution.overrideAttrs (_: {
-  #   version = "git";
-  #   src = pkgs.fetchFromGitHub {
-  #     owner = "distribution";
-  #     repo = "distribution";
-  #     rev = "0bfa293eeae4234eb23785f58a74d373f6fa38fb";
-  #     sha256 = "sha256-F0TSjf8WlF7QvK7UTwFCdFZVulA/9+1OrFyR1IsfQ/k=";
-  #   };
-  #   patches = [
-  #     (pkgs.fetchpatch {
-  #       url = "https://github.com/distribution/distribution/pull/4424.patch";
-  #       sha256 = "sha256-9nd6ai4PICUYsuE55DQMMoUqJpQpDtmEke+cUC2/2QY=";
-  #     })
-  #   ];
-  # });
 in
 {
   imports = [ ../../packages/docker-auth.nix ];

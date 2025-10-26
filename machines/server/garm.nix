@@ -57,16 +57,16 @@
             };
           };
         };
-        "denbi" = {
+        "computecanada" = {
           type = "openstack";
           config = {
             cloud = "openstack";
-            network_id = "18043a8f-7c67-438b-baa8-513e5cb07d47";
+            network_id = "befb8194-29fb-49cf-9f89-0a251369be3d";
 
             boot_from_volume = true;
-            root_disk_size = 72;
+            root_disk_size = 96;
 
-            credentials = { clouds = config.sops.secrets."denbi/clouds".path; };
+            credentials = { clouds = config.sops.secrets."computecanada/clouds".path; };
           };
         };
       };
@@ -87,6 +87,6 @@
   sops = {
     secrets."garm/jwt-auth-secret" = { };
     secrets."garm/database-passphrase" = { };
-    secrets."denbi/clouds" = { };
+    secrets."computecanada/clouds" = { };
   };
 }

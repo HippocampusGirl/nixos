@@ -27,7 +27,12 @@
         "server.lea.science" = {
           forceSSL = true;
           enableACME = true;
-          locations."/".root = "/www";
+          locations."/".root = "/www/server.lea.science";
+        };
+        "fmri.science" = {
+          forceSSL = true;
+          enableACME = true;
+          locations."/".root = "/www/fmri.science";
         };
       };
     };

@@ -39,6 +39,7 @@
       usbutils
       unzip
       wget
+      yaml2json
       zsh
       zulu
     ];

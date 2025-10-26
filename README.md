@@ -73,8 +73,8 @@ done
 
 ```bash
 sudo mount -t tmpfs none /mnt
-sudo mkdir -p /mnt/{boot,nix,persist}
-sudo mount /dev/sda1 /mnt/boot
+sudo mkdir -p /mnt/{boot,nix,persist,lea}
+sudo mount /dev/vda1 /mnt/boot
 sudo zpool import z -f
 sudo zfs load-key -a
 

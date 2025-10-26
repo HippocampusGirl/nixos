@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, ... }: {
+{ pkgs, lib, config, ... }: {
   imports = [
     ./cloudflare.nix
     ./docker-registry.nix
@@ -24,7 +24,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.unstable.linuxPackages_6_16;
     kernel.sysctl = {
       "vm.dirty_background_ratio " = 5;
       "vm.dirty_ratio" = 10;
@@ -36,6 +36,10 @@
       requestEncryptionCredentials = true;
     };
   };
+  # Fix for kernel 6.16 module structure changes
+  system.modulesTree = [
+    (lib.getOutput "modules" config.boot.kernelPackages.kernel)
+  ];
 
   documentation = {
     # Disable documentation to improve performance

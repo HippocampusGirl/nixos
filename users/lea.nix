@@ -12,6 +12,7 @@
       "kvm"
       "libvirtd"
       "wheel" # Enable sudo
+      "ydotool"
     ];
 
     home = "/lea";
