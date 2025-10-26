@@ -22,11 +22,20 @@
     enable = true;
     package = pkgs.unstable.firefox;
   };
+  programs.ydotool.enable = true;
   programs.zoom-us = {
     enable = true;
     # package = pkgs.unstable.zoom-us;
   };
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = let
+    ydotool-paste = pkgs.writeShellApplication
+      {
+        name = "ydotool-paste";
+        runtimeInputs = with pkgs; [ ydotool wl-clipboard ];
+        text = "wl-paste --no-newline | ydotool type --file=-";
+      };
+  in
+  with pkgs; [
     alacritty
     brave
     discord
@@ -43,8 +52,10 @@
     pkgs.unstable.vscode
     vuescan
     swtpm
+    ydotool-paste
     zotero
   ];
+
 
   # Enable sound
   services.pipewire = {

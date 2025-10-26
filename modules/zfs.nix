@@ -2,7 +2,7 @@
   boot = {
     supportedFilesystems = [ "exfat" "zfs" ];
     zfs = {
-      package = pkgs.zfs_unstable;
+      package = pkgs.unstable.zfs_unstable;
     };
   };
   services.zfs = {

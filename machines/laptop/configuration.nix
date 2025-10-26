@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 {
   imports =
     [
@@ -16,10 +16,14 @@
     ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_16;
+    kernelPackages = pkgs.unstable.linuxPackages_latest;
     kernelParams = [ "usbcore.autosuspend=-1" ];
     tmp.cleanOnBoot = true;
   };
+  # Fix for kernel 6.16 module structure changes
+  system.modulesTree = [
+    (lib.getOutput "modules" config.boot.kernelPackages.kernel)
+  ];
 
   console = {
     useXkbConfig = true; # use xkb.options in tty
