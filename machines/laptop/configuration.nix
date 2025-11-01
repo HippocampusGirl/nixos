@@ -17,6 +17,7 @@
 
   boot = {
     kernelPackages = pkgs.unstable.linuxPackages_latest;
+    zfs.package = pkgs.unstable.zfs_unstable;
     kernelParams = [ "usbcore.autosuspend=-1" ];
     tmp.cleanOnBoot = true;
   };

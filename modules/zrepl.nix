@@ -1,24 +1,52 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 {
   options = with lib; {
     services.zrepl = {
-      sinkPort = mkOption {
-        type = types.int;
-        description = "The port to listen on.";
-        default = 13427;
-      };
-      sourcePort = mkOption {
-        type = types.int;
-        description = "The port to listen on.";
-        default = 13428;
+      base = mkOption {
+        type = types.attrs;
       };
     };
   };
   config = {
-    services.zrepl.package = pkgs.zrepl.overrideAttrs (_: {
-      patches = [
-        ./zrepl-max-recv-msg-size.patch
-      ];
-    });
+    services.zrepl = {
+      package = pkgs.zrepl.overrideAttrs (_: {
+        patches = [
+          ./zrepl-max-recv-msg-size.patch
+        ];
+      });
+
+      base = rec {
+        ca = "/etc/ssl/certs/ca-certificates.crt";
+        cert = config.services.tailscale-cert.certFile;
+        key = config.services.tailscale-cert.keyFile;
+
+        sinkPort = 13427;
+        sourcePort = 13428;
+
+        regex = "^zrepl_";
+        keep = [{
+          type = "grid";
+          grid = "1x1d(keep=all) | 24x1h | 7x1d | 12x30d";
+          inherit regex;
+        }];
+        keepForever = [{
+          type = "regex";
+          inherit regex;
+        }];
+
+        replication.concurrency = {
+          size_estimates = 20;
+          steps = 20;
+        };
+        conflict_resolution = { initial_replication = "all"; };
+
+        send = { encrypted = false; };
+        recv.placeholder.encryption = "inherit";
+
+        snapshotting = { type = "manual"; };
+
+        interval = "10m";
+      };
+    };
   };
 }
