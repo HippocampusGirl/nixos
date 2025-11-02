@@ -29,6 +29,12 @@
           grid = "1x1d(keep=all) | 24x1h | 7x1d | 12x30d";
           inherit regex;
         }];
+        # Keep hourly snapshots for one hundred years
+        keepHourly = [{
+          type = "grid";
+          grid = "1x1d(keep=all) | 1000000x1h";
+          inherit regex;
+        }];
         keepForever = [{
           type = "regex";
           inherit regex;

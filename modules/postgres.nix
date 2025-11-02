@@ -13,5 +13,4 @@
       full_page_writes = false;
     };
   };
-  # systemd.services.postgresql.postStart = lib.mkForce '''';
 }

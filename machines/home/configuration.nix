@@ -9,6 +9,7 @@
     ./hardware-configuration.nix
     ./incus.nix
     ./jellyfin.nix
+    ./zerofs.nix
     ./zrepl.nix
   ];
 
@@ -38,7 +39,6 @@
     hostId = "13413403";
     useDHCP = true;
   };
-
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
