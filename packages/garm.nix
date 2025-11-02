@@ -27,7 +27,7 @@ let
     }}/bin/garm-provider-openstack'';
   };
 
-  statePath = "/etc/garm";
+  statePath = "/var/lib/garm";
   configFiles = {
     config = cfg.config // {
       provider = lib.mapAttrsToList
@@ -111,7 +111,10 @@ in
             '') configFiles)}
           ''
         );
-        ExecStart = "${garm}/bin/garm";
+        ExecStart = "${garm}/bin/garm -config ${statePath}/config.toml";
+
+        Group = "garm";
+        User = "garm";
       };
     };
     users = {
@@ -119,7 +122,7 @@ in
         createHome = false;
         isSystemUser = true;
         group = "garm";
-        extraGroups = [ "incus" ];
+        extraGroups = [ "incus-admin" ];
       };
       groups.garm = { };
     };

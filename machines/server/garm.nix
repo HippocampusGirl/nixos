@@ -84,9 +84,17 @@
       };
     };
   };
-  sops = {
-    secrets."garm/jwt-auth-secret" = { };
-    secrets."garm/database-passphrase" = { };
-    secrets."computecanada/clouds" = { };
-  };
+  sops =
+    let
+      k = {
+        mode = "0440";
+        owner = config.users.users.garm.name;
+        group = config.users.users.garm.group;
+      };
+    in
+    {
+      secrets."garm/jwt-auth-secret" = k;
+      secrets."garm/database-passphrase" = k;
+      secrets."computecanada/clouds" = k;
+    };
 }
