@@ -7,18 +7,18 @@ let
     }
     rec {
       pname = "zerofs";
-      version = "0.16.2";
+      version = "0.16.5";
 
       src = pkgs.fetchFromGitHub {
         owner = "Barre";
         repo = "ZeroFS";
         tag = "v${version}";
-        hash = "sha256-NJ/lQ0zE2mPSCfRlbIthhytaGKXQgM2xy3UC5uRfADA=";
+        hash = "sha256-yIy+tqUKSZY9CIQYDUNnFGrWDzxd5LUMCFzzm6SFTRA=";
       };
 
       sourceRoot = "${src.name}/zerofs";
 
-      cargoHash = "sha256-Hw6PRgOk2Ub7W0ARnCxNYxGeZ7d4bhMgKPCUn13fvhg=";
+      cargoHash = "sha256-wwXdkmwKo/PatE21zEHKBgvDf2n1haiBpDj0BDmz3wM=";
 
       meta = {
         description = "The Filesystem That Makes S3 your Primary Storage. ZeroFS is 9P/NFS/NBD on top of S3.";
@@ -79,6 +79,8 @@ in
           Restart = "always";
           RestartSec = "5s";
           DynamicUser = true;
+
+          CacheDirectory = "zerofs";
 
           Group = "zerofs";
           User = "zerofs";

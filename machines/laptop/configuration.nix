@@ -36,6 +36,7 @@
   ];
 
   hardware = {
+    bluetooth.enable = true;
     graphics = {
       enable = true;
       enable32Bit = true;
@@ -48,7 +49,7 @@
   networking = {
     hostId = "1ea1ea12";
     hostName = "laptop";
-    firewall.enable = true;
+    firewall = { enable = true; allowedUDPPorts = [ 24727 ]; };
     networkmanager.enable = true;
     nftables.enable = true;
   };
@@ -56,6 +57,7 @@
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "discord"
+      "hplip"
       "vuescan"
       "zoom"
     ];
@@ -74,16 +76,13 @@
     defaultSopsFile = ./secrets.yaml;
   };
 
-  time = { timeZone = "America/Montreal"; };
+  time.timeZone = "America/Montreal";
+  # time.timeZone = "Europe/Berlin";
 
   virtualisation = {
     libvirtd = {
       enable = true;
-      qemu = {
-        swtpm.enable = true;
-        ovmf.enable = true;
-        ovmf.packages = [ pkgs.OVMFFull.fd ];
-      };
+      qemu.swtpm.enable = true;
     };
     spiceUSBRedirection.enable = true;
   };

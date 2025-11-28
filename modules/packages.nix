@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   environment = {
     systemPackages = with pkgs; [
+      advancecomp
       apngopt
       bundle2jwks
       cached-nix-shell
@@ -19,7 +20,6 @@
       lm_sensors
       lsof
       lsyncd
-      micromamba
       nil
       nixpkgs-fmt
       nixos-generators
@@ -40,6 +40,7 @@
       unzip
       wget
       yaml2json
+      zip
       zsh
       zulu
     ];

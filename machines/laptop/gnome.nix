@@ -1,7 +1,7 @@
 { pkgs, ... }: {
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   environment.gnome.excludePackages = with pkgs; [
     epiphany
@@ -27,35 +27,56 @@
     enable = true;
     # package = pkgs.unstable.zoom-us;
   };
-  environment.systemPackages = let
-    ydotool-paste = pkgs.writeShellApplication
-      {
-        name = "ydotool-paste";
-        runtimeInputs = with pkgs; [ ydotool wl-clipboard ];
-        text = "wl-paste --no-newline | ydotool type --file=-";
-      };
-  in
-  with pkgs; [
-    alacritty
-    brave
-    discord
-    freecad-wayland
-    gnome-boxes # VM management
-    gnomeExtensions.appindicator
-    inkscape
-    krita
-    libreoffice
-    remmina
-    shfmt
-    pkgs.unstable.signal-desktop
-    pkgs.unstable.spotify
-    pkgs.unstable.vscode
-    vuescan
-    swtpm
-    ydotool-paste
-    zotero
-  ];
+  environment.systemPackages =
+    let
+      ydotool-paste = pkgs.writeShellApplication
+        {
+          name = "ydotool-paste";
+          runtimeInputs = with pkgs; [ ydotool wl-clipboard ];
+          text = "wl-paste --no-newline | ydotool type --file=-";
+        };
+    in
+    with pkgs; [
+      alacritty
+      ausweisapp
+      brave
+      discord
+      freecad-wayland
+      gnome-boxes # VM management
+      gnomeExtensions.appindicator
+      inkscape
+      krita
+      libreoffice
+      remmina
+      shfmt
+      pkgs.unstable.signal-desktop
+      pkgs.unstable.spotify
+      pkgs.unstable.vscode
+      vuescan
+      swtpm
+      vlc
+      ydotool-paste
+      zotero
+    ];
+    programs.obs-studio = {
+      enable = true;
 
+      package = (
+        pkgs.obs-studio.override {
+          cudaSupport = true;
+        }
+      );
+
+      plugins = with pkgs.obs-studio-plugins; [
+        wlrobs
+        obs-backgroundremoval
+        obs-pipewire-audio-capture
+        obs-vaapi
+        obs-gstreamer
+        obs-vkcapture
+        obs-source-record
+      ];
+  };
 
   # Enable sound
   services.pipewire = {
@@ -67,7 +88,7 @@
 
   services.printing = {
     enable = true;
-    drivers = [ pkgs.brlaser ];
+    drivers = [ pkgs.brlaser pkgs.hplipWithPlugin ];
   };
 
   # Scanner

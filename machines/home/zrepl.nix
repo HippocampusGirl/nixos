@@ -63,7 +63,7 @@ with config.services.zrepl.base; {
               "z/persist" = true;
               # "z/server.dzo-owl.ts.net/z/persist" = true;
               # "z/server.dzo-owl.ts.net/z/postgres" = true;
-              # "z/server.dzo-owl.ts.net/z/work" = true;
+              # "z/server.dzo-owl.ts.net/z/lea" = true;
               # "z/server.dzo-owl.ts.net/z/www" = true;
             };
             inherit send snapshotting conflict_resolution;
@@ -87,7 +87,7 @@ with config.services.zrepl.base; {
           {
             name = "sink_zerofs";
             type = "sink";
-            root_fs = "y";
+            root_fs = "x";
             serve = {
               type = "local";
               listener_name = "zerofs_sink";

@@ -31,6 +31,13 @@ sudo mount -t zfs z/work /mnt/work
 sudo nixos-install --no-channel-copy --root /mnt --flake path:///work/nixos#laptop --show-trace
 ```
 
+### Configure mouse
+
+Switch the mouse off and connect via USB
+```bash
+rivalcfg --buttons "buttons(layout=QWERTY; button7=F17; button8=F18, button9=F16)"
+```
+
 ## Server
 
 ### Install server

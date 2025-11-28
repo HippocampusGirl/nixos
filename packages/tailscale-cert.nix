@@ -29,7 +29,7 @@ in {
     systemd.services.tailscale-cert =
       let
         depends-on =
-          [ "network.target" "network-online.target" "tailscaled.service" ];
+          [ "sys-subsystem-net-devices-tailscale0.device" "network-online.target" "tailscaled.service" ];
       in
       {
         after = depends-on;

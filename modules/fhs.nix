@@ -9,7 +9,6 @@
             libGL
             libxcrypt
             libxcrypt-legacy
-            micromamba
             openssl
             tcsh
             xorg.libXxf86vm

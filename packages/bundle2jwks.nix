@@ -3,7 +3,7 @@ let
   pkgs = prev.pkgs;
 in
 {
-  bundle2jwks = pkgs.buildGo123Module {
+  bundle2jwks = pkgs.buildGo124Module {
     pname = "bundle2jwks";
     version = "git";
     src = pkgs.fetchFromGitHub {

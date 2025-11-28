@@ -62,7 +62,7 @@ in
     {
       description = "GlobalProtect/OpenConnect instance '${portal}'";
 
-      enable = true;
+      enable = false;
       wantedBy = [ "graphical-session.target" ];
       after = [ "network.target" ];
       restartTriggers = [ config.environment.etc."vpnc/post-connect.d/update-systemd-resolved".source ];

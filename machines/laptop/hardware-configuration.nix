@@ -14,38 +14,35 @@
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    {
-      device = "none";
-      fsType = "tmpfs";
-    };
+  fileSystems."/" = {
+    device = "none";
+    fsType = "tmpfs";
+    options = [
+      "size=3G"
+      "mode=755" # Only root can write to those files
+    ];
+  };
   fileSystems."/tmp" = {
     device = "z/tmp";
     fsType = "zfs";
     neededForBoot = true;
   };
-
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/8CB5-C90A";
+    {
+      device = "/dev/disk/by-uuid/8CB5-C90A";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
-
   fileSystems."/nix" = {
     device = "z/nix";
     fsType = "zfs";
   };
-
-  fileSystems."/persist" =
-    {
-      device = "z/persist";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
-
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/f1d0a888-d094-4e85-b70d-a5031f86039e"; }
-    ];
+  fileSystems."/persist" = {
+    device = "z/persist";
+    fsType = "zfs";
+    neededForBoot = true;
+  };
+  swapDevices = [{ device = "/dev/disk/by-uuid/f1d0a888-d094-4e85-b70d-a5031f86039e"; }];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
