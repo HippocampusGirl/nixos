@@ -11,6 +11,8 @@
       port = 13475;
 
       useRoutingFeatures = "both";
+
+      extraDaemonFlags = ["--no-logs-no-support"];
     };
     tailscale-cert.enable = true;
   };

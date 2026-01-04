@@ -34,6 +34,7 @@ sudo nixos-install --no-channel-copy --root /mnt --flake path:///work/nixos#lapt
 ### Configure mouse
 
 Switch the mouse off and connect via USB
+
 ```bash
 rivalcfg --buttons "buttons(layout=QWERTY; button7=F17; button8=F18, button9=F16)"
 ```
@@ -63,6 +64,19 @@ sudo zpool create \
     /dev/disk/by-partuuid/...
 
 sudo zfs create z/nix
+```
+
+## Transfer
+
+```bash
+for dataset in z/www z/postgres z/lea z/persist; do
+	first=$(zfs list -t snapshot -o name -S creation "${dataset}" | tail --lines=1)
+	last=$(zfs list -t snapshot -o name -s creation "${dataset}" | tail --lines=1)
+	(
+		sudo zfs send "${first}" | pv | ssh -p 22 nixos@v2202511129228410225.nicesrv.de sudo zfs recv -v -F -x compression "${dataset}"
+		sudo zfs send -I "${first}" "${last}" | pv | ssh -p 22 nixos@v2202511129228410225.nicesrv.de sudo zfs recv -v "${dataset}"
+	) &
+done
 ```
 
 ## Restore from backup

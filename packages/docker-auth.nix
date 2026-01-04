@@ -2,18 +2,18 @@
 with lib;
 let
   cfg = config.services.dockerAuth;
-  dockerAuth = pkgs.buildGo123Module rec {
+  dockerAuth = pkgs.buildGo124Module rec {
     pname = "dockerAuth";
-    version = "1.13";
+    version = "1.14";
     src = pkgs.fetchFromGitHub {
       owner = "cesanta";
       repo = "docker_auth";
-      rev = "48e07e9ecd895df692d54e99da8883189d82ab93";
-      sha256 = "sha256-I0AoPehWci6Rj+HbuI2ZJFBQdSx2iIt+R0c0kEhMp2A=";
+      rev = "1.14.0";
+      sha256 = "sha256-WeqgNxuLuckdcQj5AluyDRBuCuyoIaiiTM7AN+Dgr8s=";
     };
     sourceRoot = "source/auth_server";
     ldflags = [ "-X main.Version=${version}" "-X main.BuildID=${version}" ];
-    vendorHash = "sha256-u4zKyDwKlEiIt6ItmN2SezVOyfbayTy04o+QVVS4yZc=";
+    vendorHash = "sha256-dbSSmQ+Kl28NQ+4tw8wYy6oRcSQd88QLgaWe4wB3OMg=";
   };
   authConfig = {
     server = {

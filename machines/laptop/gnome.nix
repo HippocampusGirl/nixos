@@ -44,9 +44,14 @@
       freecad-wayland
       gnome-boxes # VM management
       gnomeExtensions.appindicator
+      hunspellDicts.de-de
+      hunspellDicts.en-us
+      hyphenDicts.de-de
+      hyphenDicts.en-us
       inkscape
       krita
       libreoffice
+      masterpdfeditor4
       remmina
       shfmt
       pkgs.unstable.signal-desktop
@@ -58,24 +63,24 @@
       ydotool-paste
       zotero
     ];
-    programs.obs-studio = {
-      enable = true;
+  programs.obs-studio = {
+    enable = true;
 
-      package = (
-        pkgs.obs-studio.override {
-          cudaSupport = true;
-        }
-      );
+    package = (
+      pkgs.obs-studio.override {
+        cudaSupport = true;
+      }
+    );
 
-      plugins = with pkgs.obs-studio-plugins; [
-        wlrobs
-        obs-backgroundremoval
-        obs-pipewire-audio-capture
-        obs-vaapi
-        obs-gstreamer
-        obs-vkcapture
-        obs-source-record
-      ];
+    plugins = with pkgs.obs-studio-plugins; [
+      wlrobs
+      obs-backgroundremoval
+      obs-pipewire-audio-capture
+      obs-vaapi
+      obs-gstreamer
+      obs-vkcapture
+      obs-source-record
+    ];
   };
 
   # Enable sound

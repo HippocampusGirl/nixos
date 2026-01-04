@@ -33,6 +33,8 @@
   environment.systemPackages = with pkgs; [
     incus
     spice-gtk
+    poppler-utils
+    texliveFull
   ];
 
   hardware = {
@@ -58,6 +60,7 @@
     builtins.elem (lib.getName pkg) [
       "discord"
       "hplip"
+      "masterpdfeditor4"
       "vuescan"
       "zoom"
     ];
@@ -76,8 +79,8 @@
     defaultSopsFile = ./secrets.yaml;
   };
 
-  time.timeZone = "America/Montreal";
-  # time.timeZone = "Europe/Berlin";
+  # time.timeZone = "America/Montreal";
+  time.timeZone = "Europe/Berlin";
 
   virtualisation = {
     libvirtd = {
@@ -87,6 +90,12 @@
     spiceUSBRedirection.enable = true;
   };
   services.spice-vdagentd.enable = true;
+
+  services.tailscale = {
+    openFirewall = lib.mkForce false;
+    port = lib.mkForce 41641;
+    useRoutingFeatures = lib.mkForce "client";
+  };
 
   # This option defines the firste this value after the initial install, for any reason,
   # even if you've upgraded your system to a new NixOS release.

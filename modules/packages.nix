@@ -20,6 +20,7 @@
       lm_sensors
       lsof
       lsyncd
+      mamba-cpp
       nil
       nixpkgs-fmt
       nixos-generators
