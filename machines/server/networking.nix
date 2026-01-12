@@ -9,11 +9,11 @@
     interfaces = {
       ens3 = {
         useDHCP = false;
-        ipv4.addresses = [{ address = "152.53.113.10"; prefixLength = 22; }];
-        ipv6.addresses = [{ address = "2a0a:4cc0:80:481c::"; prefixLength = 64; }];
+        ipv4.addresses = [{ address = "159.195.57.16"; prefixLength = 22; }];
+        ipv6.addresses = [{ address = "2a0a:4cc0:c1:e086::"; prefixLength = 64; }];
       };
     };
-    defaultGateway = { address = "152.53.112.1"; interface = "ens3"; };
+    defaultGateway = { address = "159.195.56.1"; interface = "ens3"; };
     defaultGateway6 = { address = "fe80::1"; interface = "ens3"; };
 
     useNetworkd = true;

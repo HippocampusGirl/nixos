@@ -44,6 +44,7 @@
     "cuda_profiler_api"
     "cuda_sanitizer_api"
     "cudnn"
+    "discord"
     "ffmpeg-full"
     "libcublas"
     "libcufft"
@@ -54,7 +55,10 @@
     "libnvjitlink"
     "nvidia-settings"
     "nvidia-x11"
+    "steam"
+    "steam-unwrapped"
     "tensorrt"
+    "zoom"
   ];
   boot.kernelModules = [
     "nvidia_uvm"
@@ -82,7 +86,9 @@
   networking = {
     hostName = "desktop";
     hostId = "13413404";
-    useDHCP = true;
+    firewall.enable = true;
+    networkmanager.enable = true;
+    nftables.enable = true;
   };
 
   time = { timeZone = "Europe/Berlin"; };

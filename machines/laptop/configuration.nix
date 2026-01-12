@@ -6,18 +6,19 @@
 {
   imports =
     [
-      ./gnome.nix
+      ./cec.nix
       # Include the results of the hardware scan
       ./hardware-configuration.nix
       ./networking.nix
       ./nginx.nix
       ./secure-boot.nix
+      ./webcam.nix
       ./zrepl.nix
     ];
 
   boot = {
-    kernelPackages = pkgs.unstable.linuxPackages_latest;
-    zfs.package = pkgs.unstable.zfs_unstable;
+    kernelPackages = pkgs.linuxPackages_latest;
+    zfs.package = pkgs.zfs_unstable;
     kernelParams = [ "usbcore.autosuspend=-1" ];
     tmp.cleanOnBoot = true;
   };
@@ -32,18 +33,11 @@
 
   environment.systemPackages = with pkgs; [
     incus
-    spice-gtk
+    masterpdfeditor4
     poppler-utils
-    texliveFull
+    spice-gtk # Remote desktop client
+    vuescan
   ];
-
-  hardware = {
-    bluetooth.enable = true;
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
-  };
 
   # Select internationalisation properties
   i18n.defaultLocale = "en_US.UTF-8";
@@ -58,9 +52,13 @@
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
+      "corefonts"
       "discord"
       "hplip"
       "masterpdfeditor4"
+      "steam"
+      "steam-unwrapped"
+      "vista-fonts"
       "vuescan"
       "zoom"
     ];
@@ -96,6 +94,19 @@
     port = lib.mkForce 41641;
     useRoutingFeatures = lib.mkForce "client";
   };
+
+  services.fwupd.enable = true;
+
+  services.printing = {
+    enable = true;
+    drivers = [ pkgs.brlaser pkgs.hplipWithPlugin ];
+  };
+
+  services.nfs.server.enable = true;
+
+  # Scanner
+  hardware.sane.enable = true;
+  services.udev.packages = with pkgs; [ vuescan gnome-settings-daemon ];
 
   # This option defines the firste this value after the initial install, for any reason,
   # even if you've upgraded your system to a new NixOS release.

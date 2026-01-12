@@ -18,7 +18,7 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/A9E1-981F";
+    device = "/dev/disk/by-uuid/54C2-262E";
     fsType = "vfat";
     options = [ "fmask=0022" "dmask=0022" ];
   };
@@ -41,7 +41,7 @@
   };
 
   swapDevices =
-    [{ device = "/dev/disk/by-partuuid/2e8808f5-4b89-4735-8a12-3a08c016ac68"; }];
+    [{ device = "/dev/disk/by-partuuid/6db2f512-eeec-4d11-818f-7181f00e680b"; }];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

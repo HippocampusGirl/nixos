@@ -32,6 +32,7 @@
     supportedFilesystems = [ "exfat" "zfs" ];
     tmp.cleanOnBoot = true;
     zfs = {
+      package = pkgs.zfs_unstable;
       devNodes = "/dev/disk/by-path";
       requestEncryptionCredentials = true;
     };
@@ -78,7 +79,5 @@
   };
 
   time = { timeZone = "Europe/Berlin"; };
-
-
 }
 

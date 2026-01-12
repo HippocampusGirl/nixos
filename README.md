@@ -64,6 +64,8 @@ sudo zpool create \
     /dev/disk/by-partuuid/...
 
 sudo zfs create z/nix
+
+sudo mkfs.vfat /dev/vda1
 ```
 
 ## Transfer
@@ -93,6 +95,11 @@ done
 ### Reinstall server
 
 ```bash
+mkdir .ssh
+cat <<EOF > .ssh/authorized_keys
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETA8z05h0cx/Zma9WRKNcG+ckBJ1k35dGYLnAew1BXZ
+EOF
+
 sudo mount -t tmpfs none /mnt
 sudo mkdir -p /mnt/{boot,nix,persist,lea}
 sudo mount /dev/vda1 /mnt/boot
@@ -106,13 +113,15 @@ sudo mkdir -p /mnt/etc/nixos /mnt/var/log
 sudo mount -o bind /mnt/persist/var/log /mnt/var/log
 sudo mount -o bind /lea /mnt/lea
 
+# Update hardware-configuration.nix with the new partition UUIDs before running this
+
 sudo nixos-install --no-channel-copy --root /mnt --flake path:///lea/nixos#server --show-trace
 
 sudo umount -Rl /mnt
 sudo zpool export -a
-sudo reboot
+sudo systemctl poweroff
 
-nixos-rebuild switch -L --use-remote-sudo --fast --flake /mnt/etc/nixos#server
+nixos-rebuild switch -L --sudo --fast --flake /mnt/etc/nixos#server
 ```
 
 ### Update server

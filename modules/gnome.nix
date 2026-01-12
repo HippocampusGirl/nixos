@@ -1,4 +1,12 @@
 { pkgs, ... }: {
+  hardware = {
+    bluetooth.enable = true;
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
+  };
+
   # Enable the GNOME Desktop Environment.
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
@@ -23,10 +31,7 @@
     package = pkgs.unstable.firefox;
   };
   programs.ydotool.enable = true;
-  programs.zoom-us = {
-    enable = true;
-    # package = pkgs.unstable.zoom-us;
-  };
+  programs.zoom-us.enable = true;
   environment.systemPackages =
     let
       ydotool-paste = pkgs.writeShellApplication
@@ -51,13 +56,11 @@
       inkscape
       krita
       libreoffice
-      masterpdfeditor4
       remmina
       shfmt
       pkgs.unstable.signal-desktop
       pkgs.unstable.spotify
       pkgs.unstable.vscode
-      vuescan
       swtpm
       vlc
       ydotool-paste
@@ -82,6 +85,7 @@
       obs-source-record
     ];
   };
+  programs.steam.enable = true;
 
   # Enable sound
   services.pipewire = {
@@ -90,15 +94,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
-  services.printing = {
-    enable = true;
-    drivers = [ pkgs.brlaser pkgs.hplipWithPlugin ];
-  };
-
-  # Scanner
-  hardware.sane.enable = true;
-  services.udev.packages = with pkgs; [ vuescan gnome-settings-daemon ];
 
   environment.persistence."/persist".directories = [
     "/etc/NetworkManager/system-connections"

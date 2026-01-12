@@ -80,8 +80,8 @@
             self.nixosModules.default
             ./modules/impermanence.nix
             ./modules/incus.nix
-            ./modules/paranoid.nix
             ./modules/resolved.nix
+            ./modules/sshd.nix
             ./modules/zfs.nix
             ./users/root.nix
             impermanence.nixosModules.impermanence
@@ -93,6 +93,7 @@
           imports = [
             self.nixosModules.default
             ./modules/impermanence.nix
+            ./modules/tex.nix
             ./modules/zfs.nix
             ./users/root.nix
             impermanence.nixosModules.impermanence
@@ -105,13 +106,18 @@
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {
           inherit system;
-          modules = [ self.nixosModules.laptop ./machines/laptop/configuration.nix ];
+          modules = [
+            self.nixosModules.laptop
+            ./modules/gnome.nix
+            ./machines/laptop/configuration.nix
+          ];
         };
         server = nixpkgs.lib.nixosSystem {
           inherit system;
           modules =
             [
               self.nixosModules.server
+              ./modules/paranoid.nix
               ./modules/postgres.nix
               ./machines/server/configuration.nix
             ];
@@ -119,12 +125,20 @@
         home = nixpkgs.lib.nixosSystem {
           inherit system;
           modules =
-            [ self.nixosModules.server ./machines/home/configuration.nix ];
+            [
+              self.nixosModules.server
+              ./modules/paranoid.nix
+              ./machines/home/configuration.nix
+            ];
         };
         desktop = nixpkgs.lib.nixosSystem {
           inherit system;
           modules =
-            [ self.nixosModules.server ./machines/desktop/configuration.nix ];
+            [
+              self.nixosModules.server
+              ./modules/gnome.nix
+              ./machines/desktop/configuration.nix
+            ];
         };
       };
     } // flake-utils.lib.eachDefaultSystem (system:
