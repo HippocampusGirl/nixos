@@ -101,7 +101,21 @@
     drivers = [ pkgs.brlaser pkgs.hplipWithPlugin ];
   };
 
-  services.nfs.server.enable = true;
+  services.nfs = {
+    settings = {
+      nfsd.udp = true;
+      nfsd.rdma = true;
+      nfsd."vers3" = false;
+      nfsd."vers4" = true;
+      nfsd."vers4.0" = false;
+      nfsd."vers4.1" = false;
+      nfsd."vers4.2" = true;
+    };
+    server = {
+      enable = true;
+      hostName = "laptop.dzo-owl.ts.net";
+    };
+  };
 
   # Scanner
   hardware.sane.enable = true;

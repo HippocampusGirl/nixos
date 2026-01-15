@@ -14,18 +14,43 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    # # Use hardware sensors
-    # kernelModules = [ "nct6775" ];
-    supportedFilesystems = [ "exfat" "zfs" ];
+    kernelParams = [
+      "usbcore.autosuspend=-1"
+    ];
+    supportedFilesystems = [ "exfat" "nfs" "zfs" ];
     zfs = {
       devNodes = "/dev/disk/by-path";
       requestEncryptionCredentials = true;
     };
   };
 
+  fileSystems =
+    let
+      options = [
+        "nfsvers=4.2"
+        "x-systemd.automount"
+        "x-systemd.idle-timeout=3600"
+        "noauto"
+      ];
+    in
+    {
+      "/work" = {
+        inherit options;
+        device = "laptop.dzo-owl.ts.net:/work";
+      };
+      "/scratch" = {
+        inherit options;
+        device = "laptop.dzo-owl.ts.net:/scratch";
+      };
+    };
+
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia.open = true;
+  hardware.nvidia = {
+    open = false;
+    modesetting.enable = true;
+    powerManagement.enable = true;
+  };
   hardware.nvidia-container-toolkit.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
     "cuda_cccl"

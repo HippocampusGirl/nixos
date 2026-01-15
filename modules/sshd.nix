@@ -1,14 +1,5 @@
-{ config, ... }: {
+{
   # Adapted from https://xeiaso.net/blog/paranoid-nixos-2021-07-18
-  networking = {
-    firewall = {
-      enable = true;
-      allowPing = false;
-      allowedTCPPorts = config.services.openssh.ports;
-      checkReversePath = "loose";
-    };
-    nftables.enable = true;
-  };
   services = {
     fail2ban.enable = true;
     openssh = {

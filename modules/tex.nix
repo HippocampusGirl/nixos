@@ -7,6 +7,6 @@ in
     [ tex tex-fmt ];
   fonts = {
     fontDir.enable = true;
-    packages = with pkgs; [ corefonts vista-fonts ];
+    packages = with pkgs; [ corefonts vista-fonts liberation-sans-narrow ];
   };
 }
