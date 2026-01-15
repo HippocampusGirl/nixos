@@ -11,10 +11,6 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    upload = {
-      url = "github:HippocampusGirl/upload";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.3";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -86,7 +82,6 @@
             ./users/root.nix
             impermanence.nixosModules.impermanence
             sops-nix.nixosModules.sops
-            upload.nixosModules.upload
           ];
         };
         laptop = { config, ... }: {
