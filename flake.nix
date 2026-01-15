@@ -24,7 +24,6 @@
     , impermanence
     , nixpkgs
     , sops-nix
-    , upload
     , lanzaboote
     , nixpkgs-unstable
     }:
@@ -51,6 +50,7 @@
             ./modules/nix-ld.nix
             ./modules/packages.nix
             ./modules/singularity.nix
+            ./modules/sshd.nix
             ./modules/tailscale.nix
             ./modules/tmux.nix
             ./modules/zram.nix
@@ -77,7 +77,6 @@
             ./modules/impermanence.nix
             ./modules/incus.nix
             ./modules/resolved.nix
-            ./modules/sshd.nix
             ./modules/zfs.nix
             ./users/root.nix
             impermanence.nixosModules.impermanence
