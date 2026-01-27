@@ -8,6 +8,7 @@
     [
       # Include the results of the hardware scan
       ./hardware-configuration.nix
+      ./iphone.nix
       ./networking.nix
       ./nginx.nix
       ./secure-boot.nix
@@ -116,6 +117,7 @@
       hostName = "laptop.dzo-owl.ts.net";
     };
   };
+
 
   # Scanner
   hardware.sane.enable = true;
