@@ -15,14 +15,14 @@ let
       };
       vendorHash = null;
     };
-  garm = buildCloudbaseModule "garm" "v0.1.5" "sha256-6kIULhL2NtyfduEYlApHLuwKdWEPVgcxdJ/zsLSh7AQ=" {
+  garm = buildCloudbaseModule "garm" "v0.1.7" "sha256-VmkpZr0zm8AqtIs09BKZSvPugceirBqF1UIGeiEGKck=" {
     checkFlags = [ "-tags=testing" ];
   };
 
   providerExecutables = {
-    incus = ''${buildCloudbaseModule "garm-provider-incus" "v0.1.1" "sha256-G/CdsiDohjan7QYi8gfrBm6lLWU8vrtugPkFVC/Mf9A=" { 
+    incus = ''${buildCloudbaseModule "garm-provider-incus" "v0.1.3" "sha256-+32KcYlmcS0KSPhUpnvAbcEzuxPsznZdpnLmwofNxjQ=" { 
     }}/bin/garm-provider-incus'';
-    openstack = ''${buildCloudbaseModule "garm-provider-openstack" "v0.1.1" "sha256-T/t1gpqe+oY5fmPQXA+MKF6v2fxRtoJQ8zHBRVy3K7s=" {
+    openstack = ''${buildCloudbaseModule "garm-provider-openstack" "v0.1.3" "sha256-D/aSlR8uurkuw3CgoC1oFilv3yybKIU5T/tiT4qHMvk=" {
       checkFlags = [ "-tags=testing" ];
     }}/bin/garm-provider-openstack'';
   };
