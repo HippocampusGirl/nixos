@@ -90,6 +90,35 @@
   };
   programs.steam.enable = true;
 
+  programs.vscode = {
+    enable = true;
+    package = pkgs.unstable.vscodium;
+    extensions = with pkgs.unstable.nix-vscode-extensions.vscode-marketplace; [
+      catppuccin.catppuccin-vsc
+
+      continue.continue
+
+      jnoortheen.nix-ide
+
+      mkhl.direnv
+      mkhl.shfmt
+
+      charliermarsh.ruff
+      ms-python.python
+      ms-toolsai.jupyter
+
+      ms-azuretools.vscode-containers
+      ms-vscode-remote.remote-containers
+      ms-vscode-remote.remote-ssh
+      ms-vscode-remote.remote-ssh-edit
+      ms-vscode-remote.vscode-remote-extensionpack
+      ms-vscode.remote-explorer
+      ms-vscode.remote-server
+
+      timonwong.shellcheck
+    ];
+  };
+
   # Enable sound
   services.pipewire = {
     enable = true;

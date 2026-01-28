@@ -12,10 +12,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.3";
+      url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
   };
   outputs =
     { self
@@ -26,6 +30,7 @@
     , sops-nix
     , lanzaboote
     , nixpkgs-unstable
+    , nix-vscode-extensions
     }:
     let
       system = "x86_64-linux";
@@ -65,6 +70,7 @@
                   unstable = import nixpkgs-unstable {
                     inherit system;
                     config.allowUnfree = true;
+                    overlays = [ nix-vscode-extensions.overlays.default ];
                   };
                 })
               ];

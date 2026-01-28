@@ -9,6 +9,7 @@
       # Include the results of the hardware scan
       ./hardware-configuration.nix
       ./iphone.nix
+      ./llama-cpp.nix
       ./networking.nix
       ./nginx.nix
       ./secure-boot.nix
@@ -26,6 +27,11 @@
   system.modulesTree = [
     (lib.getOutput "modules" config.boot.kernelPackages.kernel)
   ];
+
+  hardware.amdgpu = {
+    initrd.enable = true;
+    opencl.enable = true;    
+  };
 
   console = {
     useXkbConfig = true; # use xkb.options in tty
@@ -59,6 +65,7 @@
       "steam"
       "steam-unwrapped"
       "vista-fonts"
+      "vscode-with-extensions"
       "vuescan"
       "zoom"
     ];
@@ -117,7 +124,6 @@
       hostName = "laptop.dzo-owl.ts.net";
     };
   };
-
 
   # Scanner
   hardware.sane.enable = true;
