@@ -128,6 +128,7 @@
             [
               self.nixosModules.server
               ./modules/paranoid.nix
+              ./modules/work.nix
               ./machines/home/configuration.nix
             ];
         };
@@ -137,6 +138,7 @@
             [
               self.nixosModules.server
               ./modules/gnome.nix
+              ./modules/work.nix
               ./machines/desktop/configuration.nix
             ];
         };

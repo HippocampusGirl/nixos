@@ -6,9 +6,11 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./vr.nix
   ];
 
   boot = {
+    kernelPackages = pkgs.linuxPackages_6_18;
     # Use the systemd-boot EFI boot loader
     loader = {
       systemd-boot.enable = true;
@@ -16,33 +18,17 @@
     };
     kernelParams = [
       "usbcore.autosuspend=-1"
+      "amdgpu.dcdebugmask=0x10"
+      "amdgpu.mpo=0"
+      "amdgpu.sg_display=0"
     ];
     supportedFilesystems = [ "exfat" "nfs" "zfs" ];
     zfs = {
+      package = pkgs.zfs_unstable;
       devNodes = "/dev/disk/by-path";
       requestEncryptionCredentials = true;
     };
   };
-
-  fileSystems =
-    let
-      options = [
-        "nfsvers=4.2"
-        "x-systemd.automount"
-        "x-systemd.idle-timeout=3600"
-        "noauto"
-      ];
-    in
-    {
-      "/work" = {
-        inherit options;
-        device = "laptop.dzo-owl.ts.net:/work";
-      };
-      "/scratch" = {
-        inherit options;
-        device = "laptop.dzo-owl.ts.net:/scratch";
-      };
-    };
 
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -50,6 +36,10 @@
     open = false;
     modesetting.enable = true;
     powerManagement.enable = true;
+  };
+  hardware.amdgpu = {
+    initrd.enable = true;
+    opencl.enable = true;
   };
   hardware.nvidia-container-toolkit.enable = true;
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
@@ -101,6 +91,8 @@
     LD_LIBRARY_PATH = [ "/run/opengl-driver/lib" ];
   };
   programs.nix-ld.libraries = with pkgs; [ cudatoolkit cudaPackages.cudnn ];
+
+  hardware.enableRedistributableFirmware = true;
 
   documentation = {
     # Disable documentation to improve performance
