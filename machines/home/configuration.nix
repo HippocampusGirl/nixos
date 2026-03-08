@@ -9,7 +9,6 @@
     ./hardware-configuration.nix
     ./incus.nix
     ./jellyfin.nix
-    ./zerofs.nix
     ./zrepl.nix
   ];
 

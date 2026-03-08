@@ -150,7 +150,6 @@
     {
       packages = {
         garm = pkgs.callPackage ./packages/garm.nix { };
-        zerofs = pkgs.callPackage ./packages/zerofs.nix { };
       };
       devShells = {
         default =
