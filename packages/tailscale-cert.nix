@@ -35,7 +35,6 @@ in {
         after = depends-on;
         wants = depends-on;
         requires = [ "tailscaled.service" ];
-        wantedBy = [ "multi-user.target" ];
 
         path = [ pkgs.dig config.services.tailscale.package ];
 
@@ -63,6 +62,7 @@ in {
       wantedBy = [ "timers.target" ];
       timerConfig = {
         OnCalendar = "weekly";
+        OnBootSec = "5min";
         Unit = "tailscale-cert.service";
         Persistent = "yes";
         RandomizedDelaySec = "24h";
