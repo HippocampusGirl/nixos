@@ -4,11 +4,11 @@
     name = "amd-isp4";
     patch = pkgs.stdenv.mkDerivation {
       pname = "amd-isp4";
-      version = "v7";
+      version = "v8";
 
       src = pkgs.fetchurl {
-        url = "https://lore.kernel.org/all/20251216091326.111977-1-Bin.Du@amd.com/t.mbox.gz";
-        hash = "sha256-dehwTyJyO18xZY1oyhQoyV9zV02m9WhqobivuZ+pydM=";
+        url = "https://lore.kernel.org/lkml/20260212083426.216430-1-Bin.Du@amd.com/t.mbox.gz";
+        hash = "sha256-GFPvwneCUiRZn3YOCClPaj/qRWtWyd6ovjJbE37Xrds=";
       };
       
       dontUnpack = true;
