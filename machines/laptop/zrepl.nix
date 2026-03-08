@@ -41,23 +41,6 @@ with config.services.zrepl.base; {
             client_cns = [ "server.dzo-owl.ts.net" ];
           };
         }
-        # The pull job pulls snapshots from the server every ten minutes
-        {
-          name = "pull_server";
-          type = "pull";
-          connect = {
-            type = "tls";
-            address = "server.dzo-owl.ts.net:${toString (sourcePort)}";
-            server_cn = "server.dzo-owl.ts.net";
-            inherit ca cert key;
-          };
-          inherit conflict_resolution replication interval recv;
-          root_fs = "z/server.dzo-owl.ts.net";
-          pruning = {
-            keep_sender = keepForever;
-            keep_receiver = keep;
-          };
-        }
       ];
     };
   };
