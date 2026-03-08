@@ -70,19 +70,20 @@
       ydotool-paste
       zotero
     ];
+  # networking.firewall = {
+  #   allowedTCPPorts = [ 7236 7250 ]; # gnome-network-displays
+  #   allowedUDPPorts = [ 7236 5353 ]; # gnome-network-displays
+  #   # Firewall ports used by Steam in-home streaming.
 
-  # Firewall ports used by Steam in-home streaming
-  networking.firewall = {
-    allowedTCPPorts = [
-      27036
-      27037
-    ];
-    allowedUDPPorts = [
-      27031
-      27036
-    ];
-  };
-
+  # };
+  networking.firewall.allowedTCPPorts = [
+    27036
+    27037
+  ];
+  networking.firewall.allowedUDPPorts = [
+    27031
+    27036
+  ];
   programs.obs-studio = {
     enable = true;
 
@@ -121,7 +122,7 @@
     extensions = with pkgs.unstable.nix-vscode-extensions.vscode-marketplace; [
       catppuccin.catppuccin-vsc
 
-      continue.continue
+      ggml-org.llama-vscode
 
       jnoortheen.nix-ide
 
