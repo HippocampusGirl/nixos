@@ -9,6 +9,7 @@
             libGL
             libxcrypt
             libxcrypt-legacy
+            ncurses5
             openssl
             tcsh
             xorg.libXxf86vm
