@@ -18,8 +18,8 @@
     ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
-    zfs.package = pkgs.zfs_unstable;
+    kernelPackages = pkgs.linuxPackages_6_19;
+    zfs.package = pkgs.zfs_2_4;
     kernelParams = [ "usbcore.autosuspend=-1" ];
     tmp.cleanOnBoot = true;
   };
@@ -30,8 +30,9 @@
 
   hardware.amdgpu = {
     initrd.enable = true;
-    opencl.enable = true;    
+    opencl.enable = true;
   };
+  hardware.enableRedistributableFirmware = true;
 
   console = {
     useXkbConfig = true; # use xkb.options in tty
@@ -71,12 +72,6 @@
     ];
 
   powerManagement.enable = true;
-
-  # A fuse filesystem that dynamically populates contents of /bin and /usr/bin/ so that
-  # it contains all executables from the PATH of the requesting process. This allows
-  # executing FHS based programs on a non-FHS system. For example, this is useful to
-  #execute shebangs on NixOS that assume hard coded locations like /bin or /usr/bin etc.
-  services.envfs.enable = true;
 
   sops = {
     # This is using an age key that is expected to already be in the filesystem
