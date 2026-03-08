@@ -51,6 +51,7 @@
       discord
       freecad-wayland
       gnome-boxes # VM management
+      gnome-network-displays
       gnomeExtensions.appindicator
       hunspellDicts.de-de
       hunspellDicts.en-us
@@ -69,6 +70,19 @@
       ydotool-paste
       zotero
     ];
+
+  # Firewall ports used by Steam in-home streaming
+  networking.firewall = {
+    allowedTCPPorts = [
+      27036
+      27037
+    ];
+    allowedUDPPorts = [
+      27031
+      27036
+    ];
+  };
+
   programs.obs-studio = {
     enable = true;
 
@@ -88,7 +102,18 @@
       obs-source-record
     ];
   };
-  programs.steam.enable = true;
+  programs.steam = {
+    enable = true;
+    package = pkgs.steam.override {
+      extraProfile = ''
+        # Fixes timezones on VRChat
+        unset TZ
+        # Allows Monado to be used
+        export PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES=1
+      '';
+    };
+  };
+  services.lact.enable = true;
 
   programs.vscode = {
     enable = true;
