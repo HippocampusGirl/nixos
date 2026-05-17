@@ -23,7 +23,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.unstable.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_6_18;
     kernel.sysctl = {
       "vm.dirty_background_ratio " = 5;
       "vm.dirty_ratio" = 10;

@@ -52,6 +52,7 @@
       (pkgs.freecad-wayland.overrideAttrs (old: {
         nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.wrapGAppsHook3 ];
       }))
+      geckodriver
       gnome-boxes # VM management
       gnome-network-displays
       gnomeExtensions.appindicator
