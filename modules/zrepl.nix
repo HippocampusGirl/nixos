@@ -8,6 +8,10 @@
     };
   };
   config = {
+    sops = {
+      secrets."pki/crt" = { };
+      secrets."pki/key" = { };
+    };
     services.zrepl = {
       package = pkgs.zrepl.overrideAttrs (_: {
         patches = [
@@ -16,9 +20,9 @@
       });
 
       base = rec {
-        ca = "/etc/ssl/certs/ca-certificates.crt";
-        cert = config.services.tailscale-cert.certFile;
-        key = config.services.tailscale-cert.keyFile;
+        ca = ../ca.crt;
+        cert = config.sops.secrets."pki/crt".path;
+        key = config.sops.secrets."pki/key".path;
 
         sinkPort = 13427;
         sourcePort = 13428;

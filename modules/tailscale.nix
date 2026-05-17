@@ -1,11 +1,10 @@
 { config, pkgs, ... }: {
-  imports = [ ../packages/tailscale-cert.nix ];
   networking.firewall.trustedInterfaces = [ config.services.tailscale.interfaceName ];
   networking.networkmanager.unmanaged = [ config.services.tailscale.interfaceName ];
   services = {
     tailscale = {
       enable = true;
-      package = pkgs.unstable.tailscale;
+      package = pkgs.tailscale;
 
       openFirewall = true;
       port = 13475;
@@ -14,7 +13,6 @@
 
       extraDaemonFlags = [ "--no-logs-no-support" ];
     };
-    tailscale-cert.enable = true;
   };
   systemd.services.tailscaled =
     let depends-on = [ "network-online.target" "systemd-resolved.service" ];

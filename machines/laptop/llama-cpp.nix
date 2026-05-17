@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  llama-cpp = pkgs.llama-cpp.override {
+  llama-cpp = pkgs.unstable.llama-cpp.override {
     # rocmSupport = true;
     vulkanSupport = true;
   };
@@ -28,5 +28,19 @@ in
       "--flash-attn"
       "on"
     ];
+  };
+
+  systemd.services.llama-cpp = {
+    environment = {
+      HSA_OVERRIDE_GFX_VERSION = "11.5.1"; # Strix Halo
+      HOME = "/var/lib/llama-cpp";
+      XDG_CACHE_HOME = "/var/cache/llama-cpp";
+      TMPDIR = "/run/llama-cpp";
+    };
+    serviceConfig = {
+      StateDirectory = "llama-cpp";
+      CacheDirectory = "llama-cpp";
+      RuntimeDirectory = "llama-cpp";
+    };
   };
 }
